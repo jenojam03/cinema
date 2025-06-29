@@ -9,7 +9,8 @@ import lombok.*;
     public class Posto {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "posto_id")
         private Long id;
 
         @Column(nullable = false, length = 5)
@@ -18,9 +19,7 @@ import lombok.*;
         @Column(nullable = false)
         private int numero;
 
-        @ManyToOne(optional = false)
-        @JoinColumn(name = "proiezione_id")
-        private Proiezione proiezione;
+
     }
 
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Entity
 @Table(name = "proiezione")
@@ -11,16 +12,24 @@ import java.util.Calendar;
 public class Proiezione {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "proiezione_id")
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String titoloFilm;
-
     @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar dataOra;
 
     @Column(nullable = false)
-    private int numeroPosti; // totale posti disponibili
+    private int numeroPosti;
+
+    @OneToMany(mappedBy = "proiezione", cascade = CascadeType.ALL)
+    private List<Posto> posti;
+
+    @ManyToOne
+    @JoinColumn(name = "film_id")
+    private Film film;
+
+
 }
 

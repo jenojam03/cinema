@@ -2,18 +2,19 @@ package org.example.cinema.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+
+
 @Entity
 @Table(name ="cliente")
+@Getter @Setter @EqualsAndHashCode @ToString
 public class Cliente {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "cliente_id", nullable = false)
     private Long id;
 
 
@@ -24,10 +25,10 @@ public class Cliente {
     private String cognome;
 
 
-    @Column(name = "telefono", nullable = true, length = 20, unique = true)
-    private String telefono;
-
-
-    @Column(name= "email",nullable = false, length = 90, unique = true)
+    @Column(name= "email",nullable = true, length = 90, unique = true)
     private String email;
+
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Biglietto> biglietti;
 }
