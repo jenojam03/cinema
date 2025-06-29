@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
     @Entity
-    @Table(name = "posto")
+    @Table(name = "posto",uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"fila", "numero"})
+            })
     @Getter @Setter @EqualsAndHashCode @ToString
     public class Posto {
 
@@ -13,10 +15,10 @@ import lombok.*;
         @Column(name = "posto_id")
         private Long id;
 
-        @Column(nullable = false, length = 5)
+        @Column(name = "fila", nullable = false, length = 5)
         private String fila;
 
-        @Column(nullable = false)
+        @Column(name = "numero", nullable = false)
         private int numero;
 
 

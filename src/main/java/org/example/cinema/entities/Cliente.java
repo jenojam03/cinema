@@ -25,7 +25,7 @@ public class Cliente {
     private String cognome;
 
 
-    @Column(name= "email",nullable = true, length = 90, unique = true)
+    @Column(name= "email",nullable = false, length = 90)
     private String email;
 
 
