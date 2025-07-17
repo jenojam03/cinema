@@ -21,6 +21,12 @@ import lombok.*;
         @Column(name = "numero", nullable = false)
         private int numero;
 
+        @ManyToOne
+        @JoinColumn(name = "proiezione_id")
+        private Proiezione proiezione;
+
+        @Column(name = "occupato", nullable = false)
+        private boolean occupato;
 
     }
 

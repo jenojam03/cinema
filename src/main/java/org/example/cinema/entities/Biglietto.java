@@ -1,6 +1,9 @@
 package org.example.cinema.entities;
 import lombok.*;
 import jakarta.persistence.*;
+import org.example.cinema.plus.StatoBiglietto;
+
+import java.util.Calendar;
 
 @Entity
 @Table(name = "biglietto", uniqueConstraints = {
@@ -33,6 +36,16 @@ public class Biglietto {
     @JoinColumn(name = "posto_id")
     private Posto posto;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "stato", nullable = false)
+    private StatoBiglietto stato = StatoBiglietto.ATTIVO;
+
+    @Column(name = "data_acquisto", nullable = false)
+    private Calendar dataAcquisto;
+
+    @ManyToOne
+    @JoinColumn(name = "transazione_id")
+    private Transazione transazione;
 
 }
 

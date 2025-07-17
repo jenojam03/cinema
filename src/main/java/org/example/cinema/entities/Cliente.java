@@ -31,4 +31,7 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente")
     private List<Biglietto> biglietti;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Transazione> transazioni;
 }

@@ -32,7 +32,12 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public Cliente getCliente(long id) {
-        return clienteRepository.findById(id);
+        return clienteRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getClientiByNome(String nome) {
+        return clienteRepository.findByNome(nome);
     }
 
 }

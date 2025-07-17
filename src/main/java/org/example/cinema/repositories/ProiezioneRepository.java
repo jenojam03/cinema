@@ -8,10 +8,9 @@ import java.util.Calendar;
 import java.util.List;
 
 @Repository
-public interface ProiezioneRepository extends JpaRepository<Proiezione, Integer> {
+public interface ProiezioneRepository extends JpaRepository<Proiezione, Long> {
     List<Proiezione> findByFilm_Id(Long filmId);
     List<Proiezione> findByDataOra(Calendar dataOra);
     List<Proiezione> findByDataOraBetween(Calendar inizio, Calendar fine);
-    Proiezione findById(long id);
 
 }
