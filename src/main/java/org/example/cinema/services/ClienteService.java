@@ -39,5 +39,4 @@ public class ClienteService {
     public List<Cliente> getClientiByNome(String nome) {
         return clienteRepository.findByNome(nome);
     }
-
 }
