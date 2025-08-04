@@ -1,6 +1,7 @@
 package org.example.cinema.repositories;
 
 import org.example.cinema.entities.Biglietto;
+import org.example.cinema.entities.Cliente;
 import org.example.cinema.entities.Posto;
 import org.example.cinema.entities.Proiezione;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,10 @@ public interface BigliettoRepository extends JpaRepository<Biglietto, Long> {
     List<Posto> findPostiOccupatiByProiezione(@Param("proiezione") Proiezione proiezione);
 
     List<Biglietto> findByClienteIdAndDataAcquistoBetween(Long clienteId, Calendar dataInizio, Calendar dataFine);
+
+    List<Biglietto> findByCliente_IdOrderByDataAcquistoDesc(Long clienteId);
+
+    List<Biglietto> findAllOrderByDataAcquistoDesc();
+
 }
 

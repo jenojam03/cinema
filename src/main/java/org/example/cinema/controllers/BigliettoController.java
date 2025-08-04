@@ -116,7 +116,7 @@ public class BigliettoController {
     @PreAuthorize("hasRole('admin')")
     @GetMapping
     public List<Biglietto> getTuttiIBiglietti() {
-        return bigliettoService.getTuttiIBiglietti();
+        return bigliettoService.getTuttiIBigliettiOrdered();
     }
 
     private Calendar parseDate(String date) {

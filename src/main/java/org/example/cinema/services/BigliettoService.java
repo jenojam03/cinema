@@ -150,7 +150,7 @@ public class BigliettoService {
         System.out.println("Cliente trovato: " + cliente.getEmail());
 
         //recupero gli ordini del cliente
-        List<Biglietto> biglietti = bigliettoRepository.findByCliente_Id(cliente.getId());
+        List<Biglietto> biglietti = bigliettoRepository.findByCliente_IdOrderByDataAcquistoDesc(cliente.getId());
         if (biglietti.isEmpty()) {
             System.out.println("Nessun biglietto trovato per il cliente con email: " + email);
         }
@@ -192,6 +192,11 @@ public class BigliettoService {
     @Transactional(readOnly = true)
     public List<Biglietto> getTuttiIBiglietti() {
         return bigliettoRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Biglietto> getTuttiIBigliettiOrdered() {
+        return bigliettoRepository.findAllOrderByDataAcquistoDesc();
     }
 
     @Transactional

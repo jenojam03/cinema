@@ -58,8 +58,20 @@ public class ProiezioneService {
     }
 
     @Transactional(readOnly = true)
+    public List<Proiezione> showAllProiezioniOrdered() {
+        return proiezioneRepository.findAllByOrderByDataOraAsc();
+    }
+
+
+
+    @Transactional(readOnly = true)
     public List<Proiezione> showProiezioniByFilm(Long filmId) {
         return proiezioneRepository.findByFilm_Id(filmId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Proiezione> showProiezioniByFilmOrdered(Long filmId) {
+        return proiezioneRepository.findByFilm_IdOrderByDataOraAsc(filmId);
     }
 
     @Transactional(readOnly = true)

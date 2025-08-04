@@ -73,7 +73,7 @@ public class HomeController {
     @GetMapping("/proiezioni")
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<?> getAllProiezioni() {
-        return ResponseEntity.ok(proiezioneRepository.findAll());
+        return ResponseEntity.ok(proiezioneRepository.findAllByOrderByDataOraAsc());
     }
 
 }

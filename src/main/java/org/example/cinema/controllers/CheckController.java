@@ -16,25 +16,24 @@ public class CheckController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // Accessibile da chiunque: utile per il frontend per verificare che il backend risponde
     @GetMapping("/public")
     public ResponseEntity<String> publicCheck() {
         return ResponseEntity.ok("API pubblica raggiungibile");
     }
 
-    // Accessibile da utenti autenticati
+    //accessibile da utenti autenticati
     @GetMapping("/user")
     @PreAuthorize("hasRole('cliente')")
     public ResponseEntity<?> checkCliente(Authentication authentication) {
         String email = authentication.getName();
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non trovato");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Utente non trovato");
 
         return ResponseEntity.ok("Ciao " + cliente.getNome() + ", sei autenticato come cliente!");
     }
 
-    // Accessibile solo da admin
+    //accessibile solo da admin
     @GetMapping("/admin")
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<String> checkAdmin() {

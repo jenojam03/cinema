@@ -45,14 +45,14 @@ public class ProiezioneController {
     @PreAuthorize("hasAuthority('ROLE_default-roles-my-realm-test')")
     @GetMapping("/getall")
     public List<Proiezione> getAll() {
-        return proiezioneService.showAllProiezioni();
+        return proiezioneService.showAllProiezioniOrdered();
     }
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/paged")
     public ResponseEntity getAll(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
         List<Proiezione> ris = proiezioneService.showAllProiezioni(pageNumber, pageSize, sortBy);
-        if (ris.size() <= 0) {
+        if (ris.isEmpty()) {
             return new ResponseEntity<>(new ResponseMessage("Nessun Risultato!"), HttpStatus.OK);
         }
         return new ResponseEntity<>(ris, HttpStatus.OK);
@@ -62,7 +62,7 @@ public class ProiezioneController {
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/search/by_film")
     public ResponseEntity getByName(@RequestParam(required = false) Long filmId) {
-        List<Proiezione> result = proiezioneService.showProiezioniByFilm(filmId);
+        List<Proiezione> result = proiezioneService.showProiezioniByFilmOrdered(filmId);
         if (result.isEmpty()) {
             return ResponseEntity.ok(new ResponseMessage("Nessun Risultato!"));
         }
