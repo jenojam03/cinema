@@ -3,7 +3,7 @@ package org.example.cinema.controllers;
 import org.example.cinema.entities.Cliente;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.MailUserAlreadyExistsException;
-import org.example.cinema.plus.ResponseMessage;
+import org.example.cinema.support.ResponseMessage;
 import org.example.cinema.repositories.ClienteRepository;
 import org.example.cinema.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;

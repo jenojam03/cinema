@@ -1,7 +1,7 @@
 package org.example.cinema.entities;
 import lombok.*;
 import jakarta.persistence.*;
-import org.example.cinema.plus.StatoBiglietto;
+import org.example.cinema.support.StatoBiglietto;
 
 import java.util.Calendar;
 

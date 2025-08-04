@@ -1,13 +1,12 @@
 package org.example.cinema.services;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;
 import org.example.cinema.entities.*;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
-import org.example.cinema.exceptions.PostoNotFoundException;
-import org.example.cinema.plus.StatoBiglietto;
+import org.example.cinema.exceptions.DateWrongRangeException;
+import org.example.cinema.support.StatoBiglietto;
 import org.example.cinema.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,6 +142,7 @@ public class BigliettoService {
         return ret;
     }
 
+
     @Transactional(readOnly = true)
     public List<Biglietto> getBigliettiCliente(String email) throws ClienteNotFoundException {
         Cliente cliente = clienteRepository.findByEmail(email);
@@ -151,12 +151,16 @@ public class BigliettoService {
         return bigliettoRepository.findByCliente_Id(cliente.getId());
     }
 
+
     @Transactional(readOnly = true)
     public List<Biglietto> getBigliettiClientePeriodo(String email, Calendar da, Calendar a)
-            throws ClienteNotFoundException {
+            throws ClienteNotFoundException, DateWrongRangeException {
         Cliente cliente = clienteRepository.findByEmail(email);
         if(cliente == null)
             throw new ClienteNotFoundException("Cliente non trovato!");
+        if ( da.compareTo(a) >= 0 ) {
+            throw new DateWrongRangeException();
+        }
         return bigliettoRepository.findByClienteIdAndDataAcquistoBetween(cliente.getId(), da, a);
     }
 

@@ -1,4 +1,4 @@
-package org.example.cinema.plus;
+package org.example.cinema.support;
 
 public class ResponseMessage {
     private String message;
