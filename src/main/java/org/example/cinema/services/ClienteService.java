@@ -1,6 +1,9 @@
 package org.example.cinema.services;
 
+import org.example.cinema.dto.ClienteCreateRequest;
+import org.example.cinema.dto.ClienteDTO;
 import org.example.cinema.entities.Cliente;
+import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.MailUserAlreadyExistsException;
 import org.example.cinema.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -18,25 +22,41 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Cliente registraCliente(Cliente cliente) throws MailUserAlreadyExistsException{
-        if (clienteRepository.existsByEmail(cliente.getEmail()) ) {
+    public ClienteDTO registraCliente(ClienteCreateRequest req) throws MailUserAlreadyExistsException{
+        if (clienteRepository.existsByEmail(req.getEmail()) ) {
             throw new MailUserAlreadyExistsException("L'utente è già registrato");
         }
-        return clienteRepository.save(cliente);
+        Cliente cliente = new Cliente();
+        cliente.setNome(req.getNome());
+        cliente.setEmail(req.getEmail());
+        cliente.setCognome(req.getCognome());
+        Cliente salvato = clienteRepository.save(cliente);
+        return toDTO(salvato);
+    }
+
+    public ClienteDTO toDTO(Cliente cliente) {
+        return new ClienteDTO(cliente.getId(), cliente.getNome(), cliente.getEmail());
     }
 
     @Transactional(readOnly = true)
-    public List<Cliente> getAllClienti() {
-        return clienteRepository.findAll();
+    public List<ClienteDTO> getAllClienti() {
+        return clienteRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Cliente getCliente(long id) {
-        return clienteRepository.findById(id).orElse(null);
+    public ClienteDTO getCliente(long id) {
+        Cliente cliente =  clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteNotFoundException("Cliente non trovato con id: " + id));
+        return toDTO(cliente);
     }
 
     @Transactional(readOnly = true)
-    public List<Cliente> getClientiByNome(String nome) {
-        return clienteRepository.findByNome(nome);
+    public List<ClienteDTO> getClientiByNome(String nome) {
+        return clienteRepository.findByNome(nome)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

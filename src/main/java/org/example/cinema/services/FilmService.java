@@ -52,7 +52,7 @@ public class FilmService {
     @Transactional(readOnly = true)
     public Film getFilmById(Long id) {
         return filmRepository.findById(id)
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("Film non trovato con id: " + id));
     }
 
     @Transactional

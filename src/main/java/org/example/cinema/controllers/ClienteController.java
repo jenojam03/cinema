@@ -1,5 +1,8 @@
 package org.example.cinema.controllers;
 
+import org.example.cinema.dto.ClienteCreateRequest;
+import org.example.cinema.dto.ClienteDTO;
+import org.example.cinema.dto.ClienteUpdateRequest;
 import org.example.cinema.entities.Cliente;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.MailUserAlreadyExistsException;
@@ -28,62 +31,67 @@ public class ClienteController {
 
 
     @PostMapping("/registrazione")
-    public ResponseEntity create(@RequestBody @Valid Cliente cliente) {
+    public ResponseEntity<?> create(@RequestBody @Valid ClienteCreateRequest request) {
         try {
-            Cliente nuovo = clienteService.registraCliente(cliente);
-            return new ResponseEntity(nuovo, HttpStatus.OK);
+            ClienteDTO nuovo = clienteService.registraCliente(request);
+            return ResponseEntity.ok(nuovo);
         } catch (MailUserAlreadyExistsException e) {
-            return new ResponseEntity<>(new ResponseMessage("ERROR_MAIL_USER_ALREADY_EXISTS"), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseMessage("ERROR_MAIL_USER_ALREADY_EXISTS"));
+
         }
     }
 
     @PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/{id}")
-    public @ResponseBody Cliente readById(@PathVariable(value = "id") long id) throws ClienteNotFoundException {
-        return clienteService.getCliente(id);
-    }
-
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping(value="/search/by_name/{name}")
-    public @ResponseBody List<Cliente> readByName(@PathVariable(value = "name") String name) {
-        return clienteService.getClientiByNome(name);
-    }
-
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping("search/by-email/{email}")
-    public ResponseEntity<?> getClienteByEmail(@PathVariable String email) {
-        Cliente cliente = clienteRepository.findByEmail(email);
-        if (cliente == null) {
-            return ResponseEntity.status(404).body("Cliente non trovato.");
-        }
+    public @ResponseBody ResponseEntity<ClienteDTO> readById(@PathVariable(value = "id") long id) throws ClienteNotFoundException {
+        ClienteDTO cliente = clienteService.getCliente(id);
+        if(cliente == null) { return ResponseEntity.notFound().build(); }
         return ResponseEntity.ok(cliente);
     }
 
     @PreAuthorize(value="hasRole('admin')")
+    @GetMapping(value="/search/by_name/{name}")
+    public @ResponseBody List<ClienteDTO> readByName(@PathVariable(value = "name") String name) {
+        return clienteService.getClientiByNome(name);
+    }
+
+    @PreAuthorize(value="hasRole('admin')")
+    @GetMapping("search/by-email")
+    public ResponseEntity<?> getClienteByEmail(@RequestParam String email) {
+        Cliente cliente = clienteRepository.findByEmail(email);
+        if (cliente == null) {
+            return ResponseEntity.status(404).body("Cliente non trovato.");
+        }
+        return ResponseEntity.ok(clienteService.toDTO(cliente));
+    }
+
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping
-    public List<Cliente> getTuttiClienti() {
+    public List<ClienteDTO> getTuttiClienti() {
         return clienteService.getAllClienti();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Cliente> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<ClienteDTO> getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
         Cliente currentUser = clienteRepository.findByEmail(email);
         if (currentUser != null) {
-            return ResponseEntity.ok(currentUser);
+            return ResponseEntity.ok(clienteService.toDTO(currentUser));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Cliente> updateCurrentUser(@RequestBody @Valid Cliente updatedUser, Authentication authentication) {
+    public ResponseEntity<ClienteDTO> updateCurrentUser(@RequestBody @Valid ClienteUpdateRequest request, Authentication authentication) {
         String email = authentication.getName();
         Cliente currentUser = clienteRepository.findByEmail(email);
         if (currentUser != null) {
-            currentUser.setNome(updatedUser.getNome());
+            currentUser.setNome(request.getNome());
+            currentUser.setCognome(request.getCognome());
             clienteRepository.save(currentUser);
-            return ResponseEntity.ok(currentUser);
+            return ResponseEntity.ok(clienteService.toDTO(currentUser));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

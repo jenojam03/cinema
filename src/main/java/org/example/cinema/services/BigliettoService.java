@@ -2,6 +2,7 @@ package org.example.cinema.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
+import org.example.cinema.dto.BigliettoDTO;
 import org.example.cinema.entities.*;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
@@ -78,13 +79,8 @@ public class BigliettoService {
         transazione.setCliente(cliente);
         transazione.setImporto(calcolaImporto(biglietti));
 
-        if (!processaPagamento(transazione.getImporto())) {
-            throw new RuntimeException("Pagamento fallito");
-        }
 
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
-
-
 
         if(esitoPagamento){
             transazione.setEsito(true);
@@ -144,12 +140,41 @@ public class BigliettoService {
 
 
     @Transactional(readOnly = true)
-    public List<Biglietto> getBigliettiCliente(String email) throws ClienteNotFoundException {
+    public List<BigliettoDTO> getBigliettiCliente(String email) throws ClienteNotFoundException {
         Cliente cliente = clienteRepository.findByEmail(email);
         if(cliente == null)
             throw new ClienteNotFoundException("Cliente non trovato!");
-        return bigliettoRepository.findByCliente_Id(cliente.getId());
+
+        //mapping
+        //log per verificare il cliente trovato
+        System.out.println("Cliente trovato: " + cliente.getEmail());
+
+        //recupero gli ordini del cliente
+        List<Biglietto> biglietti = bigliettoRepository.findByCliente_Id(cliente.getId());
+        if (biglietti.isEmpty()) {
+            System.out.println("Nessun biglietto trovato per il cliente con email: " + email);
+        }
+
+        //creazione della lista di DTO per gli ordini
+        List<BigliettoDTO> bigliettiDTO = new ArrayList<>();
+        for (Biglietto biglietto : biglietti) {
+            BigliettoDTO dto = new BigliettoDTO();
+
+            dto.setIdBiglietto(biglietto.getId());
+            dto.setDataAcquisto(biglietto.getDataAcquisto());
+            dto.setStato(biglietto.getStato());
+            dto.setProiezione(biglietto.getProiezione());
+            dto.setPosto(biglietto.getPosto());
+            dto.setPrezzo(biglietto.getPrezzo());
+            bigliettiDTO.add(dto);
+
+
+            //log per ogni biglietto trovato
+            System.out.println("Ordine trovato: ID = " + biglietto.getId() + ", Stato = " + biglietto.getStato());
+        }
+        return bigliettiDTO;
     }
+
 
 
     @Transactional(readOnly = true)
@@ -182,12 +207,45 @@ public class BigliettoService {
             throw new IllegalStateException("Solo i biglietti acquistati possono essere annullati.");
         }
 
+        //annullamento
         biglietto.setStato(StatoBiglietto.ANNULLATO);
         bigliettoRepository.save(biglietto);
-        // eventuale logica per rimborso monetario qui
 
-        biglietto.setStato(StatoBiglietto.RIMBORSATO);
-        bigliettoRepository.save(biglietto);
+        //libera il posto
+        Posto posto = biglietto.getPosto();
+        posto.setOccupato(false);
+        postoRepository.save(posto);
+
+        //rimborso
+        rimborsoUtente(biglietto);
+        }
+
+
+    private boolean rimborsoUtente(Biglietto biglietto) {
+        boolean ret = false;
+        long minutiDifferenza = (biglietto.getProiezione().getDataOra().getTimeInMillis() - Calendar.getInstance().getTimeInMillis()) / (1000 * 60);
+
+        if (minutiDifferenza >= 60) {
+            double importoRimborso = biglietto.getPrezzo();
+            boolean ok = eseguiRimborso(biglietto.getCliente(), importoRimborso);
+
+            if (ok) {
+                biglietto.setStato(StatoBiglietto.RIMBORSATO);
+                bigliettoRepository.save(biglietto);
+            } else {
+                throw new RuntimeException("Errore durante il rimborso.");
+            }
+        } else {
+            //niente rimborso
+            System.out.println("Nessun rimborso: meno di 60 minuti alla proiezione.");
+        }
+        return ret;
+    }
+
+    private boolean eseguiRimborso(Cliente cliente, double importo) {
+        System.out.println("Rimborso in corso per " + cliente.getEmail() + " di " + importo + "€");
+        double d = new Random().nextDouble();
+        return d >= 0.2;
     }
 
     @Transactional(readOnly = true)

@@ -58,8 +58,8 @@ public class ProiezioneService {
     }
 
     @Transactional(readOnly = true)
-    public List<Proiezione> showProiezioniByFilm(Film film) {
-        return proiezioneRepository.findByFilm_Id(film.getId());
+    public List<Proiezione> showProiezioniByFilm(Long filmId) {
+        return proiezioneRepository.findByFilm_Id(filmId);
     }
 
     @Transactional(readOnly = true)
