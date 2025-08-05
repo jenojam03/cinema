@@ -3,7 +3,10 @@ package org.example.cinema.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-    @Entity
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
+@Entity
     @Table(name = "posto",uniqueConstraints = {
             @UniqueConstraint(columnNames = {"fila", "numero"})
             })
@@ -27,6 +30,9 @@ import lombok.*;
 
         @Column(name = "occupato", nullable = false)
         private boolean occupato;
+
+        @Column(name = "blocco temporaneo")
+        private LocalDateTime dataBloccoTemporaneo;
 
     }
 

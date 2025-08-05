@@ -7,12 +7,15 @@ import org.example.cinema.entities.*;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.DateWrongRangeException;
+import org.example.cinema.exceptions.PostoNotFoundException;
 import org.example.cinema.support.StatoBiglietto;
 import org.example.cinema.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -38,8 +41,7 @@ public class BigliettoService {
 
 
     @Transactional
-    public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti)
-            throws Exception {
+    public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti) {
 
         Cliente cliente = clienteRepository.findByEmail(emailCliente);
         if (cliente == null) {
@@ -49,14 +51,30 @@ public class BigliettoService {
         Proiezione proiezione = proiezioneRepository.findById(idProiezione)
                 .orElseThrow(() -> new RuntimeException("Proiezione non trovata"));
 
-
+        Map<Long, Posto> postiBloccati = new HashMap<>();
         for (Long postoId : idPosti) {
             Posto p = entityManager.find(Posto.class, postoId, LockModeType.PESSIMISTIC_WRITE);
+
             //Posto p = postoRepository.findById(postoId).orElseThrow(() -> new PostoNotFoundException("Il posto non è valido"));
             //entityManager.lock(p, LockModeType.PESSIMISTIC_WRITE);
+            if(p == null) {
+                throw new PostoNotFoundException("Posto non trovato!");
+            }
+
+            if(!p.getProiezione().equals(proiezione)) {
+                throw new RuntimeException("Il posto non appartiene alla proiezione corretta");
+            }
             if (p.isOccupato()) {
                 throw new RuntimeException("Il posto con ID " + postoId + " è già prenotato.");
             }
+            if(p.getDataBloccoTemporaneo() != null && p.getDataBloccoTemporaneo().isAfter(LocalDateTime.now().minusMinutes(5))){
+                throw new RuntimeException("Posto temporaneamente riservato. Riprova tra qualche minuto");
+            }
+
+            //blocco temporaneamente la prenotazione
+            p.setDataBloccoTemporaneo(LocalDateTime.now());
+            postiBloccati.put(postoId, p);
+
         }
 
         List<Biglietto> biglietti = new ArrayList<>();
@@ -66,7 +84,7 @@ public class BigliettoService {
             Biglietto b = new Biglietto();
             b.setCliente(cliente);
             b.setProiezione(proiezione);
-            b.setPosto(postoRepository.findById(postoID).orElse(null));
+            b.setPosto(postiBloccati.get(postoID));
             b.setStato(StatoBiglietto.ATTIVO);
             b.setTransazione(transazione);
             transazione.getBiglietti().add(b);
@@ -78,36 +96,38 @@ public class BigliettoService {
         transazione.setData(Calendar.getInstance());
         transazione.setCliente(cliente);
         transazione.setImporto(calcolaImporto(biglietti));
-
+        transazione.setEsito(false);
+        transazioneRepository.save(transazione);
 
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
 
         if(esitoPagamento){
             transazione.setEsito(true);
+            transazioneRepository.save(transazione);//aggiorna esito
+
             for(Biglietto biglietto : biglietti){
                 bigliettoRepository.save(biglietto);
-                entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
                 Posto p = biglietto.getPosto();
                 p.setOccupato(true);
+                p.setDataBloccoTemporaneo(null);
                 postoRepository.save(p);
 
             }
         }else{
-            transazione.setEsito(false);
             for(Biglietto biglietto : biglietti){
                 biglietto.setStato(StatoBiglietto.ANNULLATO);
                 bigliettoRepository.save(biglietto);
                 entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
                 Posto p = biglietto.getPosto();
+                p.setDataBloccoTemporaneo(null);
                 //p.setOccupato(false);
-                //postoRepository.save(p);
+                postoRepository.save(p);
             }
 
             throw new RuntimeException("Il pagamento è fallito, riprovare.");
 
         }
 
-        transazioneRepository.save(transazione);
         return biglietti;
     }
 
