@@ -216,7 +216,7 @@ public class BigliettoService {
 
     @Transactional(readOnly = true)
     public List<Biglietto> getTuttiIBigliettiOrdered() {
-        return bigliettoRepository.findAllOrderByDataAcquistoDesc();
+        return bigliettoRepository.findAllByOrderByDataAcquistoDesc();
     }
 
     @Transactional

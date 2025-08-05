@@ -1,6 +1,5 @@
 package org.example.cinema.configuration;
 
-import org.example.cinema.jwt.CustomJwt;
 import org.example.cinema.jwt.CustomJwtConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,19 +19,42 @@ public class SecurityConfig {
 
 
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.cors(Customizer.withDefaults())
-                    .authorizeHttpRequests(authorize -> authorize
-                            .anyRequest().authenticated()
-                    )
-                    .oauth2ResourceServer((oauth2) -> oauth2.jwt(
-                            jwt -> jwt.jwtAuthenticationConverter(customJwtConverter())
-                    ));
-            return http.build();
-        }
+    /*@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/film/**",
+                                "/proiezione/**",
+                                "/clienti/registrazione"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+                );
 
-        @Bean
+        return http.build();
+    }*/
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable()) // disabilita CSRF per REST
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll() // consente qualsiasi richiesta
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+                );
+
+        return http.build();
+    }
+
+
+    @Bean
         public Converter<Jwt, ? extends AbstractAuthenticationToken> customJwtConverter() {
             return new CustomJwtConverter();
         }

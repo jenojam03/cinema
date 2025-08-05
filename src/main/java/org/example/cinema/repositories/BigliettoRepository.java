@@ -28,7 +28,7 @@ public interface BigliettoRepository extends JpaRepository<Biglietto, Long> {
 
     List<Biglietto> findByCliente_IdOrderByDataAcquistoDesc(Long clienteId);
 
-    List<Biglietto> findAllOrderByDataAcquistoDesc();
+    List<Biglietto> findAllByOrderByDataAcquistoDesc();
 
 }
 

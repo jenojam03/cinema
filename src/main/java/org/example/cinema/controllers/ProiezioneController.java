@@ -42,13 +42,11 @@ public class ProiezioneController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_default-roles-my-realm-test')")
     @GetMapping("/getall")
     public List<Proiezione> getAll() {
         return proiezioneService.showAllProiezioniOrdered();
     }
 
-    @PreAuthorize("hasRole('admin')")
     @GetMapping("/paged")
     public ResponseEntity getAll(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
         List<Proiezione> ris = proiezioneService.showAllProiezioni(pageNumber, pageSize, sortBy);
@@ -59,7 +57,6 @@ public class ProiezioneController {
     }
 
 
-    @PreAuthorize("hasRole('admin')")
     @GetMapping("/search/by_film")
     public ResponseEntity getByName(@RequestParam(required = false) Long filmId) {
         List<Proiezione> result = proiezioneService.showProiezioniByFilmOrdered(filmId);
