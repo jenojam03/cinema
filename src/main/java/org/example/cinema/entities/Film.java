@@ -1,5 +1,6 @@
 package org.example.cinema.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Film {
     @Column(name = "regista", length = 100)
     private String regista;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "film")
     private List<Proiezione> proiezioni;
 }

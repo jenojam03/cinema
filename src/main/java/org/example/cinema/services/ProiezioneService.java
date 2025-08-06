@@ -1,10 +1,13 @@
 package org.example.cinema.services;
 
+import org.example.cinema.dto.ProiezioneCreateRequest;
 import org.example.cinema.entities.Film;
 import org.example.cinema.entities.Posto;
 import org.example.cinema.entities.Proiezione;
 import org.example.cinema.exceptions.ProiezioneEsistenteException;
+import org.example.cinema.exceptions.ProiezioneNotFoundException;
 import org.example.cinema.repositories.BigliettoRepository;
+import org.example.cinema.repositories.FilmRepository;
 import org.example.cinema.repositories.PostoRepository;
 import org.example.cinema.repositories.ProiezioneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProiezioneService {
@@ -29,6 +34,9 @@ public class ProiezioneService {
 
     @Autowired
     private BigliettoRepository bigliettoRepository;
+
+    @Autowired
+    private FilmRepository filmRepository;
 
 
     public List<Posto> getPostiDisponibili(Long proiezioneId) {
@@ -43,13 +51,42 @@ public class ProiezioneService {
                 .toList();
     }
 
-    @Transactional
+    /*@Transactional
     public void aggiungiProiezione(Proiezione proiezione) {
         if (proiezione.getId() != 0 && proiezioneRepository.existsById(proiezione.getId())) {
             throw new ProiezioneEsistenteException("La proiezione inserita esiste già");
         }
 
         proiezioneRepository.save(proiezione);
+    }*/
+
+    @Transactional
+    public void aggiungiProiezione(ProiezioneCreateRequest request) {
+        Optional<Film> film = filmRepository.findById(request.getFilmId());
+        if (film.isEmpty()) {
+            throw new IllegalArgumentException("Film non trovato con l'ID fornito.");
+        }
+
+        Proiezione proiezione = new Proiezione();
+        proiezione.setDataOra(request.getDataOra());
+        proiezione.setNumeroPosti(request.getNumeroPosti());
+        proiezione.setFilm(film.get());
+
+        //salvo l'id della proiezione
+        Proiezione savedProiezione = proiezioneRepository.save(proiezione);
+
+        List<Posto> posti = request.getPosti().stream().map(postoDto ->{
+            Posto posto = new Posto();
+            posto.setProiezione(savedProiezione);
+            posto.setFila(postoDto.getFila());
+            posto.setNumero(postoDto.getNumero());
+            posto.setOccupato(false);
+            return posto;
+        }).toList();
+
+        postoRepository.saveAll(posti);
+        savedProiezione.setPosti(posti);
+
     }
 
     @Transactional(readOnly = true)
@@ -85,4 +122,12 @@ public class ProiezioneService {
             return new ArrayList<>();
         }
     }
+
+    @Transactional
+    public void deleteProiezione(Long id) {
+        Proiezione proiezione = proiezioneRepository.findById(id)
+                .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
+        proiezioneRepository.delete(proiezione);
+    }
+
 }

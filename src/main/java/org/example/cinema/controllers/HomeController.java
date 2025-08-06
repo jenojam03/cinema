@@ -38,7 +38,7 @@ public class HomeController {
      * Se non lo è, lo registra automaticamente usando le info del token JWT (con Keycloak).
      */
     @GetMapping("/home")
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, String>> home() {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();
@@ -57,23 +57,4 @@ public class HomeController {
         response.put("message", "Utente autenticato correttamente e presente nel database.");
         return ResponseEntity.ok(response);
     }
-
-    /**
-     * Admin: Recupera tutti i film
-     */
-    @GetMapping("/film")
-    @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<?> getAllFilm() {
-        return ResponseEntity.ok(filmRepository.findAll());
-    }
-
-    /**
-     * Admin: Recupera tutte le proiezioni
-     */
-    @GetMapping("/proiezioni")
-    @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<?> getAllProiezioni() {
-        return ResponseEntity.ok(proiezioneRepository.findAllByOrderByDataOraAsc());
-    }
-
 }

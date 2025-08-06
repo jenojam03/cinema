@@ -36,7 +36,7 @@ public class BigliettoController {
     @Autowired
     private BigliettoRepository bigliettoRepository;
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @PostMapping("/acquista")
     public ResponseEntity<Map<String, String>> acquistaBiglietti(@RequestBody @NotNull AcquistoRequest request) {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +63,7 @@ public class BigliettoController {
         }
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @GetMapping("/{cliente}")
     public ResponseEntity<?> getBigliettiCliente(@PathVariable @Valid Cliente cliente) {
         try {
@@ -74,7 +74,7 @@ public class BigliettoController {
         }
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @GetMapping("/{cliente}/{startDate}/{endDate}")
     public ResponseEntity getBigliettiPeriodo(@Valid @PathVariable("cliente") Cliente cliente,
                                               @PathVariable("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy")
@@ -94,7 +94,7 @@ public class BigliettoController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/annulla")
     public ResponseEntity<?> annullaBiglietto(@PathVariable Long id) {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
@@ -113,7 +113,7 @@ public class BigliettoController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @GetMapping
     public List<Biglietto> getTuttiIBiglietti() {
         return bigliettoService.getTuttiIBigliettiOrdered();
@@ -126,8 +126,8 @@ public class BigliettoController {
         return cal;
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/miei-biglietti")
+    //@PreAuthorize("isAuthenticated()")
+    @GetMapping("/miei_biglietti")
     public ResponseEntity<List<BigliettoDTO>> getMieiBiglietti() {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();

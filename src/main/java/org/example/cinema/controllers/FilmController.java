@@ -19,7 +19,7 @@ public class FilmController {
     @Autowired
     private FilmService filmService;
 
-    @GetMapping("/getall")
+    @GetMapping()
     public List<Film> getAllFilms() {
         return filmService.showAllFilms();
     }
@@ -30,13 +30,13 @@ public class FilmController {
         return ResponseEntity.ok(proiezioni);
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @PostMapping("/create")
     public ResponseEntity<Film> creaFilm(@RequestBody Film film) {
         return ResponseEntity.ok(filmService.creaFilm(film));
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @PutMapping("/{id}")
     public ResponseEntity<?> aggiornaFilm(@PathVariable Long id, @RequestBody Film modificato) {
         try {
@@ -47,7 +47,7 @@ public class FilmController {
     }
 
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminaFilm(@PathVariable Long id) {
         try {

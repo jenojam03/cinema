@@ -1,9 +1,9 @@
 package org.example.cinema.controllers;
 
-import org.example.cinema.entities.Film;
+import org.example.cinema.dto.ProiezioneCreateRequest;
 import org.example.cinema.entities.Proiezione;
 import org.example.cinema.exceptions.ProiezioneEsistenteException;
-import org.example.cinema.repositories.ProiezioneRepository;
+import org.example.cinema.exceptions.ProiezioneNotFoundException;
 import org.example.cinema.services.FilmService;
 import org.example.cinema.services.ProiezioneService;
 import org.example.cinema.support.ResponseMessage;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/proiezione")
+@RequestMapping("/proiezioni")
 public class ProiezioneController {
 
     @Autowired
@@ -26,23 +26,22 @@ public class ProiezioneController {
     @Autowired
     private FilmService filmService;
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('admin')")
     @PostMapping("/create")
-    public ResponseEntity<?> aggiungiProiezione(@RequestBody Proiezione proiezione) {
+    public ResponseEntity<?> aggiungiProiezione(@RequestBody ProiezioneCreateRequest proiezione) {
         try {
             proiezioneService.aggiungiProiezione(proiezione);
-            // Restituire un oggetto JSON
             Map<String, String> response = new HashMap<>();
             response.put("message", "Proiezione aggiunta con successo");
             return ResponseEntity.ok(response);
         } catch (ProiezioneEsistenteException e) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Codice a barre già esistente");
+            errorResponse.put("error", "Proiezione già esistente");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
         }
     }
 
-    @GetMapping("/getall")
+    @GetMapping()
     public List<Proiezione> getAll() {
         return proiezioneService.showAllProiezioniOrdered();
     }
@@ -56,13 +55,17 @@ public class ProiezioneController {
         return new ResponseEntity<>(ris, HttpStatus.OK);
     }
 
-
-    @GetMapping("/search/by_film")
-    public ResponseEntity getByName(@RequestParam(required = false) Long filmId) {
-        List<Proiezione> result = proiezioneService.showProiezioniByFilmOrdered(filmId);
-        if (result.isEmpty()) {
-            return ResponseEntity.ok(new ResponseMessage("Nessun Risultato!"));
+    //@PreAuthorize("hasRole('admin')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProiezione(@PathVariable Long id) {
+        try {
+            proiezioneService.deleteProiezione(id);
+            return ResponseEntity.ok("Proiezione eliminata con successo");
+        } catch (ProiezioneNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Proiezione non trovata");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'eliminazione della proiezione");
         }
-        return ResponseEntity.ok(result);
     }
+
 }

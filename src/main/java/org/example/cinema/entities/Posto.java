@@ -1,14 +1,14 @@
 package org.example.cinema.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 @Entity
     @Table(name = "posto",uniqueConstraints = {
-            @UniqueConstraint(columnNames = {"fila", "numero"})
+            @UniqueConstraint(columnNames = {"fila", "numero","proiezione_id"})
             })
     @Getter @Setter @EqualsAndHashCode @ToString
     public class Posto {
@@ -24,8 +24,10 @@ import java.util.Calendar;
         @Column(name = "numero", nullable = false)
         private int numero;
 
+
         @ManyToOne
         @JoinColumn(name = "proiezione_id")
+        @JsonIgnore
         private Proiezione proiezione;
 
         @Column(name = "occupato", nullable = false)

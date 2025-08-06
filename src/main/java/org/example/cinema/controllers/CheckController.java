@@ -9,8 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+//controller di controllo per vedere se l'autenticazione funziona bene
 @RestController
-@RequestMapping("/api/check")
+@RequestMapping("/check")
 public class CheckController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class CheckController {
     }
 
     //accessibile da utenti autenticati
-    @GetMapping("/user")
+    @GetMapping("/cliente")
     @PreAuthorize("hasRole('cliente')")
     public ResponseEntity<?> checkCliente(Authentication authentication) {
         String email = authentication.getName();

@@ -42,7 +42,7 @@ public class ClienteController {
         }
     }
 
-    @PreAuthorize(value="hasRole('admin')")
+    //@PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/{id}")
     public @ResponseBody ResponseEntity<ClienteDTO> readById(@PathVariable(value = "id") long id) throws ClienteNotFoundException {
         ClienteDTO cliente = clienteService.getCliente(id);
@@ -50,14 +50,14 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
-    @PreAuthorize(value="hasRole('admin')")
+    //@PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/by_name/{name}")
     public @ResponseBody List<ClienteDTO> readByName(@PathVariable(value = "name") String name) {
         return clienteService.getClientiByNome(name);
     }
 
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping("search/by-email")
+    //@PreAuthorize(value="hasRole('admin')")
+    @GetMapping("search/by_email")
     public ResponseEntity<?> getClienteByEmail(@RequestParam String email) {
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente == null) {
@@ -66,7 +66,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.toDTO(cliente));
     }
 
-    @PreAuthorize(value="hasRole('admin')")
+    //@PreAuthorize(value="hasRole('admin')")
     @GetMapping
     public List<ClienteDTO> getTuttiClienti() {
         return clienteService.getAllClienti();
