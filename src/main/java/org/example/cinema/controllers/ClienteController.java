@@ -1,5 +1,6 @@
 package org.example.cinema.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.cinema.dto.ClienteCreateRequest;
 import org.example.cinema.dto.ClienteDTO;
 import org.example.cinema.dto.ClienteUpdateRequest;
@@ -50,10 +51,22 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
-    //@PreAuthorize(value="hasRole('admin')")
+    /*//@PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/by_name/{name}")
     public @ResponseBody List<ClienteDTO> readByName(@PathVariable(value = "name") String name) {
         return clienteService.getClientiByNome(name);
+    }*/
+
+    //@PreAuthorize(value="hasRole('admin')")
+    @GetMapping(value="/search/by_surname/{surname}")
+    public @ResponseBody List<ClienteDTO> readBySurname(@PathVariable(value = "surname") String surname) {
+        return clienteService.getClientiByCognome(surname);
+    }
+
+    //@PreAuthorize(value="hasRole('admin')")
+    @GetMapping(value="/search/by_name_surname/{name}/{surname}")
+    public @ResponseBody List<ClienteDTO> readByNameSurname(@PathVariable(value = "name") String name, @PathVariable(value = "surname") String surname) {
+        return clienteService.getClientiByNomeAndCognome(name,surname);
     }
 
     //@PreAuthorize(value="hasRole('admin')")
@@ -94,6 +107,17 @@ public class ClienteController {
             return ResponseEntity.ok(clienteService.toDTO(currentUser));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    //@PreAuthorize("hasRole('admin')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminaCliente(@PathVariable Long id) {
+        try {
+            clienteService.deleteCliente(id);
+            return ResponseEntity.ok(new ResponseMessage("Cliente eliminato con successo."));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body(new ResponseMessage(e.getMessage()));
         }
     }
 }

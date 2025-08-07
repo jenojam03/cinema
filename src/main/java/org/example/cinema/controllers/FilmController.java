@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.example.cinema.entities.Film;
 import org.example.cinema.entities.Proiezione;
 import org.example.cinema.services.FilmService;
+import org.example.cinema.services.ProiezioneService;
 import org.example.cinema.support.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ public class FilmController {
 
     @Autowired
     private FilmService filmService;
+    @Autowired
+    private ProiezioneService proiezioneService;
 
     @GetMapping()
     public List<Film> getAllFilms() {
@@ -26,7 +29,7 @@ public class FilmController {
 
     @GetMapping("/{id}/proiezioni")
     public ResponseEntity<?> getProiezioniPerFilm(@PathVariable Long id) {
-        List<Proiezione> proiezioni = filmService.getProiezioniFilm(id);
+       List<Proiezione> proiezioni = proiezioneService.showProiezioniByFilmOrdered(id);
         return ResponseEntity.ok(proiezioni);
     }
 

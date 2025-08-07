@@ -14,6 +14,7 @@ public interface ProiezioneRepository extends JpaRepository<Proiezione, Long> {
     List<Proiezione> findByDataOraBetween(Calendar inizio, Calendar fine);
     List<Proiezione> findAllByOrderByDataOraAsc();
     List<Proiezione> findByFilm_IdOrderByDataOraAsc(Long filmId);
+    Proiezione findProiezioneById(Long id);
 
 
 }

@@ -59,4 +59,28 @@ public class ClienteService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> getClientiByCognome(String cognome) {
+        return clienteRepository.findByCognome(cognome)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> getClientiByNomeAndCognome(String nome, String cognome) {
+        return clienteRepository.findByNomeAndCognome(nome,cognome)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteCliente(Long id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ClienteNotFoundException("Cliente non trovato con ID: " + id);
+        }
+        clienteRepository.deleteById(id);
+    }
 }

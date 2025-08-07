@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,25 @@ public class ProiezioneController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Proiezione non trovata");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'eliminazione della proiezione");
+        }
+    }
+
+    //@PreAuthorize("hasRole('admin')")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProiezione(@PathVariable Long id, @RequestBody Calendar nuovaDataOra) {
+        try {
+            proiezioneService.aggiornaProiezione(id, nuovaDataOra);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Proiezione aggiornata con successo");
+            return ResponseEntity.ok(response);
+        } catch (ProiezioneNotFoundException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Proiezione non trovata");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Errore durante l'aggiornamento della proiezione: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 

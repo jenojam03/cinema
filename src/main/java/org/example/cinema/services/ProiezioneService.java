@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,6 +129,19 @@ public class ProiezioneService {
         Proiezione proiezione = proiezioneRepository.findById(id)
                 .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
         proiezioneRepository.delete(proiezione);
+    }
+
+    //posso modificare solo la data di una proiezione già immessa nel db
+    @Transactional
+    public void aggiornaProiezione(Long id, Calendar nuovaDataOra) {
+        Proiezione existingProiezione = proiezioneRepository.findById(id)
+                .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata con ID: " + id));
+
+        if (nuovaDataOra != null) {
+            existingProiezione.setDataOra(nuovaDataOra);
+        }
+
+        proiezioneRepository.save(existingProiezione);
     }
 
 }

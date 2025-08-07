@@ -39,8 +39,9 @@ public class BigliettoController {
     //@PreAuthorize("isAuthenticated()")
     @PostMapping("/acquista")
     public ResponseEntity<Map<String, String>> acquistaBiglietti(@RequestBody @NotNull AcquistoRequest request) {
-        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        String email = jwt.getName();
+       // var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        //String email = jwt.getName();
+        String email = request.getEmailCliente();
         Map<String, String> response;
 
         try {
@@ -70,7 +71,7 @@ public class BigliettoController {
             List<BigliettoDTO> biglietti = bigliettoService.getBigliettiCliente(cliente.getEmail());
             return ResponseEntity.ok(biglietti);
         } catch (ClienteNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found!", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!", e);
         }
     }
 
@@ -95,7 +96,7 @@ public class BigliettoController {
     }
 
     //@PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/{id}/annulla")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> annullaBiglietto(@PathVariable Long id) {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();
