@@ -72,6 +72,7 @@ public class ProiezioneService {
         proiezione.setDataOra(request.getDataOra());
         proiezione.setNumeroPosti(request.getNumeroPosti());
         proiezione.setFilm(film.get());
+        film.get().getProiezioni().add(proiezione);
 
         //salvo l'id della proiezione
         Proiezione savedProiezione = proiezioneRepository.save(proiezione);
@@ -87,6 +88,7 @@ public class ProiezioneService {
 
         postoRepository.saveAll(posti);
         savedProiezione.setPosti(posti);
+        filmRepository.save(film.get());
 
     }
 
@@ -128,6 +130,9 @@ public class ProiezioneService {
     public void deleteProiezione(Long id) {
         Proiezione proiezione = proiezioneRepository.findById(id)
                 .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
+        Film film = proiezione.getFilm();
+        film.getProiezioni().remove(proiezione);
+        filmRepository.save(film);
         proiezioneRepository.delete(proiezione);
     }
 

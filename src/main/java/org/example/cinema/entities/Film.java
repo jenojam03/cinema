@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import jakarta.persistence.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -37,5 +38,5 @@ public class Film {
 
     @JsonIgnore
     @OneToMany(mappedBy = "film")
-    private List<Proiezione> proiezioni;
+    private List<Proiezione> proiezioni = new LinkedList<>();
 }

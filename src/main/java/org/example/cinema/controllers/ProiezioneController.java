@@ -27,7 +27,7 @@ public class ProiezioneController {
     @Autowired
     private FilmService filmService;
 
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/create")
     public ResponseEntity<?> aggiungiProiezione(@RequestBody ProiezioneCreateRequest proiezione) {
         try {
@@ -56,7 +56,7 @@ public class ProiezioneController {
         return new ResponseEntity<>(ris, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProiezione(@PathVariable Long id) {
         try {
@@ -69,7 +69,7 @@ public class ProiezioneController {
         }
     }
 
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProiezione(@PathVariable Long id, @RequestBody Calendar nuovaDataOra) {
         try {

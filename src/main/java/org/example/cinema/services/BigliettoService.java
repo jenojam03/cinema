@@ -4,14 +4,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import org.example.cinema.dto.BigliettoDTO;
 import org.example.cinema.entities.*;
-import org.example.cinema.exceptions.BigliettoNotFoundException;
-import org.example.cinema.exceptions.ClienteNotFoundException;
-import org.example.cinema.exceptions.DateWrongRangeException;
-import org.example.cinema.exceptions.PostoNotFoundException;
+import org.example.cinema.exceptions.*;
 import org.example.cinema.support.StatoBiglietto;
 import org.example.cinema.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -37,10 +35,13 @@ public class BigliettoService {
     private TransazioneRepository transazioneRepository;
 
     @Autowired
+    private TransazioneService transazioniLogService;
+
+    @Autowired
     private EntityManager entityManager;
 
 
-    @Transactional
+    @Transactional(noRollbackFor = PagamentoFallitoException.class)
     public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti) {
 
         Cliente cliente = clienteRepository.findByEmail(emailCliente);
@@ -83,10 +84,13 @@ public class BigliettoService {
         for (Long postoID : idPosti) {
             Biglietto b = new Biglietto();
             b.setCliente(cliente);
+            //aggiungo biglietto anche al cliente
+            cliente.getBiglietti().add(b);
             b.setProiezione(proiezione);
             b.setPosto(postiBloccati.get(postoID));
             b.setStato(StatoBiglietto.ATTIVO);
             b.setTransazione(transazione);
+            b.setDataAcquisto(Calendar.getInstance());
             transazione.getBiglietti().add(b);
             b.setPrezzo(new Random().nextDouble(3,15));
             //bigliettoRepository.save(b);
@@ -95,9 +99,12 @@ public class BigliettoService {
 
         transazione.setData(Calendar.getInstance());
         transazione.setCliente(cliente);
+        //aggiungo la transazione anche al cliente
+        cliente.getTransazioni().add(transazione);
         transazione.setImporto(calcolaImporto(biglietti));
         transazione.setEsito(false);
         transazioneRepository.save(transazione);
+        clienteRepository.save(cliente);
 
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
 
@@ -120,11 +127,11 @@ public class BigliettoService {
                 entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
                 Posto p = biglietto.getPosto();
                 p.setDataBloccoTemporaneo(null);
-                //p.setOccupato(false);
+                p.setOccupato(false);
                 postoRepository.save(p);
             }
 
-            throw new RuntimeException("Il pagamento è fallito, riprovare.");
+            throw new PagamentoFallitoException("Il pagamento è fallito, riprovare.");
 
         }
 
@@ -132,7 +139,7 @@ public class BigliettoService {
     }
 
     private boolean processaPagamento(double importo) {
-        if(importo <= 0){
+       /* if(importo <= 0){
             System.out.println("Importo non valido");
             return false;
         }
@@ -147,7 +154,8 @@ public class BigliettoService {
         }else{
             System.out.println("Pagamento fallito");
             return false;
-        }
+        }*/
+        return false;
     }
 
     private double calcolaImporto(List<Biglietto> biglietti) {

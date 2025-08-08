@@ -1,7 +1,9 @@
 package org.example.cinema.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -28,10 +30,10 @@ public class Cliente {
     @Column(name= "email",nullable = false, length = 90)
     private String email;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
-    private List<Biglietto> biglietti;
-
+    private List<Biglietto> biglietti = new LinkedList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
-    private List<Transazione> transazioni;
+    private List<Transazione> transazioni = new LinkedList<>();
 }

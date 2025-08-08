@@ -1,4 +1,5 @@
 package org.example.cinema.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import jakarta.persistence.*;
 import org.example.cinema.support.StatoBiglietto;
@@ -22,6 +23,7 @@ public class Biglietto {
     private double prezzo;
 
     //relazione con CLIENTE
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
@@ -43,8 +45,10 @@ public class Biglietto {
     @Column(name = "data_acquisto", nullable = false)
     private Calendar dataAcquisto;
 
+
     @ManyToOne
     @JoinColumn(name = "transazione_id")
+    @JsonIgnore
     private Transazione transazione;
 
 }

@@ -43,7 +43,7 @@ public class ClienteController {
         }
     }
 
-    //@PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/{id}")
     public @ResponseBody ResponseEntity<ClienteDTO> readById(@PathVariable(value = "id") long id) throws ClienteNotFoundException {
         ClienteDTO cliente = clienteService.getCliente(id);
@@ -57,19 +57,19 @@ public class ClienteController {
         return clienteService.getClientiByNome(name);
     }*/
 
-    //@PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/by_surname/{surname}")
     public @ResponseBody List<ClienteDTO> readBySurname(@PathVariable(value = "surname") String surname) {
         return clienteService.getClientiByCognome(surname);
     }
 
-    //@PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping(value="/search/by_name_surname/{name}/{surname}")
     public @ResponseBody List<ClienteDTO> readByNameSurname(@PathVariable(value = "name") String name, @PathVariable(value = "surname") String surname) {
         return clienteService.getClientiByNomeAndCognome(name,surname);
     }
 
-    //@PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping("search/by_email")
     public ResponseEntity<?> getClienteByEmail(@RequestParam String email) {
         Cliente cliente = clienteRepository.findByEmail(email);
@@ -79,12 +79,13 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.toDTO(cliente));
     }
 
-    //@PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value="hasRole('admin')")
     @GetMapping
     public List<ClienteDTO> getTuttiClienti() {
         return clienteService.getAllClienti();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<ClienteDTO> getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
@@ -96,6 +97,7 @@ public class ClienteController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/update")
     public ResponseEntity<ClienteDTO> updateCurrentUser(@RequestBody @Valid ClienteUpdateRequest request, Authentication authentication) {
         String email = authentication.getName();
@@ -110,7 +112,7 @@ public class ClienteController {
         }
     }
 
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminaCliente(@PathVariable Long id) {
         try {

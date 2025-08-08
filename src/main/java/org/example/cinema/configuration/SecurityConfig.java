@@ -42,15 +42,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable()) // disabilita CSRF per REST
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // consente qualsiasi richiesta
+                        .requestMatchers("/clienti/registrazione",
+                                "/film",
+                                "/film/{id}/proiezioni",
+                                "film/search/nome/{nome}",
+                                "film/search/autore/{autore}",
+                                "film/search/genere/{genere}",
+                                "proiezioni"
+                                ).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
                 );
 
         return http.build();
+
     }
 
 

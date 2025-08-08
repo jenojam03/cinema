@@ -5,6 +5,7 @@ import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Proiezione {
     private int numeroPosti;
 
     @OneToMany(mappedBy = "proiezione", cascade = CascadeType.ALL)
-    private List<Posto> posti;
+    private List<Posto> posti = new LinkedList<>();
 
     @ManyToOne
     @JoinColumn(name = "film_id")

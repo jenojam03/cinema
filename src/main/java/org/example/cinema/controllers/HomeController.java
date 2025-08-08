@@ -1,4 +1,4 @@
-package org.example.cinema.controllers;
+/*package org.example.cinema.controllers;
 
 import org.example.cinema.entities.Cliente;
 import org.example.cinema.jwt.CustomJwt;
@@ -36,9 +36,9 @@ public class HomeController {
     /**
      * Endpoint per verificare se l'utente è autenticato e presente nel DB come cliente.
      * Se non lo è, lo registra automaticamente usando le info del token JWT (con Keycloak).
-     */
+     *//*
     @GetMapping("/home")
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, String>> home() {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();
@@ -57,4 +57,4 @@ public class HomeController {
         response.put("message", "Utente autenticato correttamente e presente nel database.");
         return ResponseEntity.ok(response);
     }
-}
+}*/
