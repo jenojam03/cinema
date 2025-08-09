@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverterM()))
                 );
 
         return http.build();
@@ -64,7 +64,7 @@ public class SecurityConfig {
 
 
     @Bean
-        public Converter<Jwt, ? extends AbstractAuthenticationToken> customJwtConverter() {
+        public Converter<Jwt, ? extends AbstractAuthenticationToken> customJwtConverterM() {
             return new CustomJwtConverter();
         }
     }
