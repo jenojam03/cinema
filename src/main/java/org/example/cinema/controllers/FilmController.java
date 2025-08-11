@@ -92,4 +92,9 @@ public class FilmController {
         }
         return ResponseEntity.ok(ret);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getFilmById(@PathVariable Long id) {
+        return ResponseEntity.ok(filmService.getFilmById(id));
+    }
 }
