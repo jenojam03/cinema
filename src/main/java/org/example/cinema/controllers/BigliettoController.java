@@ -114,7 +114,7 @@ public class BigliettoController {
         }
     }
     @PreAuthorize("hasRole('admin')")
-    @GetMapping
+    @GetMapping("/all")
     public List<Biglietto> getTuttiIBiglietti() {
         return bigliettoService.getTuttiIBigliettiOrdered();
     }

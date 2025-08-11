@@ -80,7 +80,7 @@ public class ClienteController {
     }
 
     @PreAuthorize(value="hasRole('admin')")
-    @GetMapping
+    @GetMapping("/all")
     public List<ClienteDTO> getTuttiClienti() {
         return clienteService.getAllClienti();
     }

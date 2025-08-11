@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinema PSW</title>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar">
+  <a href="http://localhost:4200" class="logo">Cinema PSW</a>
+  <ul class="nav-links">
+    <li><a routerLink="/biglietti/miei_biglietti" routerLinkActive="active">I miei biglietti</a></li>
+    <li><a routerLink="/clienti/me" routerLinkActive="active">Area Personale</a></li>
+    <li><a routerLink="/film" routerLinkActive="active">Catalogo di film</a></li>
+    <li><a routerLink="/proiezioni" routerLinkActive="active">Proiezioni disponibili</a></li>
+    <li><button class="logout-button" (click)="logout()">LOGOUT</button></li>
+  </ul>
+</nav>
+
+<router-outlet></router-outlet>
