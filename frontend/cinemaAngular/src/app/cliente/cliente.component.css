@@ -1,0 +1,197 @@
+/* Contenitore principale del profilo */
+.profile-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  background: linear-gradient(to right, #f8f9fa, #f1f2f6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  border: 1px solid #ddd;
+  position: relative;
+}
+
+/* Aggiunta di un'ombra sottile per il contenitore */
+.profile-container::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+/* Titolo principale */
+.profile-container h1 {
+  text-align: center;
+  font-size: 2.5em;
+  color: #2d3436;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* Sezione delle informazioni utente */
+.user-info {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Paragrafi nelle informazioni utente */
+.user-info p {
+  font-size: 1.2em;
+  color: #636e72;
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+/* Titolo della sezione di modifica */
+.profile-container h2 {
+  font-size: 1.7em;
+  color: #2d3436;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Stile per i gruppi di input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Etichetta per gli input */
+.form-group label {
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+/* Campo di input */
+.form-group input {
+  padding: 15px;
+  font-size: 1.1em;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  outline: none;
+  width: 50%;
+}
+
+/* Focus sugli input */
+.form-group input:focus {
+  border-color: #44d51c;
+  box-shadow: 0 0 8px rgb(62, 213, 28);
+}
+
+/* Messaggi di errore */
+.error {
+  color: #e74c3c;
+  font-size: 1em;
+  font-weight: 500;
+  margin-top: 5px;
+  width: 50%;
+}
+
+/* Pulsante */
+button {
+  width: 50%;
+  padding: 16px;
+  background-color: #2fd51c;
+  color: #fff;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-weight: bold;
+}
+
+/* Hover sul pulsante */
+button:hover {
+  background-color: #35d51c;
+  transform: scale(1.05);
+}
+
+/* Pulsante disabilitato */
+button:disabled {
+  background-color: #b2bec3;
+  cursor: not-allowed;
+}
+
+/* Messaggio di successo */
+.success-message {
+  margin-top: 25px;
+  padding: 18px;
+  background-color: #d4edda;
+  color: #28a745;
+  border-left: 8px solid #28a745;
+  font-size: 1.1em;
+  border-radius: 8px;
+  width: 50%;
+}
+
+/* Messaggio di errore */
+.error-message {
+  margin-top: 25px;
+  padding: 18px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 8px solid #dc3545;
+  font-size: 1.1em;
+  border-radius: 8px;
+}
+
+/* Animazioni per i messaggi */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-message,
+.error-message {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsività */
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 15px;
+    padding: 25px;
+  }
+
+  .profile-container h1 {
+    font-size: 2.2em;
+  }
+
+  .profile-container h2 {
+    font-size: 1.5em;
+  }
+
+  .form-group input {
+    padding: 12px;
+  }
+
+  button {
+    font-size: 1em;
+    padding: 12px;
+  }
+}

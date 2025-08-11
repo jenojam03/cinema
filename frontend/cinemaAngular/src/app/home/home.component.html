@@ -1,1 +1,31 @@
-<p>home works!</p>
+<div class="home-container">
+
+  <div *ngIf="isLoading" class="loading-message">
+    <p>Caricamento del catalogo film...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && catalogoFilm.length > 0" class="film-grid">
+
+    <div
+      *ngFor="let film of catalogoFilm"
+      class="film-card"
+      (click)="mostraProiezioni(film.id)"
+    >
+      <img src="assets/images/{{ film.id }}.jpg" alt="Locandina del film {{ film.titolo }}" class="film-poster">
+
+      <div class="film-details">
+        <h3 class="film-title">{{ film.titolo }}</h3>
+        <p class="film-genre">{{ film.genere }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="!isLoading && catalogoFilm.length === 0" class="empty-message">
+    <p>Nessun film disponibile al momento.</p>
+  </div>
+</div>

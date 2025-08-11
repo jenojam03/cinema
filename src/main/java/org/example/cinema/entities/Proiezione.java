@@ -2,8 +2,6 @@ package org.example.cinema.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
-
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;

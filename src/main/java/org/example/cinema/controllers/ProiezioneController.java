@@ -1,9 +1,11 @@
 package org.example.cinema.controllers;
 
 import org.example.cinema.dto.ProiezioneCreateRequest;
+import org.example.cinema.entities.Posto;
 import org.example.cinema.entities.Proiezione;
 import org.example.cinema.exceptions.ProiezioneEsistenteException;
 import org.example.cinema.exceptions.ProiezioneNotFoundException;
+import org.example.cinema.repositories.ProiezioneRepository;
 import org.example.cinema.services.FilmService;
 import org.example.cinema.services.ProiezioneService;
 import org.example.cinema.support.ResponseMessage;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +28,7 @@ public class ProiezioneController {
     @Autowired
     private ProiezioneService proiezioneService;
     @Autowired
-    private FilmService filmService;
+    private ProiezioneRepository proiezioneRepository;
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/create")
@@ -87,5 +90,43 @@ public class ProiezioneController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    @GetMapping("/byDate")
+    public ResponseEntity<?> getProiezioniByDate(@RequestParam("data") String dataString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar dataCercata = Calendar.getInstance();
+            dataCercata.setTime(sdf.parse(dataString));
+            return ResponseEntity.ok(proiezioneRepository.findByDataOra(dataCercata));
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Formato data non valido. Usa yyyy-MM-dd.");
+        }
+
+    }
+
+    @GetMapping("/betweenDates")
+    public ResponseEntity<?> getProiezioniBetweenDates(
+            @RequestParam("inizio") String inizioString,
+            @RequestParam("fine") String fineString) {
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar inizio = Calendar.getInstance();
+            inizio.setTime(sdf.parse(inizioString));
+
+            Calendar fine = Calendar.getInstance();
+            fine.setTime(sdf.parse(fineString));
+            return ResponseEntity.ok(proiezioneRepository.findByDataOraBetween(inizio, fine));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Formato data non valido. Usa yyyy-MM-dd.");
+        }
+    }
+
+    @GetMapping("/{proiezioneId}/posti_disponibili")
+    public ResponseEntity<?> getPostiDisponibili(@PathVariable Long proiezioneId) {
+        return ResponseEntity.ok(proiezioneService.getPostiDisponibili(proiezioneId));
+    }
+
 
 }
