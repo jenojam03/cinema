@@ -1,1 +1,17 @@
-<p>film works!</p>
+<div *ngIf="isLoading">Caricamento...</div>
+<div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<div *ngIf="film">
+  <h2>{{ film.titolo }}</h2>
+  <p><strong>Genere:</strong> {{ film.genere }}</p>
+  <p><strong>Regista:</strong> {{ film.regista }}</p>
+  <p><strong>Durata:</strong> {{ film.durata }} minuti</p>
+
+  <h3>Proiezioni disponibili</h3>
+  <ul>
+    <li *ngFor="let p of proiezioni">
+      {{ p.dataOra | date:'short' }} - {{ p.numeroPosti }} posti
+      <button (click)="vaiADettaglioProiezione(p.id)">Dettagli</button>
+    </li>
+  </ul>
+</div>

@@ -1,5 +1,6 @@
 package org.example.cinema.controllers;
 
+import org.apache.coyote.Response;
 import org.example.cinema.dto.ProiezioneCreateRequest;
 import org.example.cinema.entities.Posto;
 import org.example.cinema.entities.Proiezione;
@@ -16,10 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/proiezioni")
@@ -100,7 +98,7 @@ public class ProiezioneController {
             return ResponseEntity.ok(proiezioneRepository.findByDataOra(dataCercata));
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Formato data non valido. Usa yyyy-MM-dd.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa yyyy-MM-dd.");
         }
 
     }
@@ -119,13 +117,24 @@ public class ProiezioneController {
             fine.setTime(sdf.parse(fineString));
             return ResponseEntity.ok(proiezioneRepository.findByDataOraBetween(inizio, fine));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Formato data non valido. Usa yyyy-MM-dd.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa yyyy-MM-dd.");
         }
     }
 
     @GetMapping("/{proiezioneId}/posti_disponibili")
     public ResponseEntity<?> getPostiDisponibili(@PathVariable Long proiezioneId) {
         return ResponseEntity.ok(proiezioneService.getPostiDisponibili(proiezioneId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProiezioneById(@PathVariable Long id) {
+
+        Optional<Proiezione> proiezione = proiezioneService.getProiezioneById(id);
+        if (proiezione.isPresent()) {
+            return ResponseEntity.ok(proiezione.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Proiezione non trovata");
+        }
     }
 
 

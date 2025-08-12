@@ -1,1 +1,43 @@
-<p>acquisto.component works!</p>
+<div class="acquisto-container">
+  <div *ngIf="isLoading" class="stato-messaggio caricamento">
+    <p>Caricamento dettagli proiezione...</p>
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="proiezione && !isLoading" class="dettagli-proiezione">
+    <h2>Acquista biglietti per: {{ proiezione.film.titolo }}</h2>
+    <p><strong>Data:</strong> {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Posti selezionati:</strong> {{ postiSelezionati.length }}</p>
+    <p class="prezzo-totale"><strong>Prezzo Totale:</strong> {{ getPrezzoTotale() | currency:'EUR':'symbol' }}</p>
+  </div>
+
+  <div *ngIf="proiezione && !isLoading" class="sezione-posti">
+    <h3>Seleziona i posti disponibili</h3>
+    <div *ngIf="postiDisponibili.length > 0; else noPosti">
+      <div class="posto-grid">
+        <div
+          *ngFor="let posto of postiDisponibili"
+          class="posto"
+          [class.selezionato]="postiSelezionati.includes(posto.id)"
+          (click)="togglePosto(posto.id)">
+          {{ posto.riga }}{{ posto.colonna }}
+        </div>
+      </div>
+    </div>
+    <ng-template #noPosti>
+      <div class="stato-messaggio vuoto">Nessun posto disponibile per questa proiezione.</div>
+    </ng-template>
+  </div>
+
+  <div class="azioni-acquisto">
+    <div *ngIf="successMessage" class="stato-messaggio successo">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="stato-messaggio errore">{{ errorMessage }}</div>
+
+    <button
+      (click)="confermaAcquisto()"
+      [disabled]="isProcessing || postiSelezionati.length === 0"
+      class="conferma-button">
+      {{ isProcessing ? 'In corso...' : 'Conferma Acquisto' }}
+    </button>
+  </div>
+</div>

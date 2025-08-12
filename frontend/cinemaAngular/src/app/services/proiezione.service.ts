@@ -44,8 +44,11 @@ export class ProiezioneService {
   }
 
   getPostiDisponibili(idProiezione: number): Observable<Posto[]> {
-    // Supponendo un endpoint come /proiezioni/{id}/posti
     return this.httpClient.get<Posto[]>(`${this.baseUrl}/${idProiezione}/posti_disponibili`);
+  }
+
+  getProiezione(idProiezione: number): Observable<Proiezione> {
+    return this.httpClient.get<Proiezione>(`${this.baseUrl}/${idProiezione}`);
   }
 
 

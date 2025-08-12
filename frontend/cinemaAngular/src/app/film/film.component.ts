@@ -1,11 +1,65 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Film, FilmService} from '../services/film.service';
+import {Proiezione} from '../services/proiezione.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-film',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './film.component.html',
-  styleUrl: './film.component.css'
+  styleUrls: ['./film.component.css']
 })
-export class FilmComponent {
+export class FilmComponent implements OnInit{
+
+  film?: Film;
+  proiezioni: Proiezione[] = [];
+  isLoading = true;
+  errorMessage = '';
+
+  constructor(
+    private route: ActivatedRoute,
+    private filmService: FilmService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) {
+      this.loadFilm(id);
+      this.loadProiezioni(id);
+    }
+  }
+
+  loadFilm(id: number): void {
+    this.filmService.getFilmById(id).subscribe({
+      next: data => {
+        this.film = data;
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error(err);
+        this.errorMessage = 'Errore nel caricamento del film.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadProiezioni(id: number): void {
+    this.filmService.getProiezioniByFilmId(id).subscribe({
+      next: data => {
+        this.proiezioni = data;
+      },
+      error: err => {
+        console.error(err);
+        this.errorMessage = 'Errore nel caricamento delle proiezioni.';
+      }
+    });
+  }
+
+  vaiADettaglioProiezione(idProiezione: number) {
+    this.router.navigate(['/proiezioni', idProiezione]);
+  }
 
 }

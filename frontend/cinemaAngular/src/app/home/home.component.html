@@ -1,31 +1,33 @@
 <div class="home-container">
+  <div class="welcome-section">
+    <ng-container *ngIf="isLoggedIn(); else loggedOutWelcome">
+      <!-- Messaggio per utente loggato -->
+      <h1>Benvenuto, {{ userName }}!</h1>
+      <p>Esplora i film e le proiezioni disponibili.</p>
+      <button (click)="logout()" class="action-button logout-button">
+        Logout
+      </button>
+    </ng-container>
 
-  <div *ngIf="isLoading" class="loading-message">
-    <p>Caricamento del catalogo film...</p>
+    <ng-template #loggedOutWelcome>
+      <!-- Messaggio per utente non loggato -->
+      <h1>Benvenuto nel Cinema App!</h1>
+      <p>Accedi per gestire i tuoi biglietti e la tua area personale.</p>
+      <button (click)="vaiAlLogin()" class="action-button login-button">
+        Accedi
+      </button>
+    </ng-template>
   </div>
 
-  <div *ngIf="errorMessage" class="error-message">
-    <p>{{ errorMessage }}</p>
-  </div>
-
-  <div *ngIf="!isLoading && catalogoFilm.length > 0" class="film-grid">
-
-    <div
-      *ngFor="let film of catalogoFilm"
-      class="film-card"
-      (click)="mostraProiezioni(film.id)"
-    >
-      <img src="assets/images/{{ film.id }}.jpg" alt="Locandina del film {{ film.titolo }}" class="film-poster">
-
-      <div class="film-details">
-        <h3 class="film-title">{{ film.titolo }}</h3>
-        <p class="film-genre">{{ film.genere }}</p>
-      </div>
+  <div class="navigation-section">
+    <h2>Cosa vuoi fare?</h2>
+    <div class="button-group">
+      <button (click)="vaiAlCatalogoFilm()" class="nav-button">
+        Catalogo Film
+      </button>
+      <button (click)="vaiAlCatalogoProiezioni()" class="nav-button">
+        Catalogo Proiezioni
+      </button>
     </div>
-
-  </div>
-
-  <div *ngIf="!isLoading && catalogoFilm.length === 0" class="empty-message">
-    <p>Nessun film disponibile al momento.</p>
   </div>
 </div>

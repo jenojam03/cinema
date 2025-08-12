@@ -1,0 +1,189 @@
+.container {
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #555;
+}
+
+.filters input[type="date"] {
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 0.3rem;
+}
+
+.filters button {
+  padding: 0.7rem 1.2rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  align-self: flex-end; /* Allinea i pulsanti alla base degli input */
+}
+
+.filters button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* Messaggi di stato */
+.spinner-container {
+  text-align: center;
+  padding: 2rem;
+  color: #3498db;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  text-align: center;
+  color: #e74c3c;
+  background-color: #ffe6e6;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border: 1px solid #e74c3c;
+}
+
+/* Griglia delle proiezioni */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.film-poster {
+  width: 100%;
+  height: 280px; /* Altezza fissa per le locandine */
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid #eee;
+}
+
+.card-details {
+  padding: 1rem;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-details h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.card-details p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.3rem;
+}
+
+.no-projections {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: #7f8c8d;
+  background-color: #f7f9f9;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+/* Media Queries per la responsività */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters label, .filters button {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .film-poster {
+    height: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  .film-poster {
+    height: 200px;
+  }
+  .card-details h3 {
+    font-size: 1.1rem;
+  }
+}

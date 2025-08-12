@@ -102,7 +102,10 @@ public class ProiezioneService {
         return proiezioneRepository.findAllByOrderByDataOraAsc();
     }
 
-
+    @Transactional(readOnly = true)
+    public Optional<Proiezione> getProiezioneById(Long id) {
+        return proiezioneRepository.findById(id);
+    }
 
     @Transactional(readOnly = true)
     public List<Proiezione> showProiezioniByFilm(Long filmId) {

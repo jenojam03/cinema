@@ -1,1 +1,30 @@
-<p>biglietto works!</p>
+<div class="biglietto-card">
+  <div *ngIf="isLoading" class="stato-messaggio caricamento">
+    Caricamento dettagli biglietto...
+  </div>
+
+  <div *ngIf="errorMessage" class="stato-messaggio errore">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="biglietto && !isLoading" class="dettagli-biglietto">
+    <h2>Dettagli Biglietto</h2>
+    <hr>
+    <p><strong>Film:</strong> {{ biglietto.proiezione.film.titolo }}</p>
+    <p><strong>Data e Ora:</strong> {{ biglietto.proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Posto:</strong> Riga {{ biglietto.posto.riga }}, Colonna {{ biglietto.posto.colonna }}</p>
+    <p><strong>Prezzo:</strong> {{ biglietto.prezzo | currency:'EUR':'symbol' }}</p>
+    <p><strong>Stato:</strong> {{ biglietto.stato === 'ATTIVO' ? 'Attivo' : 'Annullato' }}</p>
+    <p><strong>Data Acquisto:</strong> {{ biglietto.dataAcquisto | date:'dd/MM/yyyy' }}</p>
+  </div>
+  <div class="biglietto-card">
+    <div *ngIf="biglietto && !isLoading" class="dettagli-biglietto">
+      <button
+        *ngIf="biglietto.stato === 'ATTIVO'"
+        (click)="annullaBiglietto()"
+        class="annulla-button">
+        Annulla Biglietto
+      </button>
+    </div>
+  </div>
+</div>

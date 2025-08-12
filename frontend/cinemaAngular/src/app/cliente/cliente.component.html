@@ -1,9 +1,53 @@
 <div class="cliente-container" >
   <h2>Area Personale</h2>
 
-  <div class="dati-keycloak">
-    <p><strong>Nome:</strong> {{ nome }}</p>
-    <p><strong>Cognome:</strong> {{ cognome }}</p>
-    <p><strong>Email:</strong> {{ email }}</p>
+  <div *ngIf="oauthService.hasValidAccessToken()" class="area-personale">
+    <div class="dati-keycloak">
+      <p><strong>Nome:</strong> {{ nome }}</p>
+      <p><strong>Cognome:</strong> {{ cognome }}</p>
+      <p><strong>Email:</strong> {{ email }}</p>
+    </div>
+
+    <hr>
+
+    <div class="biglietti-utente">
+      <h3>I tuoi biglietti</h3>
+
+      <div *ngIf="isLoadingBiglietti" class="stato-messaggio caricamento">
+        Caricamento dei tuoi biglietti...
+      </div>
+
+      <div *ngIf="errorMessage" class="stato-messaggio errore">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="!isLoadingBiglietti && mieiBiglietti.length > 0" class="biglietti-list">
+        <div *ngFor="let biglietto of mieiBiglietti" class="biglietto-card">
+          <div class="card-header">
+            <h4>{{ biglietto.proiezione.film.titolo }}</h4>
+            <span class="stato-biglietto" [class.attivo]="biglietto.stato === 'ATTIVO'" [class.annullato]="biglietto.stato === 'ANNULLATO'">
+              {{ biglietto.stato }}
+            </span>
+          </div>
+          <div class="card-body">
+            <p>Data: {{ biglietto.proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>Posto: {{ biglietto.posto.riga }}{{ biglietto.posto.colonna }}</p>
+          </div>
+          <div class="card-footer">
+            <button (click)="dettaglioBiglietto(biglietto.id)" class="dettaglio-button">
+              Vedi Dettagli
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoadingBiglietti && mieiBiglietti.length === 0 && !errorMessage" class="stato-messaggio vuoto">
+        Non hai ancora acquistato biglietti.
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!oauthService.hasValidAccessToken()" class="non-loggato">
+    <p>Per accedere a quest'area, devi essere loggato.</p>
   </div>
 </div>

@@ -1,1 +1,35 @@
-<p>catalogoproiezioni.component works!</p>
+<div class="container">
+  <h2>Catalogo Proiezioni</h2>
+
+  <div class="filters">
+    <label>Data inizio:
+      <input type="date" [(ngModel)]="filtroDataInizio" />
+    </label>
+    <label>Data fine:
+      <input type="date" [(ngModel)]="filtroDataFine" />
+    </label>
+    <button (click)="filtra()">Filtra</button>
+    <button (click)="caricaProiezioni()">Reset</button>
+  </div>
+
+  <div *ngIf="isLoading" class="spinner-container">
+    <div class="spinner"></div>
+    <p>Caricamento proiezioni...</p>
+  </div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div class="grid">
+    <div class="card" *ngFor="let p of proiezioni" (click)="vaiADettaglioProiezione(p.id)">
+      <!-- Locandina del film associato alla proiezione -->
+      <img [src]="'assets/images/' + p.film.id + '.jpg'" alt="Locandina film {{ p.film.titolo }}" class="film-poster">
+      <div class="card-details">
+        <h3>{{ p.film.titolo }}</h3>
+        <p><strong>Data e Ora:</strong> {{ p.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && proiezioni.length === 0 && !errorMessage" class="no-projections">
+    <p>Nessuna proiezione trovata per i criteri selezionati.</p>
+  </div>
+</div>

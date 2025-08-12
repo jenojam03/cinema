@@ -1,64 +1,173 @@
-/* Stile del contenitore principale */
+/* Contenitore principale della Home */
 .home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px); /* Regola in base all'altezza dell'header/footer */
+  text-align: center;
   padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f6f9;
   color: #333;
 }
 
-/* Griglia per le locandine dei film */
-.film-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+/* Sezione di benvenuto */
+.welcome-section {
+  background-color: #ffffff;
+  padding: 3rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.welcome-section h1 {
+  color: #2c3e50;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.welcome-section p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Stile comune per i bottoni di azione (Login/Logout) */
+.action-button {
+  padding: 0.9rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.login-button {
+  background-color: #3498db; /* Blu */
+  color: white;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.login-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+}
+
+.logout-button {
+  background-color: #e74c3c; /* Rosso */
+  color: white;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* Sezione di navigazione ai cataloghi */
+.navigation-section {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  width: 100%;
+}
+
+.navigation-section h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap; /* Per la responsività su schermi piccoli */
+  justify-content: center;
   gap: 1.5rem;
 }
 
-/* Stile della singola "card" del film */
-.film-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+.nav-button {
+  flex: 1; /* Permette ai bottoni di espandersi */
+  min-width: 220px; /* Larghezza minima per i bottoni */
+  padding: 1.2rem 1.5rem;
+  font-size: 1.2rem;
+  background-color: #9b59b6; /* Viola */
+  color: white;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
 }
 
-.film-card:hover {
+.nav-button:hover {
+  background-color: #8e44ad;
   transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4);
 }
 
-/* Stile per le locandine */
-.film-poster {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  display: block;
+/* Media Queries per la responsività */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 1.5rem;
+  }
+
+  .welcome-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .welcome-section p {
+    font-size: 1rem;
+  }
+
+  .action-button {
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+  }
+
+  .navigation-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-button {
+    width: 90%;
+    min-width: unset;
+    font-size: 1.1rem;
+    padding: 1rem 1.2rem;
+  }
 }
 
-/* Dettagli del testo */
-.film-details {
-  padding: 1rem;
-}
+@media (max-width: 480px) {
+  .home-container {
+    padding: 1rem;
+  }
 
-.film-title {
-  font-size: 1.2rem;
-  margin: 0 0 0.5rem 0;
-  color: #1a1a1a;
-  text-align: center;
-}
+  .welcome-section, .navigation-section {
+    padding: 2rem 1.5rem;
+  }
 
-.film-genre {
-  font-size: 0.9rem;
-  color: #666;
-  text-align: center;
-}
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
 
-/* Messaggi di stato */
-.loading-message,
-.error-message,
-.empty-message {
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 2rem;
-  color: #666;
+  .welcome-section p {
+    font-size: 0.9rem;
+  }
 }

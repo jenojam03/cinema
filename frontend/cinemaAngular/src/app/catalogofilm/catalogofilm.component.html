@@ -1,1 +1,44 @@
-<p>catalogofilm.component works!</p>
+<div class="catalogo-container">
+  <h2>Catalogo Film</h2>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Cerca per titolo, regista o genere..."
+      [(ngModel)]="valore"
+      (keyup.enter)="cerca()"
+      class="search-input"
+    >
+    <select [(ngModel)]="criterio" class="filter-select">
+      <option value="titolo">Titolo</option>
+      <option value="autore">Regista</option>
+      <option value="genere">Genere</option>
+    </select>
+    <button (click)="cerca()" class="search-button">Cerca</button>
+  </div>
+
+  <div *ngIf="isLoading" class="status-message loading">
+    <p>Caricamento dei film...</p>
+    <div class="spinner"></div>
+  </div>
+  <div *ngIf="errorMessage" class="status-message error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && film.length > 0" class="film-grid">
+    <div
+      *ngFor="let f of film"
+      class="film-card"
+      (click)="mostraDettagli(f.id)"
+    >
+      <img [src]="'assets/images/' + f.id + '.jpg'" alt="Locandina del film {{ f.titolo }}" class="film-poster">
+      <div class="film-details">
+        <h3 class="film-title">{{ f.titolo }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && film.length === 0 && !errorMessage" class="status-message empty">
+    <p>Nessun film trovato.</p>
+  </div>
+</div>

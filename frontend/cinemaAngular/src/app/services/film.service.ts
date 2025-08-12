@@ -35,7 +35,7 @@ export class FilmService {
   getFilmByAutore(autore: string): Observable<Film[]> {
     return this.httpClient.get<Film[]>(`${this.baseUrl}/search/autore/{autore}`);
   }
-  getFilmByGenere(titolo: string): Observable<Film[]> {
+  getFilmByGenere(genere: string): Observable<Film[]> {
     return this.httpClient.get<Film[]>(`${this.baseUrl}/search/genere/{genere}`);
   }
 

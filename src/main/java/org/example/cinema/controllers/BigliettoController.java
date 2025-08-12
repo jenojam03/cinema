@@ -143,4 +143,24 @@ public class BigliettoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBiglietto(@PathVariable Long id) {
+        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        String email = jwt.getName();
+
+        Biglietto biglietto = bigliettoRepository.findById(id).orElse(null);
+
+        if (biglietto == null) {
+            return new ResponseEntity<>("Biglietto non trovato.", HttpStatus.NOT_FOUND);
+        }
+
+        // Verifica che l'utente loggato sia il proprietario del biglietto
+        if (!biglietto.getCliente().getEmail().equals(email) && !jwt.getAuthorities().contains("ROLE_admin")) {
+            return new ResponseEntity<>("Non hai i permessi per visualizzare questo biglietto.", HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(biglietto, HttpStatus.OK);
+    }
 }

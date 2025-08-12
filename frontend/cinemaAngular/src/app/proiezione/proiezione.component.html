@@ -1,1 +1,19 @@
-<p>proiezione works!</p>
+<div *ngIf="isLoading">Caricamento dati...</div>
+<div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<div *ngIf="proiezione">
+  <h2>Proiezione di {{ proiezione.film.titolo }}</h2>
+  <p><strong>Data e ora:</strong> {{ proiezione.dataOra | date:'full' }}</p>
+  <p><strong>Numero posti totali:</strong> {{ proiezione.numeroPosti }}</p>
+  <p><strong>Regista:</strong> {{ proiezione.film.regista }}</p>
+  <p><strong>Genere:</strong> {{ proiezione.film.genere }}</p>
+  <p><strong>Durata:</strong> {{ proiezione.film.durata }} minuti</p>
+
+  <div class="proiezione-details">
+    <button
+      class="acquista-button"
+      (click)="procediAllAcquisto()">
+      Acquista Biglietti
+    </button>
+  </div>
+</div>

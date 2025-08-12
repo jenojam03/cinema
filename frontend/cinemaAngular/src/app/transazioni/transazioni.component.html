@@ -1,1 +1,58 @@
-<p>transazioni.component works!</p>
+<div class="transazioni-container">
+  <h2>Gestione Transazioni</h2>
+
+  <div class="filtri">
+    <label for="email-filter">Filtra per email:</label>
+    <input
+      type="email"
+      id="email-filter"
+      [(ngModel)]="filtroEmail"
+      placeholder="Email del cliente"
+    >
+    <label for="esito-filter">Filtra per esito:</label>
+    <select id="esito-filter" [(ngModel)]="filtroEsito">
+      <option value="tutte">Tutte</option>
+      <option value="successo">Successo</option>
+      <option value="fallito">Fallito</option>
+    </select>
+    <button (click)="applicaFiltri()">Applica Filtri</button>
+    <button (click)="resetFiltri()">Reset Filtri</button>
+  </div>
+
+  <div *ngIf="isLoading" class="stato-messaggio caricamento">
+    Caricamento transazioni...
+  </div>
+
+  <div *ngIf="errorMessage" class="stato-messaggio errore">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && transazioni.length > 0" class="tabella-transazioni">
+    <table>
+      <thead>
+      <tr>
+        <th>ID Transazione</th>
+        <th>Data</th>
+        <th>Importo</th>
+        <th>Esito</th>
+        <th>Email Cliente</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let t of transazioni">
+        <td>{{ t.id }}</td>
+        <td>{{ t.data | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ t.importo | currency:'EUR':'symbol' }}</td>
+        <td [ngClass]="{'successo': t.esito, 'fallito': !t.esito}">
+          {{ t.esito ? 'Successo' : 'Fallito' }}
+        </td>
+        <td>{{ t.cliente.email }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!isLoading && transazioni.length === 0 && !errorMessage" class="stato-messaggio vuoto">
+    Nessuna transazione trovata.
+  </div>
+</div>

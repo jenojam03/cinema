@@ -1,0 +1,113 @@
+.transazioni-container {
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.filtri {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f7f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+}
+
+.filtri label {
+  font-weight: bold;
+  color: #555;
+}
+
+.filtri input, .filtri select, .filtri button {
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.filtri button {
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filtri button:hover {
+  background-color: #2980b9;
+}
+
+.tabella-transazioni {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: white;
+}
+
+thead {
+  background-color: #2c3e50;
+  color: white;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.successo {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.fallito {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.stato-messaggio {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.caricamento {
+  background-color: #eaf6ff;
+  color: #3498db;
+}
+
+.errore {
+  background-color: #ffe6e6;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.vuoto {
+  background-color: #f7f9f9;
+  color: #7f8c8d;
+}
