@@ -47,16 +47,16 @@ export class BigliettoService {
 
   getMieiBiglietti(): Observable<Biglietto[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Biglietto[]>(`${this.baseUrl}/miei_biglietti`, { headers });
+    return this.http.get<Biglietto[]>(`${this.baseUrl}/miei_biglietti`, { headers : headers });
   }
 
   annullaBiglietto(idBiglietto: number): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.delete(`${this.baseUrl}/${idBiglietto}`, { headers, responseType: 'text' });
+    return this.http.delete(`${this.baseUrl}/${idBiglietto}`, { headers : headers, responseType: 'text' });
   }
 
   getBiglietto(id: number): Observable<Biglietto> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Biglietto>(`${this.baseUrl}/${id}`, { headers });
+    return this.http.get<Biglietto>(`${this.baseUrl}/${id}`, { headers : headers });
   }
 }

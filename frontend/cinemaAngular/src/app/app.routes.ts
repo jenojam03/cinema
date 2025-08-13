@@ -43,6 +43,9 @@ export const routes: Routes = [
   //Transazioni
   { path: 'transazioni', component: TransazioniComponent, canActivate: [AdminGuard]},
 
+  //Acquisti
+  { path: 'acquista/:id', component: AcquistoComponent, canActivate: [AuthGuard]},
+
   //gestione pagina inesistente
   { path: '**', redirectTo: '' },
 ];

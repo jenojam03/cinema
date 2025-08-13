@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { SharedDataService } from '../services/shareddata.service';
 import { ProiezioneService, Proiezione, Posto } from '../services/proiezione.service';
 import {Router} from '@angular/router';
 
@@ -14,13 +15,15 @@ import {Router} from '@angular/router';
 export class ProiezioneComponent implements OnInit {
   proiezione?: Proiezione;
   postiDisponibili: Posto[] = [];
+  selectedPosti: Posto[] = [];
   isLoading = true;
   errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private proiezioneService: ProiezioneService,
-    private router: Router
+    private router: Router,
+    private sharedDataService: SharedDataService
   ) {}
 
   ngOnInit(): void {
@@ -58,8 +61,27 @@ export class ProiezioneComponent implements OnInit {
     });
   }
 
+  selezionaPosto(posto: Posto): void {
+    const index = this.selectedPosti.findIndex(p => p.id === posto.id);
+    if (index > -1) {
+      this.selectedPosti.splice(index, 1); // Rimuovi se già selezionato
+    } else {
+      this.selectedPosti.push(posto); // Aggiungi se non selezionato
+    }
+  }
+
+  isPostoSelezionato(posto: Posto): boolean {
+    return this.selectedPosti.some(p => p.id === posto.id);
+  }
+
+
   procediAllAcquisto(): void {
+    if (this.selectedPosti.length === 0) {
+      alert('Seleziona almeno un posto per procedere.');
+      return;
+    }
     if (this.proiezione) {
+      this.sharedDataService.setPostiSelezionati(this.selectedPosti);
       this.router.navigate(['/acquista', this.proiezione.id]);
     } else {
       alert('Impossibile procedere. Dettagli proiezione non disponibili.');

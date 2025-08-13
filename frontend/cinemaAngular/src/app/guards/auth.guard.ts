@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { KeycloakService } from 'keycloak-angular';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private keycloakService: KeycloakService, private router: Router) {}
+  constructor(private oauthService: OAuthService, private router: Router) {}
 
-  async canActivate(): Promise<boolean> {
-    const authenticated = await this.keycloakService.isLoggedIn();
-    if (!authenticated) {
-      await this.keycloakService.login();
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (this.oauthService.hasValidAccessToken()) {
+      return true;
+    } else {
+      this.oauthService.initCodeFlow(state.url); // Avvia il login e reindirizza alla pagina dopo l'accesso
       return false;
     }
-    return true;
   }
 }

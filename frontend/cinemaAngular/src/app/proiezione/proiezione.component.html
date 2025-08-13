@@ -1,19 +1,46 @@
-<div *ngIf="isLoading">Caricamento dati...</div>
-<div *ngIf="errorMessage">{{ errorMessage }}</div>
-
-<div *ngIf="proiezione">
-  <h2>Proiezione di {{ proiezione.film.titolo }}</h2>
-  <p><strong>Data e ora:</strong> {{ proiezione.dataOra | date:'full' }}</p>
-  <p><strong>Numero posti totali:</strong> {{ proiezione.numeroPosti }}</p>
-  <p><strong>Regista:</strong> {{ proiezione.film.regista }}</p>
-  <p><strong>Genere:</strong> {{ proiezione.film.genere }}</p>
-  <p><strong>Durata:</strong> {{ proiezione.film.durata }} minuti</p>
-
-  <div class="proiezione-details">
-    <button
-      class="acquista-button"
-      (click)="procediAllAcquisto()">
-      Acquista Biglietti
-    </button>
+<div class="proiezione-detail-container">
+  <div *ngIf="isLoading" class="stato-messaggio caricamento">
+    Caricamento dettagli proiezione e posti...
   </div>
+
+  <div *ngIf="errorMessage" class="stato-messaggio errore">
+    {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="proiezione && !isLoading">
+    <div class="proiezione-header">
+      <h1>Proiezione di {{ proiezione.film.titolo }}</h1>
+      <p class="film-details">
+        <span>Genere: {{ proiezione.film.genere }}</span> |
+        <span>Durata: {{ proiezione.film.durata }} min</span> |
+        <span>Regista: {{ proiezione.film.regista }}</span>
+      </p>
+      <p class="proiezione-details">
+        <strong>Data e Ora:</strong> {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }} |
+      </p>
+    </div>
+
+    <div class="posti-section">
+      <h2>Scegli i tuoi posti</h2>
+      <div *ngIf="postiDisponibili.length > 0; else noPosti" class="posto-grid">
+        <div
+          *ngFor="let posto of postiDisponibili"
+          class="posto-item"
+          [class.selezionato]="isPostoSelezionato(posto)"
+          (click)="selezionaPosto(posto)"> {{ posto.riga }}{{ posto.colonna }}
+        </div>
+      </div>
+      <ng-template #noPosti>
+        <div class="stato-messaggio vuoto">Nessun posto disponibile per questa proiezione.</div>
+      </ng-template>
+    </div>
+
+    <div class="action-section">
+      <button
+        (click)="procediAllAcquisto()"
+        class="btn-acquista"
+        [disabled]="selectedPosti.length === 0"> Procedi all'acquisto ({{ selectedPosti.length }})
+      </button>
+    </div>
+  </ng-container>
 </div>

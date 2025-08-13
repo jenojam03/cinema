@@ -1,15 +1,175 @@
-.filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+/* Contenitore principale della pagina della proiezione */
+.proiezione-detail-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--card-background); /* Sfondo bianco dalle variabili globali */
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  text-align: center;
 }
-.grid {
+
+/* Header della proiezione */
+.proiezione-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+
+.proiezione-header h1 {
+  font-size: 2.5em;
+  color: var(--secondary-color);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.film-details, .proiezione-details {
+  font-size: 1.1em;
+  color: var(--light-text-color);
+  margin-bottom: 10px;
+}
+
+.proiezione-details strong {
+  color: var(--text-color);
+}
+
+/* Sezione dei posti */
+.posti-section {
+  margin-bottom: 30px;
+}
+
+.posti-section h2 {
+  font-size: 2em;
+  color: var(--secondary-color);
+  margin-bottom: 25px;
+}
+
+.posto-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Griglia per i posti */
+  gap: 10px;
+  max-width: 600px; /* Limita la larghezza della griglia */
+  margin: 0 auto;
 }
-.card {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+
+.posto-item {
+  background-color: #e0e0e0; /* Colore base per posto disponibile */
+  color: var(--secondary-color);
+  padding: 15px 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: default; /* Non è selezionabile qui, solo nell'AcquistoComponent */
+  transition: background-color 0.3s ease;
+  user-select: none; /* Impedisce la selezione del testo */
 }
+
+/* Stili per il pulsante di acquisto */
+.action-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-acquista {
+  padding: 15px 30px;
+  background-color: var(--primary-color); /* Blu primario */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Bottone arrotondato */
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-acquista:hover {
+  background-color: #2980b9; /* Blu più scuro */
+  transform: translateY(-3px); /* Effetto hover leggero */
+}
+
+.btn-acquista:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Messaggi di stato (caricamento, errore, vuoto) */
+.stato-messaggio {
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+.caricamento {
+  background-color: #eaf6ff;
+  color: var(--primary-color);
+}
+
+.errore {
+  background-color: #ffe6e6;
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+.vuoto {
+  background-color: #f1f2f6;
+  color: var(--light-text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Media Queries per la responsività */
+@media (max-width: 768px) {
+  .proiezione-detail-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .proiezione-header h1 {
+    font-size: 2em;
+  }
+
+  .film-details, .proiezione-details {
+    font-size: 1em;
+  }
+
+  .posto-grid {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 8px;
+  }
+
+  .posto-item {
+    padding: 12px 8px;
+  }
+
+  .btn-acquista {
+    padding: 12px 25px;
+    font-size: 1.1em;
+  }
+}
+
+
+
+  /* Stili per il posto selezionato */
+  .posto-item.selezionato {
+    background-color: var(--primary-color); /* Colore primario per i posti selezionati */
+    color: cornflowerblue;
+    transform: scale(1.05); /* Effetto visivo di ingrandimento */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Rendi i posti cliccabili con un cursore */
+  .posto-item {
+    cursor: pointer;
+  }
+
+  /* Stili per il bottone disabilitato */
+  .btn-acquista:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }

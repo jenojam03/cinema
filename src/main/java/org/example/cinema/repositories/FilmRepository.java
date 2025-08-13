@@ -13,10 +13,9 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
 
     List<Film> findByGenereIgnoreCase(String genere);
 
-    List<Film> findByRegistaIgnoreCase(String regista);
-
     List<Film> findByDurataBetween(int min, int max);
 
     List<Film> findByTitoloContainingIgnoreCase(String title);
 
+    List<Film> findByRegistaContainingIgnoreCase(String autore);
 }

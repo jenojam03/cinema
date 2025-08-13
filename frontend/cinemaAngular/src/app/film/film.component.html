@@ -1,17 +1,45 @@
-<div *ngIf="isLoading">Caricamento...</div>
-<div *ngIf="errorMessage">{{ errorMessage }}</div>
+<div class="film-detail-container">
+  <div *ngIf="isLoading" class="stato-messaggio caricamento">
+    Caricamento dettagli film...
+  </div>
 
-<div *ngIf="film">
-  <h2>{{ film.titolo }}</h2>
-  <p><strong>Genere:</strong> {{ film.genere }}</p>
-  <p><strong>Regista:</strong> {{ film.regista }}</p>
-  <p><strong>Durata:</strong> {{ film.durata }} minuti</p>
+  <div *ngIf="errorMessage" class="stato-messaggio errore">
+    {{ errorMessage }}
+  </div>
 
-  <h3>Proiezioni disponibili</h3>
-  <ul>
-    <li *ngFor="let p of proiezioni">
-      {{ p.dataOra | date:'short' }} - {{ p.numeroPosti }} posti
-      <button (click)="vaiADettaglioProiezione(p.id)">Dettagli</button>
-    </li>
-  </ul>
+  <ng-container *ngIf="film && !isLoading">
+    <div class="film-header">
+      <div class="film-poster">
+        <!-- Placeholder per l'immagine del film -->
+        <img [src]="'https://placehold.co/300x450/cccccc/333333?text=Poster'"
+             alt="Locandina del film"
+             onerror="this.onerror=null;this.src='https://placehold.co/300x450/cccccc/333333?text=Poster non+disponibile';" />
+      </div>
+      <div class="film-info">
+        <h1>{{ film.titolo }}</h1>
+        <p class="film-details">
+          <span>Genere: {{ film.genere }}</span> |
+          <span>Durata: {{ film.durata }} min</span> |
+          <span>Regista: {{ film.regista }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="proiezioni-section">
+      <h2>Proiezioni disponibili</h2>
+      <div *ngIf="proiezioni.length > 0; else noProiezioni" class="proiezioni-list">
+        <div *ngFor="let proiezione of proiezioni" class="proiezione-card">
+          <div class="proiezione-details">
+            <p><strong>Data e Ora:</strong> {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <button (click)="vaiADettaglioProiezione(proiezione.id)" class="btn-dettaglio-proiezione">
+            Vedi Dettagli
+          </button>
+        </div>
+      </div>
+      <ng-template #noProiezioni>
+        <div class="stato-messaggio vuoto">Nessuna proiezione disponibile per questo film.</div>
+      </ng-template>
+    </div>
+  </ng-container>
 </div>

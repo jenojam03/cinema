@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BigliettoService, AcquistoRequest } from '../services/biglietto.service';
 import { ProiezioneService, Posto, Proiezione } from '../services/proiezione.service';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { SharedDataService } from '../services/shareddata.service';
 
 @Component({
   selector: 'app-acquisto',
@@ -15,9 +16,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 export class AcquistoComponent implements OnInit {
   proiezioneId: number = 0;
   proiezione?: Proiezione;
-  postiDisponibili: Posto[] = [];
-
-  postiSelezionati: number[] = [];
+  postiSelezionati: Posto[] = [];
   prezzoBiglietto: number = 8.50; // Prezzo fisso per esempio
 
   isLoading = true;
@@ -30,20 +29,30 @@ export class AcquistoComponent implements OnInit {
     private router: Router,
     private bigliettoService: BigliettoService,
     private proiezioneService: ProiezioneService,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    private sharedDataService: SharedDataService
   ) {}
 
   ngOnInit(): void {
+    this.postiSelezionati = this.sharedDataService.getPostiSelezionati();
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.proiezioneId = +id;
-        this.loadProiezioneEPosti(this.proiezioneId);
+        if (this.postiSelezionati.length > 0) {
+          this.loadProiezioneEPosti(this.proiezioneId);
+        } else {
+          // Se non ci sono posti selezionati (es. dopo un refresh), reindirizza
+          this.router.navigate(['/proiezioni', this.proiezioneId]);
+          this.isLoading = false;
+        }
       } else {
         this.errorMessage = 'ID proiezione non fornito.';
         this.isLoading = false;
       }
     });
+
   }
 
   loadProiezioneEPosti(id: number): void {
@@ -53,7 +62,6 @@ export class AcquistoComponent implements OnInit {
         this.proiezione = data;
         this.proiezioneService.getPostiDisponibili(id).subscribe({
           next: posti => {
-            this.postiDisponibili = posti;
             this.isLoading = false;
           },
           error: () => {
@@ -69,14 +77,6 @@ export class AcquistoComponent implements OnInit {
     });
   }
 
-  togglePosto(postoId: number): void {
-    const index = this.postiSelezionati.indexOf(postoId);
-    if (index > -1) {
-      this.postiSelezionati.splice(index, 1);
-    } else {
-      this.postiSelezionati.push(postoId);
-    }
-  }
 
   getPrezzoTotale(): number {
     return this.postiSelezionati.length * this.prezzoBiglietto;
@@ -85,7 +85,7 @@ export class AcquistoComponent implements OnInit {
   confermaAcquisto(): void {
     if (!this.oauthService.hasValidAccessToken()) {
       alert('Devi essere loggato per effettuare un acquisto.');
-      this.oauthService.initCodeFlow();
+      this.oauthService.initCodeFlow(this.router.url);
       return;
     }
 
@@ -99,7 +99,7 @@ export class AcquistoComponent implements OnInit {
 
     const acquistoRequest: AcquistoRequest = {
       idProiezione: this.proiezioneId,
-      idPosti: this.postiSelezionati
+      idPosti: this.postiSelezionati.map(posto => posto.id)
     };
 
     this.bigliettoService.acquistaBiglietti(acquistoRequest).subscribe({

@@ -69,12 +69,11 @@ export class CatalogoFilmComponent implements OnInit {
         this.errorMessage = 'Errore nella ricerca.';
         console.error(err);
         this.isLoading = false;
+        this.caricaFilm();
       }
     });
   }
-  mostraProiezioni(idFilm: number): void {
-    this.router.navigate(['/film', idFilm, 'proiezioni']);
-  }
+
   mostraDettagli(idFilm: number): void {
     this.router.navigate(['/film', idFilm]);
   }

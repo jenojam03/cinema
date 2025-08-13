@@ -46,11 +46,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/clienti/registrazione",
                                 "/film",
+                                "/film/{id}",
                                 "/film/{id}/proiezioni",
-                                "film/search/nome/{nome}",
-                                "film/search/autore/{autore}",
-                                "film/search/genere/{genere}",
-                                "proiezioni"
+                                "/film/search/nome/{nome}",
+                                "/film/search/autore/{autore}",
+                                "/film/search/genere/{genere}",
+                                "/proiezioni",
+                                "/proiezioni/{id}",
+                                "/proiezioni/{proiezioneId}/posti_disponibili",
+                                "/proiezioni/betweenDates",
+                                "/proiezioni/byDate"
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )

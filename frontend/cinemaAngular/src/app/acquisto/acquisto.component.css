@@ -1,0 +1,217 @@
+/* Contenitore principale della pagina di acquisto */
+.acquisto-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--card-background); /* Utilizza il colore di sfondo delle card dal tuo CSS globale */
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color); /* Colore del testo principale */
+  text-align: center;
+}
+
+/* Spinner di caricamento */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Card di riepilogo della proiezione */
+.proiezione-riepilogo-card {
+  background-color: #f7f9fc; /* Sfondo leggermente più scuro per contrasto */
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.riepilogo-header h1 {
+  font-size: 2em;
+  color: var(--secondary-color);
+  margin-bottom: 5px;
+}
+
+.riepilogo-header .sottotitolo {
+  font-size: 1.1em;
+  color: var(--light-text-color);
+  margin-bottom: 20px;
+}
+
+.riepilogo-body p {
+  font-size: 1em;
+  margin: 8px 0;
+  color: var(--text-color);
+}
+
+.riepilogo-body .posti-count {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.riepilogo-body .prezzo-totale {
+  font-size: 1.8em;
+  color: var(--success-color); /* Verde per il prezzo */
+  margin-top: 20px;
+  font-weight: 700;
+}
+
+/* Sezione di selezione dei posti */
+.sezione-posti-selezione h2 {
+  font-size: 1.8em;
+  color: var(--secondary-color);
+  margin-bottom: 25px;
+}
+
+.posto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Griglia flessibile per i posti */
+  gap: 12px;
+  max-width: 650px; /* Limita la larghezza della griglia dei posti */
+  margin: 0 auto 30px auto;
+}
+
+.posto-item {
+  background-color: #e0e0e0; /* Grigio chiaro per i posti disponibili */
+  color: var(--secondary-color);
+  padding: 15px 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  user-select: none; /* Impedisce la selezione del testo al click */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.posto-item:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.posto-item.selezionato {
+  background-color: var(--primary-color); /* Blu primario per i posti selezionati */
+  color: white;
+  transform: scale(1.05); /* Effetto "pop" quando selezionato */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sezione azioni di acquisto */
+.azioni-acquisto {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.conferma-button {
+  padding: 15px 40px;
+  background-color: var(--success-color); /* Verde per il pulsante di conferma */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Bottone arrotondato */
+  cursor: pointer;
+  font-size: 1.3em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.conferma-button:hover:not(:disabled) {
+  background-color: #27ae60; /* Verde più scuro */
+  transform: translateY(-3px);
+}
+
+.conferma-button:disabled {
+  background-color: #b2bec3; /* Grigio per il pulsante disabilitato */
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Messaggi di stato (successo, errore) */
+.stato-messaggio {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.stato-messaggio.successo {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.stato-messaggio.errore {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.stato-messaggio.vuoto {
+  background-color: #f1f2f6;
+  color: var(--light-text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Media Queries per la responsività */
+@media (max-width: 768px) {
+  .acquisto-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .proiezione-riepilogo-card {
+    padding: 15px;
+  }
+
+  .riepilogo-header h1 {
+    font-size: 1.8em;
+  }
+
+  .riepilogo-body .prezzo-totale {
+    font-size: 1.5em;
+  }
+
+  .sezione-posti-selezione h2 {
+    font-size: 1.5em;
+  }
+
+  .posto-grid {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 8px;
+  }
+
+  .posto-item {
+    padding: 12px 8px;
+    font-size: 0.9em;
+  }
+
+  .conferma-button {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    width: 100%; /* Bottone a larghezza intera su mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .acquisto-container {
+    padding: 15px;
+  }
+
+  .riepilogo-header h1 {
+    font-size: 1.5em;
+  }
+}

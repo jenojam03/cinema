@@ -30,13 +30,13 @@ export class FilmService {
   }
 
   getFilmByTitolo(titolo: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/nome/{titolo}`);
+    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/nome/${titolo}`);
   }
   getFilmByAutore(autore: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/autore/{autore}`);
+    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/autore/${autore}`);
   }
   getFilmByGenere(genere: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/genere/{genere}`);
+    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/genere/${genere}`);
   }
 
   getProiezioniByFilmId(id: number): Observable<Proiezione[]> {

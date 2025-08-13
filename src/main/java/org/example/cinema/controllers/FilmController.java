@@ -77,7 +77,7 @@ public class FilmController {
 
     @GetMapping("/search/autore/{autore}")
     public ResponseEntity<?> getFilmByAutore(@PathVariable String autore)  {
-        List<Film> ret = filmRepository.findByRegistaIgnoreCase(autore);
+        List<Film> ret = filmRepository.findByRegistaContainingIgnoreCase(autore);
         if(ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }

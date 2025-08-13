@@ -58,7 +58,7 @@ public class ProiezioneController {
     }
 
     @PreAuthorize("hasRole('admin')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProiezione(@PathVariable Long id) {
         try {
             proiezioneService.deleteProiezione(id);
@@ -71,7 +71,7 @@ public class ProiezioneController {
     }
 
     @PreAuthorize("hasRole('admin')")
-    @PutMapping("/{id}")
+    @PutMapping("/put/{id}")
     public ResponseEntity<?> updateProiezione(@PathVariable Long id, @RequestBody Calendar nuovaDataOra) {
         try {
             proiezioneService.aggiornaProiezione(id, nuovaDataOra);
@@ -117,7 +117,7 @@ public class ProiezioneController {
             fine.setTime(sdf.parse(fineString));
             return ResponseEntity.ok(proiezioneRepository.findByDataOraBetween(inizio, fine));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa yyyy-MM-dd.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
         }
     }
 

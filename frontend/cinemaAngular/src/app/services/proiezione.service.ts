@@ -32,7 +32,7 @@ export class ProiezioneService {
 
   getProiezioniByData(data: string): Observable<Proiezione[]> {
     const params = new HttpParams().set('data', data);
-    return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/byDate/`,{params});
+    return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/byDate`,{params});
   }
 
   getProiezioniBetweenDates(inizio: string, fine: string): Observable<Proiezione[]> {
