@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Proiezione, ProiezioneService } from '../services/proiezione.service';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-catalogo-proiezioni',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './catalogoproiezioni.component.html',
   styleUrls: ['./catalogoproiezioni.component.css']
 })
@@ -21,7 +21,6 @@ export class CatalogoProiezioniComponent implements OnInit {
   filtroDataFine = '';
 
   constructor(private proiezioneService: ProiezioneService,
-              private route: ActivatedRoute,
               private router: Router) {}
 
   ngOnInit(): void {

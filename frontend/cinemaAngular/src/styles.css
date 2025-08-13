@@ -1,0 +1,80 @@
+/* Stili globali per l'applicazione */
+:root {
+  --primary-color: #3498db;      /* Blu brillante per bottoni e link */
+  --secondary-color: #2c3e50;    /* Blu scuro per testo e sfondi */
+  --background-color: #ecf0f1;   /* Grigio chiaro per lo sfondo */
+  --text-color: #333;            /* Colore del testo principale */
+  --light-text-color: #7f8c8d;   /* Grigio per testo secondario */
+  --card-background: #ffffff;    /* Sfondo bianco per le card */
+  --border-color: #dfe6e9;       /* Colore dei bordi */
+  --success-color: #2ecc71;      /* Verde per messaggi di successo */
+  --error-color: #e74c3c;        /* Rosso per messaggi di errore */
+}
+
+/* Reset CSS di base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* Stile per i contenitori comuni, come quelli nelle pagine */
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Stile per i titoli */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Stile per i bottoni di base */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+/* Bottone primario */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+/* Stili per messaggi di stato */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}

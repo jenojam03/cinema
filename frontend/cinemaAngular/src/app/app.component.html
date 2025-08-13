@@ -4,18 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cinema PSW</title>
-  <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux&display=swap" rel="stylesheet">
+  <!-- Global font import. Ensure this is in your src/styles.css if not used globally in index.html -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar">
-  <a href="http://localhost:4200" class="logo">Cinema PSW</a>
+  <a routerLink="/" class="logo">Cinema PSW</a> <!-- Use routerLink="/" for home -->
   <ul class="nav-links">
-    <li><a routerLink="/biglietti/miei_biglietti" routerLinkActive="active">I miei biglietti</a></li>
-    <li><a routerLink="/clienti/me" routerLinkActive="active">Area Personale</a></li>
+    <!-- Links visible to all users -->
     <li><a routerLink="/film" routerLinkActive="active">Catalogo di film</a></li>
     <li><a routerLink="/proiezioni" routerLinkActive="active">Proiezioni disponibili</a></li>
-    <li><button class="logout-button" (click)="logout()">LOGOUT</button></li>
+
+    <!-- Links visible only if logged in -->
+    <ng-container *ngIf="isLoggedIn()">
+      <li><a routerLink="/biglietti/miei_biglietti" routerLinkActive="active">I miei biglietti</a></li>
+      <li><a routerLink="/clienti/me" routerLinkActive="active">Area Personale</a></li>
+    </ng-container>
+
+    <!-- Optional: Login button if not logged in.
+         This is handled by HomeComponent, so typically not needed in global nav,
+         but kept here if you want it as an alternative.
+    <ng-container *ngIf="!isLoggedIn()">
+      <li><button class="login-button" (click)="oauthService.initCodeFlow()">LOGIN</button></li>
+    </ng-container>
+    -->
   </ul>
 </nav>
 
 <router-outlet></router-outlet>
+
+</body>
+</html>

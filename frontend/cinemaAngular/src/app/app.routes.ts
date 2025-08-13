@@ -22,7 +22,7 @@ import { AdminGuard } from './guards/admin.guard';
 export const routes: Routes = [
 
   //Home page
-  {path: "", component: HomeComponent, pathMatch: 'full'},
+  {path: '', component: HomeComponent},
 
   //Film
   {path: "film", component: CatalogoFilmComponent},

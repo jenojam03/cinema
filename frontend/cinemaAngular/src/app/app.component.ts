@@ -1,70 +1,43 @@
-import {Component, OnInit, signal} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
-import {filter} from 'rxjs';
-import {OAuthService} from 'angular-oauth2-oidc';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, OnDestroy {
   title: string = 'Cinema PSW';
-
+  private authEventsSubscription!: Subscription;
 
   constructor(
     private oauthService: OAuthService,
-    private httpClient: HttpClient,
-    private router: Router) {}
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.oauthService.events
-      .pipe(filter(e => e.type === 'token_received'))
-      .subscribe(() => {
-        console.log('Token ricevuto, facendo partire la chiamata...');
-        this.clienteInit();
-
+    this.authEventsSubscription = this.oauthService.events
+      .pipe(filter(e => e.type === 'token_received' || e.type === 'token_refreshed' || e.type === 'logout'))
+      .subscribe(e => {
+        console.log(`Authentication event: ${e.type}`);
       });
+  }
 
-    if (this.oauthService.hasValidAccessToken()) {
-      console.log('Token già presente, facendo partire la chiamata...');
-      this.clienteInit();
-
+  ngOnDestroy(): void {
+    if (this.authEventsSubscription) {
+      this.authEventsSubscription.unsubscribe();
     }
   }
 
-  clienteInit() {
-    const token = this.oauthService.getAccessToken();
-    this.httpClient.get<{ message: string }>('http://localhost:9090/home', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }).subscribe(response => {
-      console.log(response);
-    });
+  isLoggedIn(): boolean {
+    return this.oauthService.hasValidAccessToken();
   }
 
-  logout() {
-    this.oauthService.logOut();
-  }
-
-  goToFilm() {
-    this.router.navigate(['/film']);
-  }
-
-  goToMyBiglietti() {
-    this.router.navigate(['/biglietti/miei_biglietti']);
-  }
-
-  goToProfile() {
-    this.router.navigate(['/clienti/me']);
-  }
-
-  goToProiezioni() {
-    this.router.navigate(['/proiezioni']);
-  }
-
-  goToHome() { }
 }

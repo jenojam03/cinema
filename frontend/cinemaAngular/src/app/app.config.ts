@@ -7,8 +7,8 @@ import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 
 export const authCodeFlowConfig: AuthConfig = {
-  issuer: 'http://localhost:8080/realms/cinema-realm',
-  redirectUri: window.location.origin,
+  issuer: 'http://localhost:8080/realms/myrealm',
+  redirectUri: 'http://localhost:4200',
   clientId: 'cinema-client',
   responseType: 'code',
   scope: 'openid profile email',
@@ -19,7 +19,7 @@ function initializeOAuth(oauthService: OAuthService): Promise<void> {
   return new Promise((resolve) => {
     oauthService.configure(authCodeFlowConfig);
     oauthService.setupAutomaticSilentRefresh();
-    oauthService.loadDiscoveryDocumentAndLogin()
+    oauthService.loadDiscoveryDocumentAndTryLogin()
       .then(() => resolve());
   });
 }
