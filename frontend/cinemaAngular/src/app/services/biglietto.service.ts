@@ -12,10 +12,10 @@ export interface AcquistoRequest {
 
 
 export interface Biglietto {
-  id: number;
+  idBiglietto: number;
   prezzo: number;
-  proiezione: Proiezione;
   posto: Posto;
+  proiezione: Proiezione;
   stato: 'ATTIVO' | 'ANNULLATO' | 'RIMBORSATO';
   dataAcquisto: string;
 }

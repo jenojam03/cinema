@@ -152,4 +152,9 @@ public class ProiezioneService {
         proiezioneRepository.save(existingProiezione);
     }
 
+    @Transactional(readOnly = true)
+    public Object getPosti(Long proiezioneId) {
+        Proiezione p = proiezioneRepository.findProiezioneById(proiezioneId);
+        return p.getPosti();
+    }
 }

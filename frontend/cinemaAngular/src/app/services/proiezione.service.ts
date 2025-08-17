@@ -12,8 +12,8 @@ export interface Proiezione {
 }
 export interface Posto {
   id: number;
-  riga: string;
-  colonna: number;
+  fila: string;
+  numero: number;
   occupato: boolean;
 }
 
@@ -45,6 +45,10 @@ export class ProiezioneService {
 
   getPostiDisponibili(idProiezione: number): Observable<Posto[]> {
     return this.httpClient.get<Posto[]>(`${this.baseUrl}/${idProiezione}/posti_disponibili`);
+  }
+
+  getPosti(idProiezione: number): Observable<Posto[]> {
+    return this.httpClient.get<Posto[]>(`${this.baseUrl}/${idProiezione}/posti`);
   }
 
   getProiezione(idProiezione: number): Observable<Proiezione> {

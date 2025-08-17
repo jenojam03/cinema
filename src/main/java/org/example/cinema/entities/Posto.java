@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
         @Column(name = "occupato", nullable = false)
         private boolean occupato;
 
-        @Column(name = "blocco temporaneo")
+        @Column(name = "blocco_temporaneo")
         private LocalDateTime dataBloccoTemporaneo;
 
     }

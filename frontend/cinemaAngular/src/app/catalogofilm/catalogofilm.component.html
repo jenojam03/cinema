@@ -3,12 +3,23 @@
 
   <div class="search-bar">
     <input
+      *ngIf="criterio !== 'genere'"
       type="text"
       placeholder="Cerca per titolo, regista o genere..."
       [(ngModel)]="valore"
       (keyup.enter)="cerca()"
       class="search-input"
     >
+    <select
+      *ngIf="criterio === 'genere'"
+      [(ngModel)]="valore"
+      class="filter-select genre-select"
+      (change)="cerca()"
+    >
+      <option value="">Tutti i generi</option>
+      <option *ngFor="let g of generiDisponibili" [value]="g">{{ g }}</option>
+    </select>
+
     <select [(ngModel)]="criterio" class="filter-select">
       <option value="titolo">Titolo</option>
       <option value="autore">Regista</option>
@@ -31,7 +42,7 @@
       class="film-card"
       (click)="mostraDettagli(f.id)"
     >
-      <img [src]="'assets/images/' + f.id + '.jpg'" alt="Locandina del film {{ f.titolo }}" class="film-poster">
+      <img [src]="'images/' + f.id + '.jpg'" alt="Locandina del film {{ f.titolo }}" class="film-poster">
       <div class="film-details">
         <h3 class="film-title">{{ f.titolo }}</h3>
       </div>

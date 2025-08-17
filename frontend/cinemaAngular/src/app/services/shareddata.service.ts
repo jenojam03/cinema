@@ -1,4 +1,3 @@
-// src/app/services/shared-data.service.ts
 import { Injectable } from '@angular/core';
 import { Posto } from './proiezione.service';
 

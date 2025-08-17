@@ -35,9 +35,6 @@ public class BigliettoService {
     private TransazioneRepository transazioneRepository;
 
     @Autowired
-    private TransazioneService transazioniLogService;
-
-    @Autowired
     private EntityManager entityManager;
 
 
@@ -139,7 +136,7 @@ public class BigliettoService {
     }
 
     private boolean processaPagamento(double importo) {
-       /* if(importo <= 0){
+       if(importo <= 0){
             System.out.println("Importo non valido");
             return false;
         }
@@ -154,8 +151,7 @@ public class BigliettoService {
         }else{
             System.out.println("Pagamento fallito");
             return false;
-        }*/
-        return false;
+        }
     }
 
     private double calcolaImporto(List<Biglietto> biglietti) {

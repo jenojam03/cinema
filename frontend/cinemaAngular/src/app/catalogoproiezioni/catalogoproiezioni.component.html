@@ -9,7 +9,7 @@
       <input type="date" [(ngModel)]="filtroDataFine" />
     </label>
     <button (click)="filtra()">Filtra</button>
-    <button (click)="caricaProiezioni()">Reset</button>
+    <button (click)="resetFiltri(); caricaProiezioni()">Reset</button>
   </div>
 
   <div *ngIf="isLoading" class="spinner-container">
@@ -21,7 +21,7 @@
   <div class="grid">
     <div class="card" *ngFor="let p of proiezioni" (click)="vaiADettaglioProiezione(p.id)">
       <!-- Locandina del film associato alla proiezione -->
-      <img [src]="'assets/images/' + p.film.id + '.jpg'" alt="Locandina film {{ p.film.titolo }}" class="film-poster">
+      <img [src]="'images/' + p.film.id + '.jpg'" alt="Locandina film {{ p.film.titolo }}" class="film-poster">
       <div class="card-details">
         <h3>{{ p.film.titolo }}</h3>
         <p><strong>Data e Ora:</strong> {{ p.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>

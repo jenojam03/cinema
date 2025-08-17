@@ -52,8 +52,21 @@ export class CatalogoProiezioniComponent implements OnInit {
   }
 
   filtra(): void {
+    this.errorMessage = '';
+    if (this.filtroDataInizio && this.filtroDataFine) {
+      const dataInizio = new Date(this.filtroDataInizio);
+      const dataFine = new Date(this.filtroDataFine);
+      if (dataInizio > dataFine) {
+        this.errorMessage = 'La data di inizio non può essere successiva alla data di fine.';
+        this.proiezioni = [];
+        return;
+      }
+    }
+
     const dataInizioFormattata = this.formattaData(this.filtroDataInizio);
     const dataFineFormattata = this.formattaData(this.filtroDataFine);
+
+
 
     if (dataInizioFormattata && dataFineFormattata) {
       this.isLoading = true;

@@ -12,7 +12,12 @@ export class AuthGuard implements CanActivate {
     if (this.oauthService.hasValidAccessToken()) {
       return true;
     } else {
-      this.oauthService.initCodeFlow(state.url); // Avvia il login e reindirizza alla pagina dopo l'accesso
+      this.oauthService.initCodeFlow(state.url);
+      const returnUrl = sessionStorage.getItem('returnUrl');
+      if (returnUrl) {
+        this.router.navigateByUrl(returnUrl);
+        sessionStorage.removeItem('returnUrl');
+      }
       return false;
     }
   }

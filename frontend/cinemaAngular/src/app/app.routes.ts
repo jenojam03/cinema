@@ -32,10 +32,9 @@ export const routes: Routes = [
   //Proiezioni
   {path: "proiezioni", component: CatalogoProiezioniComponent},
   {path: "proiezioni/:id", component: ProiezioneComponent},
-  {path: "proiezioni/:id/acquista", component: AcquistoComponent, canActivate: [AuthGuard]},
 
   //Biglietti
-  { path: 'biglietti/miei_biglietti', component: BigliettoComponent, canActivate: [AuthGuard]},
+  { path: 'biglietti/:id', component: BigliettoComponent},
 
   //Area personale cliente
   { path: 'clienti/me', component: ClienteComponent, canActivate: [AuthGuard]},
@@ -44,7 +43,7 @@ export const routes: Routes = [
   { path: 'transazioni', component: TransazioniComponent, canActivate: [AdminGuard]},
 
   //Acquisti
-  { path: 'acquista/:id', component: AcquistoComponent, canActivate: [AuthGuard]},
+  { path: 'acquista/:id', component: AcquistoComponent},
 
   //gestione pagina inesistente
   { path: '**', redirectTo: '' },

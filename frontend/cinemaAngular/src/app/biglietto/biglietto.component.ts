@@ -17,6 +17,7 @@ export class BigliettoComponent implements OnInit {
   biglietto?: Biglietto;
   isLoading = true;
   errorMessage = '';
+  id: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +26,6 @@ export class BigliettoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Recupera l'ID del biglietto dai parametri della rotta
     this.route.paramMap.subscribe(params => {
       const bigliettoId = params.get('id');
       if (bigliettoId) {
@@ -41,7 +41,9 @@ export class BigliettoComponent implements OnInit {
     this.isLoading = true;
     this.bigliettoService.getBiglietto(id).subscribe({
       next: (data) => {
+        console.log('Dati ricevuti dal backend:', data);
         this.biglietto = data;
+        this.id = id;
         this.isLoading = false;
       },
       error: (err) => {
@@ -53,12 +55,10 @@ export class BigliettoComponent implements OnInit {
   }
   annullaBiglietto(): void {
     if (!this.biglietto) return;
-
     if (confirm('Sei sicuro di voler annullare questo biglietto? Questa operazione non può essere annullata.')) {
-      this.bigliettoService.annullaBiglietto(this.biglietto.id).subscribe({
+      this.bigliettoService.annullaBiglietto(this.id).subscribe({
         next: () => {
           this.router.navigate(['/']);
-          this.biglietto!.stato = 'ANNULLATO';
           alert('Biglietto annullato con successo!');
         },
         error: (err) => {

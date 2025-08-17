@@ -18,6 +18,7 @@ export class CatalogoFilmComponent implements OnInit {
   errorMessage: string = '';
   criterio: 'titolo' | 'autore' | 'genere' = 'titolo';//di default è titolo
   isLoading = true;
+  generiDisponibili: string[] = ['Animazione', 'Azione', 'Avventura','Biografico', 'Commedia', 'Crime', 'Drammatico', 'Fantasy', 'Fantascienza', 'Horror', 'Korean drama', 'Romance','Thriller','Western'];
 
   constructor(private filmService: FilmService, private router: Router) {}
 
@@ -62,14 +63,16 @@ export class CatalogoFilmComponent implements OnInit {
 
     chiamata!.subscribe({
       next: data => {
+        this.errorMessage = '';
         this.film = data;
         this.isLoading = false;
       },
       error: err => {
-        this.errorMessage = 'Errore nella ricerca.';
         console.error(err);
         this.isLoading = false;
-        this.caricaFilm();
+          this.errorMessage = 'Nessun film trovato.'
+          this.film = [];
+
       }
     });
   }

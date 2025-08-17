@@ -28,13 +28,14 @@ export class HomeComponent implements OnInit {
         if (event.type === 'token_received' || event.type === 'token_refreshed' || event.type === 'logout') {
           this.checkLoginStatus();
         }
+
       });
     }
 
   private checkLoginStatus(): void {
     if (this.oauthService.hasValidAccessToken()) {
       this.oauthService.loadUserProfile().then((info: any) => {
-        this.userName = info.name || 'Utente';
+        this.userName = info.info.preferred_username || info.info.given_name || 'Utente';
       }).catch(err => {
         console.error('Errore nel caricamento del profilo utente:', err);
         this.userName = 'Utente';
@@ -50,7 +51,7 @@ export class HomeComponent implements OnInit {
 
   vaiAlLogin(): void {
     this.oauthService.initCodeFlow();
-    //redireziona a keycloak se non autenticato
+    //redirezione a keycloak se non autenticato
   }
 
   logout(): void {

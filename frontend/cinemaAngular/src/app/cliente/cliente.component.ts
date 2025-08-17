@@ -52,8 +52,15 @@ export class ClienteComponent implements OnInit {
         }
       });
   }
+
+
   dettaglioBiglietto(idBiglietto: number): void {
-    this.router.navigate(['/biglietto', idBiglietto]);
+    console.log('ID del biglietto:', idBiglietto);
+    this.router.navigate(['/biglietti', idBiglietto]);
   }
 
+  logout(): void {
+    this.oauthService.logOut();
+    this.router.navigate(['/']);
+  }
 }

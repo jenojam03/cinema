@@ -97,6 +97,10 @@
   background-color: #c0392b;
 }
 
+.stato-biglietto.rimborsato {
+  background-color: #9b59b6;
+}
+
 .biglietto-card .card-body p {
   margin: 5px 0;
   font-size: 1em;
@@ -153,4 +157,56 @@
   border-radius: 10px;
   margin-top: 20px;
   color: #7f8c8d;
+}
+
+/* src/app/components/cliente/cliente.component.css */
+
+.area-personale {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Aggiunge spazio tra le due card */
+  margin-top: 20px;
+}
+
+/* Stile base per le card, applicato a entrambi i contenitori */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+/* Stili specifici per i biglietti per mantenere la griglia */
+.biglietti-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.biglietto-card {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Rimuovi la linea orizzontale `<hr>` se l'hai aggiunta precedentemente,
+   in quanto lo spazio tra le card è già sufficiente. */
+/* src/app/components/cliente/cliente.component.css */
+
+.logout-button {
+  background-color: #e74c3c; /* Un colore rosso per indicare il logout */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px; /* Spazio dal contenuto precedente */
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
 }

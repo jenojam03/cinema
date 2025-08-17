@@ -1,6 +1,7 @@
 package org.example.cinema.configuration;
 
 import org.example.cinema.jwt.CustomJwtConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -18,28 +19,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 
-
-    /*@Bean
+   /* @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/film/**",
-                                "/proiezione/**",
-                                "/clienti/registrazione"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
     }*/
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, EnsureClienteExistsFilter ensureClienteExistsFilter) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -54,6 +46,7 @@ public class SecurityConfig {
                                 "/proiezioni",
                                 "/proiezioni/{id}",
                                 "/proiezioni/{proiezioneId}/posti_disponibili",
+                                "/proiezioni/{proiezioneId}/posti",
                                 "/proiezioni/betweenDates",
                                 "/proiezioni/byDate"
                                 ).permitAll()
@@ -62,7 +55,7 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverterM()))
                 );
-
+        http.addFilterAfter(ensureClienteExistsFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class);
         return http.build();
 
     }

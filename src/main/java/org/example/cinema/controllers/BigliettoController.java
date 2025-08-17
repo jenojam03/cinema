@@ -64,7 +64,7 @@ public class BigliettoController {
     }
 
     @PreAuthorize("hasRole('admin')")
-    @GetMapping("/{cliente}")
+    @GetMapping("/di/{cliente}")
     public ResponseEntity<?> getBigliettiCliente(@PathVariable @Valid Cliente cliente) {
         try {
             List<BigliettoDTO> biglietti = bigliettoService.getBigliettiCliente(cliente.getEmail());

@@ -1,23 +1,31 @@
-<div class="cliente-container" >
+<div class="cliente-container">
   <h2>Area Personale</h2>
 
+  <div *ngIf="!oauthService.hasValidAccessToken()" class="non-loggato">
+    <p>Per accedere a quest'area, devi essere loggato.</p>
+  </div>
+
   <div *ngIf="oauthService.hasValidAccessToken()" class="area-personale">
-    <div class="dati-keycloak">
-      <p><strong>Nome:</strong> {{ nome }}</p>
-      <p><strong>Cognome:</strong> {{ cognome }}</p>
-      <p><strong>Email:</strong> {{ email }}</p>
+    <div class="card dati-utente-card">
+      <h3>I tuoi dati</h3>
+      <div class="dati-keycloak">
+        <p><strong>Nome:</strong> {{ nome }}</p>
+        <p><strong>Cognome:</strong> {{ cognome }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+      </div>
+      <button (click)="logout()" class="logout-button">
+        Logout
+      </button>
     </div>
 
-    <hr>
-
-    <div class="biglietti-utente">
+    <div class="card biglietti-utente-card">
       <h3>I tuoi biglietti</h3>
 
       <div *ngIf="isLoadingBiglietti" class="stato-messaggio caricamento">
         Caricamento dei tuoi biglietti...
       </div>
 
-      <div *ngIf="errorMessage" class="stato-messaggio errore">
+      <div *ngIf="errorMessage && !isLoadingBiglietti" class="stato-messaggio errore">
         {{ errorMessage }}
       </div>
 
@@ -25,16 +33,17 @@
         <div *ngFor="let biglietto of mieiBiglietti" class="biglietto-card">
           <div class="card-header">
             <h4>{{ biglietto.proiezione.film.titolo }}</h4>
-            <span class="stato-biglietto" [class.attivo]="biglietto.stato === 'ATTIVO'" [class.annullato]="biglietto.stato === 'ANNULLATO'">
+            <span class="stato-biglietto" [class.attivo]="biglietto.stato === 'ATTIVO'" [class.annullato]="biglietto.stato === 'ANNULLATO'" [class.rimborsato]="biglietto.stato === 'RIMBORSATO'">
               {{ biglietto.stato }}
             </span>
           </div>
           <div class="card-body">
             <p>Data: {{ biglietto.proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
-            <p>Posto: {{ biglietto.posto.riga }}{{ biglietto.posto.colonna }}</p>
+            <p>Posto: {{ biglietto.posto.fila }}{{ biglietto.posto.numero }}</p>
+            <p>Id: {{ biglietto.idBiglietto }}</p>
           </div>
           <div class="card-footer">
-            <button (click)="dettaglioBiglietto(biglietto.id)" class="dettaglio-button">
+            <button (click)="dettaglioBiglietto(biglietto.idBiglietto)" class="dettaglio-button">
               Vedi Dettagli
             </button>
           </div>
@@ -45,9 +54,5 @@
         Non hai ancora acquistato biglietti.
       </div>
     </div>
-  </div>
-
-  <div *ngIf="!oauthService.hasValidAccessToken()" class="non-loggato">
-    <p>Per accedere a quest'area, devi essere loggato.</p>
   </div>
 </div>

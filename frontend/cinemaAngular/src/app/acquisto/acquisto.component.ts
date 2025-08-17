@@ -36,6 +36,11 @@ export class AcquistoComponent implements OnInit {
   ngOnInit(): void {
     this.postiSelezionati = this.sharedDataService.getPostiSelezionati();
 
+    const savedPosti = sessionStorage.getItem('postiSelezionati');
+    if (savedPosti) {
+      this.postiSelezionati = JSON.parse(savedPosti);
+      sessionStorage.removeItem('postiSelezionati');
+    }
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -85,6 +90,9 @@ export class AcquistoComponent implements OnInit {
   confermaAcquisto(): void {
     if (!this.oauthService.hasValidAccessToken()) {
       alert('Devi essere loggato per effettuare un acquisto.');
+      sessionStorage.setItem('returnUrl', this.router.url);
+      sessionStorage.setItem('postiSelezionati', JSON.stringify(this.postiSelezionati));
+
       this.oauthService.initCodeFlow(this.router.url);
       return;
     }
@@ -106,7 +114,8 @@ export class AcquistoComponent implements OnInit {
       next: () => {
         this.successMessage = 'Acquisto effettuato con successo!';
         this.isProcessing = false;
-        // Reindirizza l'utente o aggiorna la UI
+        alert(this.successMessage);
+        this.router.navigate(['/cliente']);
       },
       error: (err) => {
         this.errorMessage = 'Errore durante l\'acquisto. Riprova più tardi.';

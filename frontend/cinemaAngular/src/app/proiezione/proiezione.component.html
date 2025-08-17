@@ -1,46 +1,60 @@
-<div class="proiezione-detail-container">
-  <div *ngIf="isLoading" class="stato-messaggio caricamento">
-    Caricamento dettagli proiezione e posti...
+<div class="proiezione-dettagli-container">
+  <!-- Dettagli proiezione (sezione superiore) -->
+  <div *ngIf="proiezione" class="dettagli-proiezione">
+    <h2>{{ proiezione.film.titolo }}</h2>
+    <p>Data e ora: {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p>Durata: {{ proiezione.film.durata }} minuti</p>
   </div>
 
-  <div *ngIf="errorMessage" class="stato-messaggio errore">
-    {{ errorMessage }}
-  </div>
+  <!-- ✅ Sezione posti -->
+  <div class="sezione-posti-container">
+    <h3>Seleziona i tuoi posti</h3>
 
-  <ng-container *ngIf="proiezione && !isLoading">
-    <div class="proiezione-header">
-      <h1>Proiezione di {{ proiezione.film.titolo }}</h1>
-      <p class="film-details">
-        <span>Genere: {{ proiezione.film.genere }}</span> |
-        <span>Durata: {{ proiezione.film.durata }} min</span> |
-        <span>Regista: {{ proiezione.film.regista }}</span>
-      </p>
-      <p class="proiezione-details">
-        <strong>Data e Ora:</strong> {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }} |
-      </p>
+    <!-- Schermo -->
+    <div class="schermo">Schermo</div>
+
+    <!-- Messaggi di stato (caricamento, errore, ecc.) -->
+    <div *ngIf="isLoading" class="stato-messaggio caricamento">
+      Caricamento posti...
     </div>
 
-    <div class="posti-section">
-      <h2>Scegli i tuoi posti</h2>
-      <div *ngIf="postiDisponibili.length > 0; else noPosti" class="posto-grid">
-        <div
-          *ngFor="let posto of postiDisponibili"
-          class="posto-item"
-          [class.selezionato]="isPostoSelezionato(posto)"
-          (click)="selezionaPosto(posto)"> {{ posto.riga }}{{ posto.colonna }}
-        </div>
+    <div *ngIf="errorMessage && !isLoading" class="stato-messaggio errore">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Griglia dei posti (Mostra tutti i posti) -->
+    <div *ngIf="!isLoading && !errorMessage" class="posti-grid-wrapper">
+      <div class="posti-grid">
+        <ng-container *ngFor="let posto of postiTotali">
+          <button
+            class="posto-button"
+            [class.occupato]="posto.occupato"
+            [class.selezionato]="isPostoSelezionato(posto)"
+            [disabled]="posto.occupato"
+            (click)="selezionaPosto(posto)"
+            [title]="posto.occupato ? 'Posto occupato' : 'Seleziona posto'"
+          >
+            {{ posto.fila }}{{ posto.numero }}
+          </button>
+        </ng-container>
       </div>
-      <ng-template #noPosti>
-        <div class="stato-messaggio vuoto">Nessun posto disponibile per questa proiezione.</div>
-      </ng-template>
     </div>
 
-    <div class="action-section">
-      <button
-        (click)="procediAllAcquisto()"
-        class="btn-acquista"
-        [disabled]="selectedPosti.length === 0"> Procedi all'acquisto ({{ selectedPosti.length }})
-      </button>
+    <!-- Riepilogo posti selezionati -->
+    <div *ngIf="selectedPosti.length > 0 && !isLoading" class="riepilogo-posti">
+      <h4>Posti selezionati:</h4>
+      <div class="selected-posti-list">
+        <span *ngFor="let posto of selectedPosti" class="posto-selezionato-label">
+          {{ posto.fila }}{{ posto.numero }}
+        </span>
+      </div>
     </div>
-  </ng-container>
+  </div>
+
+  <!-- ✅ Bottone per procedere all'acquisto -->
+  <div class="action-buttons">
+    <button (click)="procediAllAcquisto()" class="procedi-button" [disabled]="selectedPosti.length === 0 || isLoading">
+      Procedi all'acquisto ({{ selectedPosti.length }} posto/i)
+    </button>
+  </div>
 </div>

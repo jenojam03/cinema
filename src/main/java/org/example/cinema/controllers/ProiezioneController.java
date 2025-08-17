@@ -98,7 +98,7 @@ public class ProiezioneController {
             return ResponseEntity.ok(proiezioneRepository.findByDataOra(dataCercata));
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa yyyy-MM-dd.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
         }
 
     }
@@ -124,6 +124,11 @@ public class ProiezioneController {
     @GetMapping("/{proiezioneId}/posti_disponibili")
     public ResponseEntity<?> getPostiDisponibili(@PathVariable Long proiezioneId) {
         return ResponseEntity.ok(proiezioneService.getPostiDisponibili(proiezioneId));
+    }
+
+    @GetMapping("/{proiezioneId}/posti")
+    public ResponseEntity<?> getPosti(@PathVariable Long proiezioneId) {
+        return ResponseEntity.ok(proiezioneService.getPosti(proiezioneId));
     }
 
     @GetMapping("/{id}")

@@ -16,6 +16,7 @@ export class ProiezioneComponent implements OnInit {
   proiezione?: Proiezione;
   postiDisponibili: Posto[] = [];
   selectedPosti: Posto[] = [];
+  postiTotali: Posto[] = [];
   isLoading = true;
   errorMessage = '';
 
@@ -30,7 +31,8 @@ export class ProiezioneComponent implements OnInit {
     const idProiezione = Number(this.route.snapshot.paramMap.get('id'));
     if (idProiezione) {
       this.loadProiezione(idProiezione);
-      this.loadPosti(idProiezione);
+      this.loadTuttiIPosti(idProiezione);
+      //this.loadPosti(idProiezione);
     }
   }
 
@@ -61,7 +63,25 @@ export class ProiezioneComponent implements OnInit {
     });
   }
 
+  loadTuttiIPosti(idProiezione: number): void {
+    this.isLoading = true; // Inizia il caricamento per i posti
+    this.proiezioneService.getPosti(idProiezione).subscribe({ // ✅ Chiama getPosti
+      next: data => {
+        this.postiTotali = data; // ✅ Assegna a postiTotali
+        this.isLoading = false; // Termina il caricamento
+      },
+      error: err => {
+        console.error(err);
+        this.errorMessage = 'Errore nel caricamento dei posti.';
+        this.isLoading = false; // Termina il caricamento anche in caso di errore
+      }
+    });
+  }
+
   selezionaPosto(posto: Posto): void {
+    if (posto.occupato) {
+      return;
+    }
     const index = this.selectedPosti.findIndex(p => p.id === posto.id);
     if (index > -1) {
       this.selectedPosti.splice(index, 1); // Rimuovi se già selezionato
@@ -71,7 +91,7 @@ export class ProiezioneComponent implements OnInit {
   }
 
   isPostoSelezionato(posto: Posto): boolean {
-    return this.selectedPosti.some(p => p.id === posto.id);
+    return posto.occupato;
   }
 
 
