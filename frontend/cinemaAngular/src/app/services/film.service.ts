@@ -9,8 +9,35 @@ export interface Film {
   durata: number;
   genere: string;
   regista: string;
-
 }
+
+export interface PagedResponse<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: {
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,26 +48,31 @@ export class FilmService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getFilm(): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}`);
+  getFilm(page: number, size: number): Observable<PagedResponse<Film>> {
+    return this.httpClient.get<PagedResponse<Film>>(`${this.baseUrl}/paged?page=${page}&size=${size}`);
   }
 
   getFilmById(id: number): Observable<Film> {
     return this.httpClient.get<Film>(`${this.baseUrl}/${id}`);
   }
 
-  getFilmByTitolo(titolo: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/nome/${titolo}`);
-  }
-  getFilmByAutore(autore: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/autore/${autore}`);
-  }
-  getFilmByGenere(genere: string): Observable<Film[]> {
-    return this.httpClient.get<Film[]>(`${this.baseUrl}/search/genere/${genere}`);
+  getFilmByTitolo(titolo: string, page: number, size: number): Observable<PagedResponse<Film>> {
+    return this.httpClient.get<PagedResponse<Film>>(`${this.baseUrl}/search/paged/titolo/${titolo}?page=${page}&size=${size}`);
   }
 
-  getProiezioniByFilmId(id: number): Observable<Proiezione[]> {
+  getFilmByAutore(autore: string, page: number, size: number): Observable<PagedResponse<Film>> {
+    return this.httpClient.get<PagedResponse<Film>>(`${this.baseUrl}/search/paged/regista/${autore}?page=${page}&size=${size}`);
+  }
+
+  getFilmByGenere(genere: string, page: number, size: number): Observable<PagedResponse<Film>> {
+    return this.httpClient.get<PagedResponse<Film>>(`${this.baseUrl}/search/paged/genere/${genere}?page=${page}&size=${size}`);
+  }
+
+  getProiezioniByFilmIdPaged(id: number, page: number, size: number): Observable<PagedResponse<Proiezione>> {
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/${id}/proiezioni/paged?page=${page}&size=${size}`);
+  }
+
+  getProiezioniByFilmId(id: number, page: number, size: number): Observable<Proiezione[]> {
     return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/${id}/proiezioni`);
   }
-
 }

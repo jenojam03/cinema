@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Proiezione, ProiezioneService } from '../services/proiezione.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-catalogo-proiezioni',
@@ -20,6 +22,11 @@ export class CatalogoProiezioniComponent implements OnInit {
   filtroDataInizio = '';
   filtroDataFine = '';
 
+  //paginazione
+  currentPage = 0;
+  totalPages = 0;
+  pageSize = 15;
+
   constructor(private proiezioneService: ProiezioneService,
               private router: Router) {}
 
@@ -27,17 +34,20 @@ export class CatalogoProiezioniComponent implements OnInit {
     this.caricaProiezioni();
   }
 
-  caricaProiezioni(): void {
+  caricaProiezioni(page: number = 0): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.proiezioneService.getProiezioni().subscribe({
+    this.proiezioneService.getProiezioni(page, this.pageSize).subscribe({
       next: (data) => {
-        this.proiezioni = data;
+        this.proiezioni = data.content;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.errorMessage = 'Errore nel caricamento delle proiezioni';
         this.isLoading = false;
+        console.error(err);
       }
     });
   }
@@ -51,7 +61,7 @@ export class CatalogoProiezioniComponent implements OnInit {
     return `${giorno}-${mese}-${anno}`;
   }
 
-  filtra(): void {
+  filtra(page: number = 0): void {
     this.errorMessage = '';
     if (this.filtroDataInizio && this.filtroDataFine) {
       const dataInizio = new Date(this.filtroDataInizio);
@@ -59,6 +69,7 @@ export class CatalogoProiezioniComponent implements OnInit {
       if (dataInizio > dataFine) {
         this.errorMessage = 'La data di inizio non può essere successiva alla data di fine.';
         this.proiezioni = [];
+        this.totalPages = 0;
         return;
       }
     }
@@ -66,34 +77,43 @@ export class CatalogoProiezioniComponent implements OnInit {
     const dataInizioFormattata = this.formattaData(this.filtroDataInizio);
     const dataFineFormattata = this.formattaData(this.filtroDataFine);
 
-
+    this.isLoading = true;
 
     if (dataInizioFormattata && dataFineFormattata) {
-      this.isLoading = true;
-      this.proiezioneService.getProiezioniBetweenDates(dataInizioFormattata, dataFineFormattata).subscribe({
+      this.proiezioneService.getProiezioniBetweenDates(dataInizioFormattata, dataFineFormattata, page, this.pageSize).subscribe({
         next: (data) => {
-          this.proiezioni = data;
+          this.proiezioni = data.content;
+          this.currentPage = data.number;
+          this.totalPages = data.totalPages;
           this.isLoading = false;
         },
-        error: () => {
-          this.errorMessage = 'Errore nel filtraggio delle proiezioni';
+        error: (err) => {
+          this.errorMessage = 'Nessuna proiezione trovata per il periodo selezionato';
+          this.proiezioni = [];
+          this.totalPages = 0;
           this.isLoading = false;
+          console.error(err);
         }
       });
     } else if (dataInizioFormattata) {
       this.isLoading = true;
-      this.proiezioneService.getProiezioniByData(dataInizioFormattata).subscribe({
+      this.proiezioneService.getProiezioniByData(dataInizioFormattata, page, this.pageSize).subscribe({
         next: (data) => {
-          this.proiezioni = data;
+          this.proiezioni = data.content;
+          this.currentPage = data.number;
+          this.totalPages = data.totalPages;
           this.isLoading = false;
         },
-        error: () => {
-          this.errorMessage = 'Errore nel filtraggio delle proiezioni';
+        error: (err) => {
+          this.errorMessage = 'Nessuna proiezione trovata per la data selezionata';
+          this.proiezioni = [];
+          this.totalPages = 0;
           this.isLoading = false;
+          console.error(err);
         }
       });
     } else {
-      this.caricaProiezioni();
+      this.caricaProiezioni(page);
     }
   }
 
@@ -105,5 +125,21 @@ export class CatalogoProiezioniComponent implements OnInit {
 
   vaiADettaglioProiezione(idProiezione: number): void {
     this.router.navigate(['/proiezioni', idProiezione]);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      if (this.filtroDataInizio || this.filtroDataFine) {
+        // Se ci sono filtri data attivi, applica la paginazione con i filtri
+        this.filtra(page);
+      } else {
+        // Altrimenti, carica tutte le proiezioni con la nuova pagina
+        this.caricaProiezioni(page);
+      }
+    }
+  }
+
+  getPageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i);
   }
 }

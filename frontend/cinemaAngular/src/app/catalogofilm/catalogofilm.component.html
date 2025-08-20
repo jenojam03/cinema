@@ -49,6 +49,21 @@
     </div>
   </div>
 
+
+
+  <div *ngIf="!isLoading && film.length > 0" class="pagination-controls">
+    <ng-container *ngFor="let page of getPageNumbers()">
+      <button
+        (click)="goToPage(page)"
+        [ngClass]="{'active-page': currentPage === page}"
+        class="page-number-button"
+      >
+        {{ page + 1 }}
+      </button>
+    </ng-container>
+
+  </div>
+
   <div *ngIf="!isLoading && film.length === 0 && !errorMessage" class="status-message empty">
     <p>Nessun film trovato.</p>
   </div>

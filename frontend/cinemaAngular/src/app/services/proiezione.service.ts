@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Film } from './film.service';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {Film, PagedResponse} from './film.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Proiezione {
@@ -8,8 +8,8 @@ export interface Proiezione {
   dataOra: string;
   numeroPosti: number;
   film: Film;
-
 }
+
 export interface Posto {
   id: number;
   fila: string;
@@ -26,21 +26,28 @@ export class ProiezioneService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getProiezioni(): Observable<Proiezione[]> {
-    return this.httpClient.get<Proiezione[]>(`${this.baseUrl}`);
+  getProiezioni(page: number, size: number): Observable<PagedResponse<Proiezione>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/future`, { params });
   }
 
-  getProiezioniByData(data: string): Observable<Proiezione[]> {
-    const params = new HttpParams().set('data', data);
-    return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/byDate`,{params});
+  getProiezioniByData(data: string, page: number, size: number): Observable<PagedResponse<Proiezione>> {
+    const params = new HttpParams()
+      .set('data', data)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/byDate`, { params });
   }
 
-  getProiezioniBetweenDates(inizio: string, fine: string): Observable<Proiezione[]> {
+  getProiezioniBetweenDates(inizio: string, fine: string, page: number, size: number): Observable<PagedResponse<Proiezione>> {
     const params = new HttpParams()
       .set('inizio', inizio)
-      .set('fine', fine);
-
-    return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/betweenDates`, { params });
+      .set('fine', fine)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/betweenDates`, { params });
   }
 
   getPostiDisponibili(idProiezione: number): Observable<Posto[]> {
@@ -54,6 +61,4 @@ export class ProiezioneService {
   getProiezione(idProiezione: number): Observable<Proiezione> {
     return this.httpClient.get<Proiezione>(`${this.baseUrl}/${idProiezione}`);
   }
-
-
 }

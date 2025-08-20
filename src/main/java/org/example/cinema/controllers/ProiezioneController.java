@@ -11,6 +11,7 @@ import org.example.cinema.services.FilmService;
 import org.example.cinema.services.ProiezioneService;
 import org.example.cinema.support.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,5 +143,51 @@ public class ProiezioneController {
         }
     }
 
+
+    //paginate e future
+    @GetMapping("/future")
+    public ResponseEntity<?> getFutureProiezioni(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+
+        Page<Proiezione> futureProjections = proiezioneService.getFutureProiezioni(page, size);
+        return ResponseEntity.ok(futureProjections);
+    }
+
+    @GetMapping("/betweenDatesPaged")
+    public ResponseEntity<?> getProiezioniBetweenDates(
+            @RequestParam("inizio") String inizioString,
+            @RequestParam("fine") String fineString,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar inizio = Calendar.getInstance();
+            inizio.setTime(sdf.parse(inizioString));
+
+            Calendar fine = Calendar.getInstance();
+            fine.setTime(sdf.parse(fineString));
+            return ResponseEntity.ok(proiezioneService.showProiezioniBetween(inizio, fine, page, size));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
+        }
+    }
+
+    @GetMapping("/byDatePaged")
+    public ResponseEntity<?> getProiezioniByDatePaged(@RequestParam("data") String dataString,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "15") int size) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Calendar dataCercata = Calendar.getInstance();
+            dataCercata.setTime(sdf.parse(dataString));
+            return ResponseEntity.ok(proiezioneService.showProiezioniByData(dataCercata, page, size));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
+        }
+
+    }
 
 }

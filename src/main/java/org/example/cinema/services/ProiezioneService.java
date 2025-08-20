@@ -17,11 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,4 +155,71 @@ public class ProiezioneService {
         Proiezione p = proiezioneRepository.findProiezioneById(proiezioneId);
         return p.getPosti();
     }
+
+
+    //FUTURE
+    @Transactional(readOnly = true)
+    public List<Proiezione> showAllProiezioniOrderedFuture() {
+        return proiezioneRepository.findByDataOraAfterOrderByDataOraAsc(Calendar.getInstance());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Proiezione> getFutureProiezioniByFilmId(Long filmId) {
+        return proiezioneRepository.findByFilmIdAndDataOraAfterOrderByDataOraAsc(filmId, Calendar.getInstance());
+    }
+
+    //PAGINATE
+    @Transactional(readOnly = true)
+    public Page<Proiezione> getFutureProiezioni(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
+        Page<Proiezione> pagedResult =  proiezioneRepository.findByDataOraAfter(Calendar.getInstance(), pageable);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Proiezione> getFutureProiezioniByFilm(Long filmId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
+        Page<Proiezione> pagedResult = proiezioneRepository.findByFilmIdAndDataOraAfter(filmId, Calendar.getInstance(), pageable);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Proiezione> showProiezioniBetween(Calendar inizio, Calendar fine, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
+        Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraBetween(inizio, fine, pageable);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Proiezione> showProiezioniByData(Calendar data, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
+        Page<Proiezione> pagedResult = proiezioneRepository.findByDataOra(data, pageable);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
 }

@@ -32,4 +32,18 @@
   <div *ngIf="!isLoading && proiezioni.length === 0 && !errorMessage" class="no-projections">
     <p>Nessuna proiezione trovata per i criteri selezionati.</p>
   </div>
+
+  <div *ngIf="!isLoading && proiezioni.length > 0" class="pagination-controls">
+    <ng-container *ngFor="let page of getPageNumbers()">
+      <button
+        (click)="goToPage(page)"
+        [ngClass]="{'active-page': currentPage === page}"
+        class="page-number-button"
+      >
+        {{ page + 1 }}
+      </button>
+    </ng-container>
+
+  </div>
+
 </div>

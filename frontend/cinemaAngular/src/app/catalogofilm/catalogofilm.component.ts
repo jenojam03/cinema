@@ -20,18 +20,25 @@ export class CatalogoFilmComponent implements OnInit {
   isLoading = true;
   generiDisponibili: string[] = ['Animazione', 'Azione', 'Avventura','Biografico', 'Commedia', 'Crime', 'Drammatico', 'Fantasy', 'Fantascienza', 'Horror', 'Korean drama', 'Romance','Thriller','Western'];
 
+  //paginazione
+  currentPage = 0;
+  pageSize = 12;
+  totalPages = 0;
+
   constructor(private filmService: FilmService, private router: Router) {}
 
   ngOnInit(): void {
     this.caricaFilm();
   }
 
-  caricaFilm(): void {
+  caricaFilm(page: number = 0): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.filmService.getFilm().subscribe({
-      next: (data) => {
-        this.film = data;
+    this.filmService.getFilm(page, this.pageSize).subscribe({
+      next: (data:any) => {
+        this.film = data.content;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
         this.isLoading = false;
       },
       error: err => {
@@ -42,7 +49,7 @@ export class CatalogoFilmComponent implements OnInit {
     });
   }
 
-  cerca(): void {
+  cerca(page: number = 0): void {
     if (!this.valore.trim()) {
       this.caricaFilm();
       return;
@@ -51,20 +58,22 @@ export class CatalogoFilmComponent implements OnInit {
     let chiamata;
     switch (this.criterio) {
       case 'titolo':
-        chiamata = this.filmService.getFilmByTitolo(this.valore);
+        chiamata = this.filmService.getFilmByTitolo(this.valore, page, this.pageSize);
         break;
       case 'autore':
-        chiamata= this.filmService.getFilmByAutore(this.valore);
+        chiamata= this.filmService.getFilmByAutore(this.valore, page, this.pageSize);
         break;
       case 'genere':
-        chiamata = this.filmService.getFilmByGenere(this.valore);
+        chiamata = this.filmService.getFilmByGenere(this.valore, page, this.pageSize);
         break;
     }
 
     chiamata!.subscribe({
-      next: data => {
+      next: (data:any) => {
         this.errorMessage = '';
-        this.film = data;
+        this.film = data.content;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
         this.isLoading = false;
       },
       error: err => {
@@ -79,5 +88,19 @@ export class CatalogoFilmComponent implements OnInit {
 
   mostraDettagli(idFilm: number): void {
     this.router.navigate(['/film', idFilm]);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      if (this.valore.trim()) {
+        this.cerca(page);
+      } else {
+        this.caricaFilm(page);
+      }
+    }
+  }
+
+  getPageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i);
   }
 }

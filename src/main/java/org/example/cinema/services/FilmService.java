@@ -80,6 +80,60 @@ public class FilmService {
     }
 
 
+    //PAGINATI
+    @Transactional(readOnly = true)
+    public Page<Film> getAllPaged(int page, int size){
+        Pageable paging = PageRequest.of(page, size, Sort.by("titolo").ascending());
+        Page<Film> pagedResult = filmRepository.findAll(paging);
+        /*
+        if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<Film> getFilmByTitolo(String titolo, int page, int size) {
+        Pageable paging = PageRequest.of(page, size, Sort.by("titolo").ascending());
+        Page<Film> pagedResult = filmRepository.findByTitoloContainingIgnoreCase(titolo, paging);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Film> getFilmByGenere(String genere, int page, int size) {
+        Pageable paging = PageRequest.of(page, size, Sort.by("titolo").ascending());
+        Page<Film> pagedResult = filmRepository.findByGenereIgnoreCase(genere, paging);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Film> getFilmByRegista(String regista, int page, int size) {
+        Pageable paging = PageRequest.of(page, size, Sort.by("titolo").ascending());
+        Page<Film> pagedResult = filmRepository.findByRegistaContainingIgnoreCase(regista, paging);
+        /*if ( pagedResult.hasContent() ) {
+            return pagedResult.getContent();
+        }
+        else {
+            return new ArrayList<>();
+        }*/
+        return pagedResult;
+    }
 
 
 }
