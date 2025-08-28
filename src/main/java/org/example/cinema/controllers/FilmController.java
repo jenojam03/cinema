@@ -35,7 +35,7 @@ public class FilmController {
 
     @GetMapping("/{id}/proiezioni")
     public ResponseEntity<?> getProiezioniPerFilm(@PathVariable Long id) {
-       List<Proiezione> proiezioni = proiezioneService.showProiezioniByFilmOrdered(id);
+       List<Proiezione> proiezioni = proiezioneService.getFutureProiezioniByFilmId(id);
         return ResponseEntity.ok(proiezioni);
     }
 

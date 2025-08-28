@@ -62,6 +62,9 @@ public class BigliettoService {
             if(!p.getProiezione().equals(proiezione)) {
                 throw new RuntimeException("Il posto non appartiene alla proiezione corretta");
             }
+            if(p.getProiezione().getDataOra().after(LocalDate.now())) {
+                throw new RuntimeException("La proiezione è già iniziata");
+            }
             if (p.isOccupato()) {
                 throw new RuntimeException("Il posto con ID " + postoId + " è già prenotato.");
             }
@@ -121,7 +124,7 @@ public class BigliettoService {
             for(Biglietto biglietto : biglietti){
                 biglietto.setStato(StatoBiglietto.ANNULLATO);
                 bigliettoRepository.save(biglietto);
-                entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
+                //entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
                 Posto p = biglietto.getPosto();
                 p.setDataBloccoTemporaneo(null);
                 p.setOccupato(false);

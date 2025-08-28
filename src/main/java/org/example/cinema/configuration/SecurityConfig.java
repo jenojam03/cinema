@@ -19,9 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 
-   /* @Bean
+   /*@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
@@ -30,7 +30,7 @@ public class SecurityConfig {
         return http.build();
     }*/
 
-    @Bean
+   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, EnsureClienteExistsFilter ensureClienteExistsFilter) throws Exception {
         http
                 .cors(Customizer.withDefaults())

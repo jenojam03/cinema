@@ -3,8 +3,6 @@ import {CommonModule} from '@angular/common';
 import {Film, FilmService} from '../services/film.service';
 import {Proiezione} from '../services/proiezione.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-film',
