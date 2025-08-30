@@ -47,7 +47,7 @@ export class ProiezioneService {
       .set('fine', fine)
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/betweenDates`, { params });
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/betweenDatesPaged`, { params });
   }
 
   getPostiDisponibili(idProiezione: number): Observable<Posto[]> {

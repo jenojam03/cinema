@@ -19,7 +19,7 @@ export class CatalogoProiezioniComponent implements OnInit {
 
   filtroDataInizio = '';
   filtroDataFine = '';
-
+  oggi: string = '';
   //paginazione
   currentPage = 0;
   totalPages = 0;
@@ -30,6 +30,11 @@ export class CatalogoProiezioniComponent implements OnInit {
 
   ngOnInit(): void {
     this.caricaProiezioni();
+    const oggiDate = new Date();
+    const anno = oggiDate.getFullYear();
+    const mese = (oggiDate.getMonth() + 1).toString().padStart(2, '0');
+    const giorno = oggiDate.getDate().toString().padStart(2, '0');
+    this.oggi = `${anno}-${mese}-${giorno}`;
   }
 
   caricaProiezioni(page: number = 0): void {
@@ -68,6 +73,21 @@ export class CatalogoProiezioniComponent implements OnInit {
         this.errorMessage = 'La data di inizio non può essere successiva alla data di fine.';
         this.proiezioni = [];
         this.totalPages = 0;
+        return;
+      }
+      const oggi = new Date();
+
+      //perchè sennò conta anche i minuti e se selezioni oggi dà errore
+      const oggiSoloData = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate());
+      const dataInizioSoloData = new Date(dataInizio.getFullYear(), dataInizio.getMonth(), dataInizio.getDate());
+      const dataFineSoloData = new Date(dataFine.getFullYear(), dataFine.getMonth(), dataFine.getDate());
+
+      if (dataInizioSoloData < oggiSoloData) {
+        this.errorMessage = 'Non puoi selezionare date passate';
+        return;
+      }
+      if (dataFineSoloData < oggiSoloData) {
+        this.errorMessage = 'Non puoi selezionare date passate';
         return;
       }
     }

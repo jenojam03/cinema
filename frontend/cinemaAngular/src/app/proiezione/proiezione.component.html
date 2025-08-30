@@ -1,19 +1,16 @@
 <div class="proiezione-dettagli-container">
-  <!-- Dettagli proiezione (sezione superiore) -->
+
   <div *ngIf="proiezione" class="dettagli-proiezione">
     <h2>{{ proiezione.film.titolo }}</h2>
     <p>Data e ora: {{ proiezione.dataOra | date:'dd/MM/yyyy HH:mm' }}</p>
     <p>Durata: {{ proiezione.film.durata }} minuti</p>
   </div>
 
-  <!-- ✅ Sezione posti -->
   <div class="sezione-posti-container">
     <h3>Seleziona i tuoi posti</h3>
 
-    <!-- Schermo -->
     <div class="schermo">Schermo</div>
 
-    <!-- Messaggi di stato (caricamento, errore, ecc.) -->
     <div *ngIf="isLoading" class="stato-messaggio caricamento">
       Caricamento posti...
     </div>
@@ -22,7 +19,6 @@
       {{ errorMessage }}
     </div>
 
-    <!-- Griglia dei posti (Mostra tutti i posti) -->
     <div *ngIf="!isLoading && !errorMessage" class="posti-grid-wrapper">
       <div class="posti-grid">
         <ng-container *ngFor="let posto of postiTotali">
@@ -40,7 +36,6 @@
       </div>
     </div>
 
-    <!-- Riepilogo posti selezionati -->
     <div *ngIf="selectedPosti.length > 0 && !isLoading" class="riepilogo-posti">
       <h4>Posti selezionati:</h4>
       <div class="selected-posti-list">
@@ -51,7 +46,6 @@
     </div>
   </div>
 
-  <!-- ✅ Bottone per procedere all'acquisto -->
   <div class="action-buttons">
     <button (click)="procediAllAcquisto()" class="procedi-button" [disabled]="selectedPosti.length === 0 || isLoading">
       Procedi all'acquisto ({{ selectedPosti.length }} posto/i)

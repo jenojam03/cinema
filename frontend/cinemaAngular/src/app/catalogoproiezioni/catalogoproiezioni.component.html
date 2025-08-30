@@ -3,10 +3,10 @@
 
   <div class="filters">
     <label>Data inizio:
-      <input type="date" [(ngModel)]="filtroDataInizio" />
+      <input type="date" [(ngModel)]="filtroDataInizio" [min]="oggi" />
     </label>
     <label>Data fine:
-      <input type="date" [(ngModel)]="filtroDataFine" />
+      <input type="date" [(ngModel)]="filtroDataFine" [min]="oggi"/>
     </label>
     <button (click)="filtra()">Filtra</button>
     <button (click)="resetFiltri(); caricaProiezioni()">Reset</button>
