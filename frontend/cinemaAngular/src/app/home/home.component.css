@@ -1,173 +1,156 @@
-/* Contenitore principale della Home */
+/* Contenitore principale della Home Page */
 .home-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 60px); /* Regola in base all'altezza dell'header/footer */
+  align-items: center;
   text-align: center;
-  padding: 2rem;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f6f9;
-  color: #333;
+  color: #333; /* Testo scuro */
+  position: relative;
+  /* Immagine di sfondo con un leggero overlay bianco/chiaro */
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://si-guida.it/wp-content/uploads/2025/02/dolore-nel-cinema-immagine-anteprima.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Rende lo sfondo fisso durante lo scroll */
+  font-family: 'Roboto', sans-serif;
+  padding: 20px;
 }
 
 /* Sezione di benvenuto */
 .welcome-section {
-  background-color: #ffffff;
-  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.6); /* Sfondo quasi bianco per il box di benvenuto */
+  padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2.5rem;
-  max-width: 600px;
-  width: 100%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  backdrop-filter: blur(3px); /* Leggera sfocatura per un tocco moderno */
 }
 
 .welcome-section h1 {
+  font-size: 3.5em;
+  font-weight: 700;
+  margin-bottom: 10px;
   color: #2c3e50;
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
 }
 
 .welcome-section p {
-  font-size: 1.2rem;
-  color: #555;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  font-size: 1.5em;
+  font-weight: 300;
+  margin-bottom: 25px;
+  color: #636e72;
 }
 
-/* Stile comune per i bottoni di azione (Login/Logout) */
-.action-button {
-  padding: 0.9rem 2rem;
-  font-size: 1.1rem;
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-.login-button {
-  background-color: #3498db; /* Blu */
-  color: white;
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-}
-
-.login-button:hover {
-  background-color: #2980b9;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-}
-
-.logout-button {
-  background-color: #e74c3c; /* Rosso */
-  color: white;
-  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-}
-
-.logout-button:hover {
-  background-color: #c0392b;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
-}
-
-/* Sezione di navigazione ai cataloghi */
-.navigation-section {
-  background-color: #ffffff;
-  padding: 2.5rem 2rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
-  width: 100%;
-}
-
+/* Sezione di navigazione */
 .navigation-section h2 {
+  font-size: 2.5em;
+  font-weight: 500;
+  margin-bottom: 20px;
   color: #2c3e50;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
 }
 
 .button-group {
   display: flex;
-  flex-wrap: wrap; /* Per la responsività su schermi piccoli */
+  gap: 20px;
   justify-content: center;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Stile comune per tutti i pulsanti */
+.action-button,
+.nav-button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: white; /* Testo bianco sui pulsanti per leggibilità */
+}
+
+.action-button:hover,
+.nav-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Colori specifici per i pulsanti */
+.login-button {
+  background-color: #2980b9;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #007bff;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
 }
 
 .nav-button {
-  flex: 1; /* Permette ai bottoni di espandersi */
-  min-width: 220px; /* Larghezza minima per i bottoni */
-  padding: 1.2rem 1.5rem;
-  font-size: 1.2rem;
-  background-color: #9b59b6; /* Viola */
+  background-color: #2980b9;
   color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
 }
 
 .nav-button:hover {
-  background-color: #8e44ad;
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4);
+  background-color: #007bff;
 }
 
-/* Media Queries per la responsività */
+/* Responsività */
 @media (max-width: 768px) {
-  .home-container {
-    padding: 1.5rem;
-  }
-
   .welcome-section h1 {
-    font-size: 2.2rem;
+    font-size: 2.5em;
   }
 
   .welcome-section p {
-    font-size: 1rem;
-  }
-
-  .action-button {
-    padding: 0.8rem 1.8rem;
-    font-size: 1rem;
+    font-size: 1.2em;
   }
 
   .navigation-section h2 {
-    font-size: 1.8rem;
+    font-size: 2em;
   }
 
   .button-group {
     flex-direction: column;
-    align-items: center;
-  }
-
-  .nav-button {
-    width: 90%;
-    min-width: unset;
-    font-size: 1.1rem;
-    padding: 1rem 1.2rem;
   }
 }
+/* Card generiche (se non le hai già definite) */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-@media (max-width: 480px) {
-  .home-container {
-    padding: 1rem;
-  }
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
 
-  .welcome-section, .navigation-section {
-    padding: 2rem 1.5rem;
-  }
+/* Stili specifici per la card di navigazione */
+.navigation-card {
+  margin-top: 10px; /* Spazio tra le due card */
+  text-align: center;
+  /* Per il tema chiaro con immagine di sfondo, il colore di sfondo della card è importante */
+  background-color: rgba(255, 255, 255, 0.6); /* Sfondo semi-trasparente */
+  backdrop-filter: blur(3px);
+  border: 1px solid #e0e0e0;
+}
 
-  .welcome-section h1 {
-    font-size: 1.8rem;
-  }
-
-  .welcome-section p {
-    font-size: 0.9rem;
-  }
+.navigation-card h2 {
+  font-size: 2.5em;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #2c3e50;
 }
