@@ -197,16 +197,77 @@
 /* src/app/components/cliente/cliente.component.css */
 
 .logout-button {
-  background-color: #e74c3c; /* Un colore rosso per indicare il logout */
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 15px; /* Spazio dal contenuto precedente */
+  margin-top: 15px;
+  transition: all 0.3s ease; /* Aggiungi una transizione per un effetto più fluido */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiungi un'ombra di base */
 }
 
 .logout-button:hover {
   background-color: #c0392b;
+  transform: translateY(-2px); /* Sposta il pulsante verso l'alto */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Rendi l'ombra più pronunciata */
+}
+
+.logout-button:active {
+  transform: translateY(0); /* Ritorna alla posizione originale al click */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ritorna all'ombra di base */
+}
+
+/* Stile per i pulsanti specifici dell'amministratore */
+.admin-button {
+  display: inline-block;
+  padding: 12px 25px;
+  margin-top: 15px; /* Spazio sopra il pulsante */
+  background-color: #34495e; /* Un colore scuro e professionale */
+  color: white;
+  text-decoration: none; /* Rimuove la sottolineatura dal link */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombra per un effetto di profondità */
+}
+
+.admin-button:hover {
+  background-color: #2c3e50; /* Scurisce il colore al passaggio del mouse */
+  transform: translateY(-2px); /* Sposta leggermente il pulsante verso l'alto */
+}
+
+.admin-button:active {
+  transform: translateY(0); /* Ritorna alla posizione originale al click */
+}
+
+/* Card generiche (da applicare a tutte le sezioni) */
+.card {
+  background-color: #ffffff; /* Sfondo bianco puro */
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* Ombra più pronunciata ma morbida */
+  padding: 30px;
+  border: none; /* Rimuovi il bordo predefinito */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Solleva la card al passaggio del mouse */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Specifiche per le card */
+.dati-utente-card h3,
+.admin-card h3,
+.biglietti-utente-card h3 {
+  font-size: 1.8em;
+  color: #34495e;
+  border-bottom: 2px solid #dbe9f5; /* Aggiungi una linea decorativa sotto i titoli */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }

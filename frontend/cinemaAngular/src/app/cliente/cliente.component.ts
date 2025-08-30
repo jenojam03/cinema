@@ -3,6 +3,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import {CommonModule, DatePipe} from '@angular/common';
 import {Router, RouterModule} from '@angular/router';
 import {Biglietto, BigliettoService} from '../services/biglietto.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-cliente',
@@ -22,6 +23,7 @@ export class ClienteComponent implements OnInit {
 
   constructor(protected oauthService: OAuthService,
               private bigliettoService: BigliettoService,
+              public authService: AuthService,
               private router: Router) {}
 
   ngOnInit(): void {
@@ -63,4 +65,34 @@ export class ClienteComponent implements OnInit {
     this.oauthService.logOut();
     this.router.navigate(['/']);
   }
+
+  //per gli amministratori
+  /*isAdmin(): boolean {
+    const token = this.oauthService.getAccessToken();
+    if (!token) return false;
+
+    const payload = this.decodeJwtPayload(token);
+    return payload?.realm_access?.roles?.includes('admin') ?? false;
+  }
+
+  isCliente(): boolean {
+    const token = this.oauthService.getAccessToken();
+    if (!token) return false;
+
+    const payload = this.decodeJwtPayload(token);
+    return payload?.realm_access?.roles?.includes('cliente') ?? false;
+  }
+
+  //per leggere il payload
+  private decodeJwtPayload(token: string): any {
+    try {
+      const base64Payload = token.split('.')[1];
+      const payload = atob(base64Payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(payload);
+    } catch (e) {
+      console.error('Errore nella decodifica del token', e);
+      return null;
+    }
+  }*/
+
 }

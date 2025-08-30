@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Proiezione } from './proiezione.service';
@@ -58,5 +58,14 @@ export class BigliettoService {
   getBiglietto(id: number): Observable<Biglietto> {
     const headers = this.getAuthHeaders();
     return this.http.get<Biglietto>(`${this.baseUrl}/${id}`, { headers : headers });
+  }
+
+  getPrezzo(numeroPosti: number):Observable<any> {
+    const params = new HttpParams().set('numeroPosti', numeroPosti);
+    return this.http.get(`${this.baseUrl}/prezzo`, { params:  params });
+  }
+
+  getPrezzoBase():Observable<any> {
+    return this.http.get(`${this.baseUrl}/prezzoBase`);
   }
 }

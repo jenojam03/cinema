@@ -63,7 +63,7 @@ public class ProiezioneService {
     public void aggiungiProiezione(ProiezioneCreateRequest request) {
         Optional<Film> film = filmRepository.findById(request.getFilmId());
         if (film.isEmpty()) {
-            throw new IllegalArgumentException("Film non trovato con l'ID fornito.");
+            throw new IllegalArgumentException("Non esiste nessun film con questo ID.");
         }
 
         Proiezione proiezione = new Proiezione();

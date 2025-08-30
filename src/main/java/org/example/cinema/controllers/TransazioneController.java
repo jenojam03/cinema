@@ -2,6 +2,7 @@ package org.example.cinema.controllers;
 
 import org.example.cinema.entities.Transazione;
 import org.example.cinema.repositories.TransazioneRepository;
+import org.example.cinema.services.TransazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,24 +16,24 @@ import java.util.List;
 public class TransazioneController {
 
     @Autowired
-    private TransazioneRepository transazioneRepository;
+    private TransazioneService transazioneService;
 
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping
     public ResponseEntity<List<Transazione>> getAllTransazioni() {
-        List<Transazione> transazioni = transazioneRepository.findAll();
+        List<Transazione> transazioni = transazioneService.getTransazioni();
         return ResponseEntity.ok(transazioni);
     }
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/cliente")
     public ResponseEntity<List<Transazione>> getTransazioniByClienteEmail(@RequestParam String email) {
-        List<Transazione> transazioni = transazioneRepository.findByClienteEmail(email);
+        List<Transazione> transazioni = transazioneService.getTransazioniByEmail(email);
         return ResponseEntity.ok(transazioni);
     }
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/esito")
     public ResponseEntity<List<Transazione>> getTransazioniByEsito(@RequestParam boolean esito) {
-        List<Transazione> transazioni = transazioneRepository.findByEsito(esito);
+        List<Transazione> transazioni = transazioneService.getTransazioniByEsito(esito);
         return ResponseEntity.ok(transazioni);
     }
 }

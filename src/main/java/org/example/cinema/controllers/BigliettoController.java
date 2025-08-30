@@ -25,6 +25,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.example.cinema.services.BigliettoService.PREZZO_BASE;
+
 @RestController
 @RequestMapping("/biglietti")
 public class BigliettoController {
@@ -36,7 +38,20 @@ public class BigliettoController {
     @Autowired
     private BigliettoRepository bigliettoRepository;
 
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/prezzo")
+    public ResponseEntity<?> prezzoTot(@RequestParam int numeroPosti) {
+        double prezzoBase = PREZZO_BASE;
+        double prezzoTot = numeroPosti*prezzoBase;
+        return ResponseEntity.ok(prezzoTot);
+    }
+
+    @GetMapping("/prezzoBase")
+    public ResponseEntity<?> prezzoBase() {
+        return ResponseEntity.ok(PREZZO_BASE);
+    }
+
+
+    @PreAuthorize("isAuthenticated() and hasRole('cliente')")
     @PostMapping("/acquista")
     public ResponseEntity<Map<String, String>> acquistaBiglietti(@RequestBody @NotNull AcquistoRequest request) {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
@@ -76,7 +91,7 @@ public class BigliettoController {
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/{cliente}/{startDate}/{endDate}")
-    public ResponseEntity getBigliettiPeriodo(@Valid @PathVariable("cliente") Cliente cliente,
+    public ResponseEntity<?> getBigliettiPeriodo(@Valid @PathVariable("cliente") Cliente cliente,
                                               @PathVariable("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy")
                                               String start, @PathVariable("endDate") @DateTimeFormat(pattern = "dd-MM-yyyy") String end) {
         try {
@@ -113,6 +128,8 @@ public class BigliettoController {
                     HttpStatus.BAD_REQUEST);
         }
     }
+
+
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
     public List<Biglietto> getTuttiIBiglietti() {
@@ -156,7 +173,7 @@ public class BigliettoController {
             return new ResponseEntity<>("Biglietto non trovato.", HttpStatus.NOT_FOUND);
         }
 
-        // Verifica che l'utente loggato sia il proprietario del biglietto
+        //verifica che l'utente loggato sia il proprietario del biglietto
         if (!biglietto.getCliente().getEmail().equals(email) && !jwt.getAuthorities().contains("ROLE_admin")) {
             return new ResponseEntity<>("Non hai i permessi per visualizzare questo biglietto.", HttpStatus.FORBIDDEN);
         }

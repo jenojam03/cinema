@@ -14,9 +14,9 @@
         <h1>Acquista Biglietti per: {{ proiezione.film.titolo }}</h1>
       </div>
       <div class="riepilogo-body">
-        <p>Prezzo singolo biglietto: {{ prezzoBiglietto | currency:'EUR':'symbol' }}</p>
+        <p>Prezzo singolo biglietto: {{ prezzoBase | currency:'EUR':'symbol' }}</p>
         <p>Posti selezionati: <span class="posti-count">{{ postiSelezionati.length }}</span></p>
-        <h2 class="prezzo-totale">Totale: {{ getPrezzoTotale() | currency:'EUR':'symbol' }}</h2>
+        <h2 class="prezzo-totale">Totale: {{ prezzoAcquisto | currency:'EUR':'symbol' }}</h2>
       </div>
     </div>
 

@@ -51,7 +51,9 @@ public class SecurityConfig {
                                 "/proiezioni/byDate",
                                 "/proiezioni/byDatePaged",
                                 "proiezioni/future",
-                                "proiezioni/betweenDatesPaged"
+                                "proiezioni/betweenDatesPaged",
+                                "biglietti/prezzo",
+                                "biglietti/prezzoBase"
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )

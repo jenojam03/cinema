@@ -34,4 +34,19 @@ public class TransazioneService {
             postoRepository.save(p);
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Transazione> getTransazioni() {
+        return transazioneRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Transazione> getTransazioniByEsito(boolean esito) {
+        return transazioneRepository.findByEsito(esito);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Transazione> getTransazioniByEmail(String email) {
+        return transazioneRepository.findByClienteEmail(email);
+    }
 }

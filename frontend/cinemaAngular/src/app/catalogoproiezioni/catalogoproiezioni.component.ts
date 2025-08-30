@@ -128,10 +128,9 @@ export class CatalogoProiezioniComponent implements OnInit {
   goToPage(page: number): void {
     if (page >= 0 && page < this.totalPages) {
       if (this.filtroDataInizio || this.filtroDataFine) {
-        // Se ci sono filtri data attivi, applica la paginazione con i filtri
+        //se ci sono filtri li applica
         this.filtra(page);
       } else {
-        // Altrimenti, carica tutte le proiezioni con la nuova pagina
         this.caricaProiezioni(page);
       }
     }

@@ -63,7 +63,7 @@ export class BigliettoComponent implements OnInit {
         },
         error: (err) => {
           console.error('Errore durante l\'annullamento:', err);
-          this.errorMessage = 'Impossibile annullare il biglietto. Riprova più tardi.';
+          this.errorMessage = err.error;
         }
       });
     }

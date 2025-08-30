@@ -18,7 +18,14 @@
       </button>
     </div>
 
-    <div class="card biglietti-utente-card">
+    <div class="card admin-card" *ngIf="this.authService.isAdmin()">
+      <h3>Sezione Amministratore</h3>
+      <button [routerLink]="['/transazioni']" class="admin-button">
+        Visualizza Transazioni
+      </button>
+    </div>
+
+    <div *ngIf = "this.authService.isCliente()" class="card biglietti-utente-card">
       <h3>I tuoi biglietti</h3>
 
       <div *ngIf="isLoadingBiglietti" class="stato-messaggio caricamento">

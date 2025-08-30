@@ -17,7 +17,9 @@ export class AcquistoComponent implements OnInit {
   proiezioneId: number = 0;
   proiezione?: Proiezione;
   postiSelezionati: Posto[] = [];
-  prezzoBiglietto: number = 8.50; // Prezzo fisso per esempio
+
+  prezzoAcquisto: number = 0;
+  prezzoBase: number = 0;
 
   isLoading = true;
   isProcessing = false;
@@ -47,8 +49,10 @@ export class AcquistoComponent implements OnInit {
         this.proiezioneId = +id;
         if (this.postiSelezionati.length > 0) {
           this.loadProiezioneEPosti(this.proiezioneId);
+          this.calcolaPrezzo();
+          this.getPrezzoBase();
         } else {
-          // Se non ci sono posti selezionati (es. dopo un refresh), reindirizza
+          //se non ci sono posti selezionati reindirizza
           this.router.navigate(['/proiezioni', this.proiezioneId]);
           this.isLoading = false;
         }
@@ -59,6 +63,28 @@ export class AcquistoComponent implements OnInit {
     });
 
   }
+
+  calcolaPrezzo(): void {
+    if (!this.proiezioneId || this.postiSelezionati.length === 0) {
+      this.prezzoAcquisto = 0;
+      return;
+    }
+
+    this.bigliettoService.getPrezzo(this.postiSelezionati.length)
+      .subscribe({
+        next: prezzo => this.prezzoAcquisto = prezzo,
+        error: () => this.prezzoAcquisto = 0
+      });
+  }
+
+  getPrezzoBase():void {
+    this.bigliettoService.getPrezzoBase()
+      .subscribe({
+        next: prezzo => this.prezzoBase = prezzo,
+        error: () => this.prezzoBase = 0
+      });
+  }
+
 
   loadProiezioneEPosti(id: number): void {
     this.isLoading = true;
@@ -82,10 +108,6 @@ export class AcquistoComponent implements OnInit {
     });
   }
 
-
-  getPrezzoTotale(): number {
-    return this.postiSelezionati.length * this.prezzoBiglietto;
-  }
 
   confermaAcquisto(): void {
     if (!this.oauthService.hasValidAccessToken()) {

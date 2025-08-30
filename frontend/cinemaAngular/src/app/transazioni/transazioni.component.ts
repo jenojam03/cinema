@@ -17,7 +17,7 @@ export class TransazioniComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  // Filtri
+  //filtri
   filtroEmail = '';
   filtroEsito: 'tutte' | 'successo' | 'fallito' = 'tutte';
 
@@ -27,7 +27,6 @@ export class TransazioniComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Al caricamento, mostra tutte le transazioni
     this.loadTransazioni();
   }
 
@@ -52,7 +51,7 @@ export class TransazioniComponent implements OnInit {
     this.errorMessage = '';
 
     if (this.filtroEmail.trim() !== '') {
-      // Filtra per email
+      //filtra per email
       this.transazioniService.getTransazioniByClienteEmail(this.filtroEmail).subscribe({
         next: (data) => {
           this.transazioni = data;
@@ -61,7 +60,7 @@ export class TransazioniComponent implements OnInit {
         error: () => this.handleError()
       });
     } else if (this.filtroEsito !== 'tutte') {
-      // Filtra per esito
+      //filtra per esito
       const esitoBoolean = this.filtroEsito === 'successo';
       this.transazioniService.getTransazioniByEsito(esitoBoolean).subscribe({
         next: (data) => {
@@ -71,7 +70,7 @@ export class TransazioniComponent implements OnInit {
         error: () => this.handleError()
       });
     } else {
-      // Nessun filtro, ricarica tutto
+      //nessun filtro, ricarica tutto
       this.loadTransazioni();
     }
   }

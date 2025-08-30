@@ -37,6 +37,8 @@ public class BigliettoService {
     @Autowired
     private EntityManager entityManager;
 
+    public static final Double PREZZO_BASE = 8.50;
+
 
     @Transactional(noRollbackFor = PagamentoFallitoException.class)
     public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti) {
@@ -92,7 +94,9 @@ public class BigliettoService {
             b.setTransazione(transazione);
             b.setDataAcquisto(Calendar.getInstance());
             transazione.getBiglietti().add(b);
-            b.setPrezzo(new Random().nextDouble(3,15));
+
+            //PREZZO
+            b.setPrezzo(PREZZO_BASE);
             //bigliettoRepository.save(b);
             biglietti.add(b);
         }

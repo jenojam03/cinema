@@ -79,7 +79,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.toDTO(cliente));
     }
 
-    @PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
     public List<ClienteDTO> getTuttiClienti() {
         return clienteService.getAllClienti();
