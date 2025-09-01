@@ -26,8 +26,7 @@ public class ProiezioneController {
 
     @Autowired
     private ProiezioneService proiezioneService;
-    @Autowired
-    private ProiezioneRepository proiezioneRepository;
+
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/create")
@@ -96,7 +95,7 @@ public class ProiezioneController {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Calendar dataCercata = Calendar.getInstance();
             dataCercata.setTime(sdf.parse(dataString));
-            return ResponseEntity.ok(proiezioneRepository.findByDataOra(dataCercata));
+            return ResponseEntity.ok(proiezioneService.getProiezioneByData(dataCercata));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
@@ -116,7 +115,7 @@ public class ProiezioneController {
 
             Calendar fine = Calendar.getInstance();
             fine.setTime(sdf.parse(fineString));
-            return ResponseEntity.ok(proiezioneRepository.findByDataOraBetween(inizio, fine));
+            return ResponseEntity.ok(proiezioneService.getProiezioneBetween(inizio, fine));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato data non valido. Usa dd-MM-yyyy.");
         }

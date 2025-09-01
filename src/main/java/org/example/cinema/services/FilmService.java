@@ -136,4 +136,18 @@ public class FilmService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<Film> getFilmByTitoloContaining(String titolo) {
+        return filmRepository.findByTitoloContainingIgnoreCase(titolo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Film> getFilmByRegistaContaining(String regista) {
+        return filmRepository.findByRegistaContainingIgnoreCase(regista);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Film> getFilmByGenere(String genere) {
+        return filmRepository.findByGenereIgnoreCase(genere);
+    }
 }

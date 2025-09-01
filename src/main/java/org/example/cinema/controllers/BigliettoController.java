@@ -11,6 +11,7 @@ import org.example.cinema.jwt.CustomJwt;
 import org.example.cinema.repositories.BigliettoRepository;
 import org.example.cinema.repositories.ClienteRepository;
 import org.example.cinema.services.BigliettoService;
+import org.example.cinema.services.ClienteService;
 import org.example.cinema.support.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,9 +35,7 @@ public class BigliettoController {
     @Autowired
     private BigliettoService bigliettoService;
     @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private BigliettoRepository bigliettoRepository;
+    private ClienteService clienteService;
 
     @GetMapping("/prezzo")
     public ResponseEntity<?> prezzoTot(@RequestParam int numeroPosti) {
@@ -114,8 +113,8 @@ public class BigliettoController {
     public ResponseEntity<?> annullaBiglietto(@PathVariable Long id) {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();
-        Cliente cliente = clienteRepository.findByEmail(email);
-        Biglietto biglietto = bigliettoRepository.findById(id).orElse(null);
+        Cliente cliente = clienteService.getClienteByEmail(email);
+        Biglietto biglietto = bigliettoService.getBigliettoById(id);
 
         if (cliente == null || biglietto == null || !biglietto.getCliente().getId().equals(cliente.getId())) {
             return new ResponseEntity<>("Utente o Biglietto non trovati.", HttpStatus.NOT_FOUND);
@@ -167,7 +166,7 @@ public class BigliettoController {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
         String email = jwt.getName();
 
-        Biglietto biglietto = bigliettoRepository.findById(id).orElse(null);
+        Biglietto biglietto = bigliettoService.getBigliettoById(id);
 
         if (biglietto == null) {
             return new ResponseEntity<>("Biglietto non trovato.", HttpStatus.NOT_FOUND);

@@ -24,8 +24,6 @@ public class FilmController {
     @Autowired
     private FilmService filmService;
     @Autowired
-    private FilmRepository filmRepository;
-    @Autowired
     private ProiezioneService proiezioneService;
 
     @GetMapping()
@@ -77,7 +75,7 @@ public class FilmController {
 
     @GetMapping("/search/nome/{nome}")
     public ResponseEntity<?> getFilmByTitolo(@PathVariable String nome)  {
-        List<Film> ret = filmRepository.findByTitoloContainingIgnoreCase(nome);
+        List<Film> ret = filmService.getFilmByTitoloContaining(nome);
         if(ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
@@ -86,7 +84,7 @@ public class FilmController {
 
     @GetMapping("/search/autore/{autore}")
     public ResponseEntity<?> getFilmByAutore(@PathVariable String autore)  {
-        List<Film> ret = filmRepository.findByRegistaContainingIgnoreCase(autore);
+        List<Film> ret = filmService.getFilmByRegistaContaining(autore);
         if(ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
@@ -95,7 +93,7 @@ public class FilmController {
 
     @GetMapping("/search/genere/{genere}")
     public ResponseEntity<?> getFilmByGenere(@PathVariable String genere)  {
-        List<Film> ret = filmRepository.findByGenereIgnoreCase(genere);
+        List<Film> ret = filmService.getFilmByGenere(genere);
         if(ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }

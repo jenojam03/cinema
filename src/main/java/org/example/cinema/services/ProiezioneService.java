@@ -75,7 +75,7 @@ public class ProiezioneService {
         //salvo l'id della proiezione
         Proiezione savedProiezione = proiezioneRepository.save(proiezione);
 
-        List<Posto> posti = request.getPosti().stream().map(postoDto ->{
+        List<Posto> posti = request.getPosti().stream().map(postoDto -> {
             Posto posto = new Posto();
             posto.setProiezione(savedProiezione);
             posto.setFila(postoDto.getFila());
@@ -119,10 +119,9 @@ public class ProiezioneService {
     public List<Proiezione> showAllProiezioni(int pageNumber, int pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
         Page<Proiezione> pagedResult = proiezioneRepository.findAll(paging);
-        if ( pagedResult.hasContent() ) {
+        if (pagedResult.hasContent()) {
             return pagedResult.getContent();
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
@@ -172,7 +171,7 @@ public class ProiezioneService {
     @Transactional(readOnly = true)
     public Page<Proiezione> getFutureProiezioni(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
-        Page<Proiezione> pagedResult =  proiezioneRepository.findByDataOraAfter(Calendar.getInstance(), pageable);
+        Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraAfter(Calendar.getInstance(), pageable);
         /*if ( pagedResult.hasContent() ) {
             return pagedResult.getContent();
         }
@@ -222,4 +221,14 @@ public class ProiezioneService {
         return pagedResult;
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Proiezione> getProiezioneByData(Calendar dataCercata) {
+        return proiezioneRepository.findByDataOra(dataCercata);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Proiezione> getProiezioneBetween(Calendar inizio, Calendar fine){
+        return proiezioneRepository.findByDataOraBetween(inizio,fine);
+    }
 }

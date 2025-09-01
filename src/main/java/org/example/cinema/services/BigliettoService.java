@@ -289,5 +289,9 @@ public class BigliettoService {
         return bigliettoRepository.findPostiOccupatiByProiezione(proiezione);
     }
 
+    public Biglietto getBigliettoById(Long id) {
+        return bigliettoRepository.findById(id).orElse(null);
+    }
+
 
 }

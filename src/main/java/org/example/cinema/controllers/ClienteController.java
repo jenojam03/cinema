@@ -27,8 +27,6 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
 
 
     @PostMapping("/registrazione")
@@ -72,7 +70,7 @@ public class ClienteController {
     @PreAuthorize(value="hasRole('admin')")
     @GetMapping("search/by_email")
     public ResponseEntity<?> getClienteByEmail(@RequestParam String email) {
-        Cliente cliente = clienteRepository.findByEmail(email);
+        Cliente cliente = clienteService.getClienteByEmail(email);
         if (cliente == null) {
             return ResponseEntity.status(404).body("Cliente non trovato.");
         }
@@ -89,7 +87,7 @@ public class ClienteController {
     @GetMapping("/me")
     public ResponseEntity<ClienteDTO> getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
-        Cliente currentUser = clienteRepository.findByEmail(email);
+        Cliente currentUser = clienteService.getClienteByEmail(email);
         if (currentUser != null) {
             return ResponseEntity.ok(clienteService.toDTO(currentUser));
         } else {
@@ -101,11 +99,11 @@ public class ClienteController {
     @PutMapping("/update")
     public ResponseEntity<ClienteDTO> updateCurrentUser(@RequestBody @Valid ClienteUpdateRequest request, Authentication authentication) {
         String email = authentication.getName();
-        Cliente currentUser = clienteRepository.findByEmail(email);
+        Cliente currentUser = clienteService.getClienteByEmail(email);
         if (currentUser != null) {
             currentUser.setNome(request.getNome());
             currentUser.setCognome(request.getCognome());
-            clienteRepository.save(currentUser);
+            clienteService.saveCliente(currentUser);
             return ResponseEntity.ok(clienteService.toDTO(currentUser));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

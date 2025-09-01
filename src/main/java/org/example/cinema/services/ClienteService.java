@@ -83,4 +83,14 @@ public class ClienteService {
         }
         clienteRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public Cliente getClienteByEmail(String email) {
+        return clienteRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public Cliente saveCliente(Cliente c){
+        return clienteRepository.save(c);
+    }
 }
