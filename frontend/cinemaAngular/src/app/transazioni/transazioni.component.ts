@@ -70,7 +70,7 @@ export class TransazioniComponent implements OnInit {
         error: () => this.handleError()
       });
     } else {
-      //nessun filtro, ricarica tutto
+      //carica tutto senza filtri
       this.loadTransazioni();
     }
   }

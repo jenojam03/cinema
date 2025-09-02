@@ -6,6 +6,7 @@ import { Posto } from './proiezione.service';
 })
 export class SharedDataService {
 
+  //per conservare i posti selezionati quando vengo rediretto dopo il login
   private postiSelezionati: Posto[] = [];
 
   constructor() { }

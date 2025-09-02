@@ -72,7 +72,8 @@ export class FilmService {
     return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/${id}/proiezioni/paged?page=${page}&size=${size}`);
   }
 
-  getProiezioniByFilmId(id: number, page: number, size: number): Observable<Proiezione[]> {
+  //proiezioni di un film non paginate perchè di solito sono poche
+  getProiezioniByFilmId(id: number): Observable<Proiezione[]> {
     return this.httpClient.get<Proiezione[]>(`${this.baseUrl}/${id}/proiezioni`);
   }
 }

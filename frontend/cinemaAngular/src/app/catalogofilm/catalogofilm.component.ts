@@ -18,7 +18,8 @@ export class CatalogoFilmComponent implements OnInit {
   errorMessage: string = '';
   criterio: 'titolo' | 'autore' | 'genere' = 'titolo';//di default è titolo
   isLoading = true;
-  generiDisponibili: string[] = ['Animazione', 'Azione', 'Avventura','Biografico', 'Commedia', 'Crime', 'Drammatico', 'Fantasy', 'Fantascienza', 'Horror', 'Korean drama', 'Romance','Thriller','Western'];
+  generiDisponibili: string[] = ['Animazione', 'Azione', 'Avventura','Biografico', 'Commedia', 'Crime',
+    'Drammatico', 'Fantasy', 'Fantascienza', 'Horror', 'Korean drama', 'Romance','Thriller','Western'];
 
   //paginazione
   currentPage = 0;

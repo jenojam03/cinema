@@ -18,10 +18,6 @@ export class FilmComponent implements OnInit{
   isLoading = true;
   errorMessage = '';
 
-  //Paginazione
-  currentPage = 0;
-  totalPages = 0;
-  pageSize = 15;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,14 +47,11 @@ export class FilmComponent implements OnInit{
     });
   }
 
-  loadProiezioni(id: number, page: number = 0): void {
+  loadProiezioni(id: number): void {
     this.isLoading = true;
-    this.filmService.getProiezioniByFilmId(id,page,this.pageSize).subscribe({
+    this.filmService.getProiezioniByFilmId(id).subscribe({
       next: data => {
         this.proiezioni = data;
-        /*this.proiezioni = data.content;
-        this.currentPage = data.number;
-        this.totalPages = data.totalPages;*/
         this.isLoading = false;
       },
       error: err => {
@@ -72,14 +65,4 @@ export class FilmComponent implements OnInit{
     this.router.navigate(['/proiezioni', idProiezione]);
   }
 
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      const id = Number(this.route.snapshot.paramMap.get('id'))
-      this.loadProiezioni(id, page);
-    }
-  }
-
-  getPageNumbers() {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
-  }
 }

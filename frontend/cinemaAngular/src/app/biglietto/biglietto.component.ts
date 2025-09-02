@@ -53,9 +53,11 @@ export class BigliettoComponent implements OnInit {
       }
     });
   }
+
+
   annullaBiglietto(): void {
     if (!this.biglietto) return;
-    if (confirm('Sei sicuro di voler annullare questo biglietto? Questa operazione non può essere annullata.')) {
+    if (confirm('Sei sicuro di voler annullare questo biglietto? Questa operazione non è reversibile.')) {
       this.bigliettoService.annullaBiglietto(this.id).subscribe({
         next: () => {
           this.router.navigate(['/']);

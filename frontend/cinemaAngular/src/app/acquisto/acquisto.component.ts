@@ -36,8 +36,10 @@ export class AcquistoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    //serve per la condivisione tra componenti (proiezione e acquisto)
     this.postiSelezionati = this.sharedDataService.getPostiSelezionati();
 
+    //serve per la condivisione tra pagine (refresh, login ecc)
     const savedPosti = sessionStorage.getItem('postiSelezionati');
     if (savedPosti) {
       this.postiSelezionati = JSON.parse(savedPosti);

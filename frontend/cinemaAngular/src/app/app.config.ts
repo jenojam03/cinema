@@ -16,24 +16,6 @@ export const authCodeFlowConfig: AuthConfig = {
   requireHttps: false
 };
 
-function initializeOAuth(oauthService: OAuthService, router: Router): Promise<void> {
-  return new Promise((resolve) => {
-    oauthService.configure(authCodeFlowConfig);
-    oauthService.setupAutomaticSilentRefresh();
-
-    oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-      if (oauthService.hasValidAccessToken()) {
-        const returnUrl = sessionStorage.getItem('returnUrl');
-        if (returnUrl) {
-          console.log('Redirect a:', returnUrl);
-          sessionStorage.removeItem('returnUrl');
-          router.navigateByUrl(returnUrl);
-        }
-      }
-      resolve();
-    });
-  });
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
