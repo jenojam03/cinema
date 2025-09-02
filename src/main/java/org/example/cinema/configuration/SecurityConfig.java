@@ -35,6 +35,9 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
+
+                //questi endpoint possono essere raggiunti da chiunque (quindi un utente può sfogliare
+                //il catalogo senza essere loggato)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/clienti/registrazione",
                                 "/film",
@@ -50,10 +53,10 @@ public class SecurityConfig {
                                 "/proiezioni/betweenDates",
                                 "/proiezioni/byDate",
                                 "/proiezioni/byDatePaged",
-                                "proiezioni/future",
-                                "proiezioni/betweenDatesPaged",
-                                "biglietti/prezzo",
-                                "biglietti/prezzoBase"
+                                "/proiezioni/future",
+                                "/proiezioni/betweenDatesPaged",
+                                "/biglietti/prezzo",
+                                "/biglietti/prezzoBase"
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -26,7 +26,6 @@ public class FilmService {
         return filmRepository.findAll();
     }
 
-    //ricerca paginata
     @Transactional(readOnly = true)
     public List<Film> showAllFilms(int pageNumber, int pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));

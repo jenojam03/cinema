@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.cinema.entities.Cliente;
 import org.example.cinema.repositories.ClienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -17,11 +18,10 @@ import java.io.IOException;
 @Component
 public class EnsureClienteExistsFilter extends OncePerRequestFilter {
 
-    private final ClienteRepository clienteRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-    public EnsureClienteExistsFilter(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

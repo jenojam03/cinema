@@ -21,9 +21,6 @@ public interface BigliettoRepository extends JpaRepository<Biglietto, Long> {
 
     boolean existsByProiezione_IdAndPosto_Id(Long proiezioneId, Long postoId);
 
-    @Query("SELECT b.posto FROM Biglietto b WHERE b.proiezione = :proiezione")
-    List<Posto> findPostiOccupatiByProiezione(@Param("proiezione") Proiezione proiezione);
-
     List<Biglietto> findByClienteIdAndDataAcquistoBetween(Long clienteId, Calendar dataInizio, Calendar dataFine);
 
     List<Biglietto> findByCliente_IdOrderByDataAcquistoDesc(Long clienteId);

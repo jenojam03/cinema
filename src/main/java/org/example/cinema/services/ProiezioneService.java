@@ -43,21 +43,9 @@ public class ProiezioneService {
                 .orElseThrow(() -> new RuntimeException("Proiezione non trovata"));
 
         List<Posto> tuttiIPosti = postoRepository.findAll(); // oppure solo quelli assegnati a quella proiezione
-        List<Posto> occupati = bigliettoRepository.findPostiOccupatiByProiezione(proiezione);
-
-        return tuttiIPosti.stream()
-                .filter(p -> !occupati.contains(p))
-                .toList();
+        return postoRepository.findPostiLiberiByProiezione(proiezione);
     }
 
-    /*@Transactional
-    public void aggiungiProiezione(Proiezione proiezione) {
-        if (proiezione.getId() != 0 && proiezioneRepository.existsById(proiezione.getId())) {
-            throw new ProiezioneEsistenteException("La proiezione inserita esiste già");
-        }
-
-        proiezioneRepository.save(proiezione);
-    }*/
 
     @Transactional
     public void aggiungiProiezione(ProiezioneCreateRequest request) {
@@ -72,21 +60,22 @@ public class ProiezioneService {
         proiezione.setFilm(film.get());
         film.get().getProiezioni().add(proiezione);
 
-        //salvo l'id della proiezione
-        Proiezione savedProiezione = proiezioneRepository.save(proiezione);
+        //salvo la proiezione
+        //Proiezione savedProiezione = proiezioneRepository.save(proiezione);
 
         List<Posto> posti = request.getPosti().stream().map(postoDto -> {
             Posto posto = new Posto();
-            posto.setProiezione(savedProiezione);
+            posto.setProiezione(proiezione);
             posto.setFila(postoDto.getFila());
             posto.setNumero(postoDto.getNumero());
             posto.setOccupato(false);
             return posto;
         }).toList();
 
-        postoRepository.saveAll(posti);
-        savedProiezione.setPosti(posti);
-        filmRepository.save(film.get());
+        //postoRepository.saveAll(posti);
+        proiezione.setPosti(posti);
+        proiezioneRepository.save(proiezione);
+        //filmRepository.save(film.get());
 
     }
 

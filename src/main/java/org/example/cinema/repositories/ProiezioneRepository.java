@@ -22,7 +22,7 @@ public interface ProiezioneRepository extends JpaRepository<Proiezione, Long> {
     List<Proiezione> findByFilmIdAndDataOraAfterOrderByDataOraAsc(Long filmId, Calendar dataOra);
 
 
-    //paginazione
+    //PAGINATI
     Page<Proiezione> findByDataOraAfter(Calendar dataOra, Pageable pageable);
 
     Page<Proiezione> findByFilmIdAndDataOraAfter(Long filmId, Calendar dataOra, Pageable pageable);

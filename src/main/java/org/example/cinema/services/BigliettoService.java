@@ -49,7 +49,7 @@ public class BigliettoService {
         }
 
         Proiezione proiezione = proiezioneRepository.findById(idProiezione)
-                .orElseThrow(() -> new RuntimeException("Proiezione non trovata"));
+                .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
 
         Map<Long, Posto> postiBloccati = new HashMap<>();
         for (Long postoId : idPosti) {
@@ -57,10 +57,10 @@ public class BigliettoService {
 
             //Posto p = postoRepository.findById(postoId).orElseThrow(() -> new PostoNotFoundException("Il posto non è valido"));
             //entityManager.lock(p, LockModeType.PESSIMISTIC_WRITE);
+
             if(p == null) {
                 throw new PostoNotFoundException("Posto non trovato!");
             }
-
             if(!p.getProiezione().equals(proiezione)) {
                 throw new RuntimeException("Il posto non appartiene alla proiezione corretta");
             }
@@ -96,8 +96,8 @@ public class BigliettoService {
             transazione.getBiglietti().add(b);
 
             //PREZZO
-            b.setPrezzo(PREZZO_BASE);
-            //bigliettoRepository.save(b);
+            b.setPrezzo(PREZZO_BASE); //potrei avere un campo prezzo in Proiezione e scrivere quindi proiezione.getPrezzo()
+            bigliettoRepository.save(b);
             biglietti.add(b);
         }
 
@@ -110,6 +110,7 @@ public class BigliettoService {
         transazioneRepository.save(transazione);
         clienteRepository.save(cliente);
 
+        //ESITO POSITIVO CON 80% DI PROBABILITA' PER SIMULARE IMPREVISTI
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
 
         if(esitoPagamento){
@@ -156,7 +157,7 @@ public class BigliettoService {
             System.out.println("Pagamento effettuato con successo");
             return true;
         }else{
-            System.out.println("Pagamento fallito");
+            System.out.println("Pagamento fallito. Riprovare");
             return false;
         }
     }
@@ -176,8 +177,6 @@ public class BigliettoService {
         if(cliente == null)
             throw new ClienteNotFoundException("Cliente non trovato!");
 
-        //mapping
-        //log per verificare il cliente trovato
         System.out.println("Cliente trovato: " + cliente.getEmail());
 
         //recupero gli ordini del cliente
@@ -201,7 +200,7 @@ public class BigliettoService {
 
 
             //log per ogni biglietto trovato
-            System.out.println("Ordine trovato: ID = " + biglietto.getId() + ", Stato = " + biglietto.getStato());
+            System.out.println("Biglietto trovato: ID = " + biglietto.getId() + ", Stato = " + biglietto.getStato());
         }
         return bigliettiDTO;
     }
@@ -286,7 +285,7 @@ public class BigliettoService {
 
     @Transactional(readOnly = true)
     public List<Posto> getPostiOccupati(Proiezione proiezione) {
-        return bigliettoRepository.findPostiOccupatiByProiezione(proiezione);
+        return postoRepository.findPostiOccupatiByProiezione(proiezione);
     }
 
     public Biglietto getBigliettoById(Long id) {
