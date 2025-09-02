@@ -60,12 +60,13 @@ export class BigliettoService {
     return this.http.get<Biglietto>(`${this.baseUrl}/${id}`, { headers : headers });
   }
 
-  getPrezzo(numeroPosti: number):Observable<any> {
-    const params = new HttpParams().set('numeroPosti', numeroPosti);
+  getPrezzo(numeroPosti: number, idProiezione: number):Observable<any> {
+    const params = new HttpParams().set('numeroPosti', numeroPosti).set('proiezioneId', idProiezione);
     return this.http.get(`${this.baseUrl}/prezzo`, { params:  params });
   }
 
-  getPrezzoBase():Observable<any> {
-    return this.http.get(`${this.baseUrl}/prezzoBase`);
+  getPrezzoBase(idProiezione: number):Observable<any> {
+    const params = new HttpParams().set('proiezioneId', idProiezione);
+    return this.http.get(`${this.baseUrl}/prezzoBase`, { params: params });
   }
 }

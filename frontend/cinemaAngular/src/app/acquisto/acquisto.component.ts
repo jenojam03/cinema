@@ -70,7 +70,7 @@ export class AcquistoComponent implements OnInit {
       return;
     }
 
-    this.bigliettoService.getPrezzo(this.postiSelezionati.length)
+    this.bigliettoService.getPrezzo(this.postiSelezionati.length, this.proiezioneId)
       .subscribe({
         next: prezzo => this.prezzoAcquisto = prezzo,
         error: () => this.prezzoAcquisto = 0
@@ -78,7 +78,7 @@ export class AcquistoComponent implements OnInit {
   }
 
   getPrezzoBase():void {
-    this.bigliettoService.getPrezzoBase()
+    this.bigliettoService.getPrezzoBase(this.proiezioneId)
       .subscribe({
         next: prezzo => this.prezzoBase = prezzo,
         error: () => this.prezzoBase = 0

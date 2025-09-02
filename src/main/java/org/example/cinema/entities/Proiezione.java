@@ -17,6 +17,9 @@ public class Proiezione {
     private Long id;
 
     @Column(nullable = false)
+    private Double prezzo;
+
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dataOra;
 

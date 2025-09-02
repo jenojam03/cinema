@@ -37,7 +37,7 @@ public class BigliettoService {
     @Autowired
     private EntityManager entityManager;
 
-    public static final Double PREZZO_BASE = 8.50;
+    //public static final Double PREZZO_BASE = 8.50;
 
 
     @Transactional(noRollbackFor = PagamentoFallitoException.class)
@@ -96,7 +96,7 @@ public class BigliettoService {
             transazione.getBiglietti().add(b);
 
             //PREZZO
-            b.setPrezzo(PREZZO_BASE); //potrei avere un campo prezzo in Proiezione e scrivere quindi proiezione.getPrezzo()
+            b.setPrezzo(proiezione.getPrezzo()); //potrei avere un campo prezzo in Proiezione e scrivere quindi proiezione.getPrezzo()
             bigliettoRepository.save(b);
             biglietti.add(b);
         }
@@ -129,7 +129,6 @@ public class BigliettoService {
             for(Biglietto biglietto : biglietti){
                 biglietto.setStato(StatoBiglietto.ANNULLATO);
                 bigliettoRepository.save(biglietto);
-                //entityManager.lock(biglietto.getPosto(), LockModeType.PESSIMISTIC_WRITE);
                 Posto p = biglietto.getPosto();
                 p.setDataBloccoTemporaneo(null);
                 p.setOccupato(false);
@@ -151,7 +150,7 @@ public class BigliettoService {
         System.out.println("Pagamento in corso");
         System.out.println("Importo da pagare: " + importo);
 
-        boolean ok = new Random().nextInt(100) < 80;
+        boolean ok = new Random().nextInt(100) < 90;
 
         if(ok){
             System.out.println("Pagamento effettuato con successo");
@@ -280,7 +279,7 @@ public class BigliettoService {
     private boolean eseguiRimborso(Cliente cliente, double importo) {
         System.out.println("Rimborso in corso per " + cliente.getEmail() + " di " + importo + "€");
         double d = new Random().nextDouble();
-        return d >= 0.2;
+        return d >= 0.1;
     }
 
     @Transactional(readOnly = true)

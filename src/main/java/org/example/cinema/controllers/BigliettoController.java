@@ -4,12 +4,14 @@ import org.example.cinema.dto.AcquistoRequest;
 import org.example.cinema.dto.BigliettoDTO;
 import org.example.cinema.entities.Biglietto;
 import org.example.cinema.entities.Cliente;
+import org.example.cinema.entities.Proiezione;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.DateWrongRangeException;
 //import org.example.cinema.jwt.CustomJwt;
 import org.example.cinema.services.BigliettoService;
 import org.example.cinema.services.ClienteService;
+import org.example.cinema.services.ProiezioneService;
 import org.example.cinema.support.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +28,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.example.cinema.services.BigliettoService.PREZZO_BASE;
+//import static org.example.cinema.services.BigliettoService.PREZZO_BASE;
 
 @RestController
 @RequestMapping("/biglietti")
@@ -36,17 +38,30 @@ public class BigliettoController {
     private BigliettoService bigliettoService;
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private ProiezioneService proiezioneService;
+
+
 
     @GetMapping("/prezzo")
-    public ResponseEntity<?> prezzoTot(@RequestParam int numeroPosti) {
-        double prezzoBase = PREZZO_BASE;
-        double prezzoTot = numeroPosti*prezzoBase;
-        return ResponseEntity.ok(prezzoTot);
+    public ResponseEntity<?> prezzoTot(@RequestParam int numeroPosti, @RequestParam Long proiezioneId) {
+        Optional<Proiezione> p = proiezioneService.getProiezioneById(proiezioneId);
+        if(p.isPresent()) {
+            double prezzoBase = p.get().getPrezzo();
+            double prezzoTot = numeroPosti*prezzoBase;
+            return ResponseEntity.ok(prezzoTot);
+        }
+        return ResponseEntity.status(404).body("L'id della proiezione non è corretto");
     }
 
     @GetMapping("/prezzoBase")
-    public ResponseEntity<?> prezzoBase() {
-        return ResponseEntity.ok(PREZZO_BASE);
+    public ResponseEntity<?> prezzoBase(@RequestParam Long proiezioneId) {
+        Optional<Proiezione> p = proiezioneService.getProiezioneById(proiezioneId);
+        if(p.isPresent()) {
+            double prezzoBase = p.get().getPrezzo();
+            return ResponseEntity.ok(prezzoBase);
+        }
+        return ResponseEntity.status(404).body("L'id della proiezione non è corretto");
     }
 
 
