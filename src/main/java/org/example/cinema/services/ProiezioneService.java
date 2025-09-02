@@ -199,8 +199,20 @@ public class ProiezioneService {
 
     @Transactional(readOnly = true)
     public Page<Proiezione> showProiezioniByData(Calendar data, int page, int size) {
+        //perchè altrimenti fa la ricerca per ora precisa e non restituisce nulla
+        Calendar inizioGiorno = (Calendar) data.clone();
+        inizioGiorno.set(Calendar.HOUR_OF_DAY, 0);
+        inizioGiorno.set(Calendar.MINUTE, 0);
+        inizioGiorno.set(Calendar.SECOND, 0);
+        inizioGiorno.set(Calendar.MILLISECOND, 0);
+
+        Calendar fineGiorno = (Calendar) data.clone();
+        fineGiorno.set(Calendar.HOUR_OF_DAY, 23);
+        fineGiorno.set(Calendar.MINUTE, 59);
+        fineGiorno.set(Calendar.SECOND, 59);
+        fineGiorno.set(Calendar.MILLISECOND, 999);
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
-        Page<Proiezione> pagedResult = proiezioneRepository.findByDataOra(data, pageable);
+        Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraBetween(inizioGiorno, fineGiorno, pageable);
         /*if ( pagedResult.hasContent() ) {
             return pagedResult.getContent();
         }

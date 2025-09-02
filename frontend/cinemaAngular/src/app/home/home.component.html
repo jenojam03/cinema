@@ -2,7 +2,7 @@
   <div class="welcome-section">
     <ng-container *ngIf="isLoggedIn(); else loggedOutWelcome">
       <!-- Messaggio per utente loggato -->
-      <h1>Benvenut*, {{ userName }} !</h1>
+      <h1>Benvenuto/a, {{ userName }} !</h1>
       <p>Esplora i film e le proiezioni disponibili.</p>
       <button (click)="logout()" class="action-button logout-button">
         Logout
@@ -11,10 +11,10 @@
 
     <ng-template #loggedOutWelcome>
       <!-- Messaggio per utente non loggato -->
-      <h1>Benvenuto nel Cinema App!</h1>
-      <p>Accedi per gestire i tuoi biglietti e la tua area personale.</p>
+      <h1>Benvenuto nel Cinema PSW</h1>
+      <p>Accedi o registrati per gestire i tuoi biglietti e la tua area personale.</p>
       <button (click)="vaiAlLogin()" class="action-button login-button">
-        Accedi
+        Accedi / Registrati
       </button>
     </ng-template>
   </div>

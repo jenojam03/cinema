@@ -25,7 +25,7 @@
       </button>
     </div>
 
-    <div *ngIf = "this.authService.isCliente()" class="card biglietti-utente-card">
+    <div *ngIf = "(this.authService.isCliente() && !this.authService.isAdmin())" class="card biglietti-utente-card">
       <h3>I tuoi biglietti</h3>
 
       <div *ngIf="isLoadingBiglietti" class="stato-messaggio caricamento">

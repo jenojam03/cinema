@@ -38,7 +38,7 @@ export class ProiezioneService {
       .set('data', data)
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/byDate`, { params });
+    return this.httpClient.get<PagedResponse<Proiezione>>(`${this.baseUrl}/byDatePaged`, { params });
   }
 
   getProiezioniBetweenDates(inizio: string, fine: string, page: number, size: number): Observable<PagedResponse<Proiezione>> {

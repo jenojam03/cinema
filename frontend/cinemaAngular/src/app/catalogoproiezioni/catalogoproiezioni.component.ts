@@ -100,9 +100,9 @@ export class CatalogoProiezioniComponent implements OnInit {
     if (dataInizioFormattata && dataFineFormattata) {
       this.proiezioneService.getProiezioniBetweenDates(dataInizioFormattata, dataFineFormattata, page, this.pageSize).subscribe({
         next: (data) => {
-          this.proiezioni = data.content;
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
+          this.proiezioni = data.content ?? [];
+          this.currentPage = data.number ?? 0;
+          this.totalPages = data.totalPages ?? 0;
           this.isLoading = false;
         },
         error: (err) => {
@@ -117,9 +117,9 @@ export class CatalogoProiezioniComponent implements OnInit {
       this.isLoading = true;
       this.proiezioneService.getProiezioniByData(dataInizioFormattata, page, this.pageSize).subscribe({
         next: (data) => {
-          this.proiezioni = data.content;
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
+          this.proiezioni = data.content ?? []; //altrimenti rimane undefined
+          this.currentPage = data.number ?? 0;
+          this.totalPages = data.totalPages ?? 0;
           this.isLoading = false;
         },
         error: (err) => {
