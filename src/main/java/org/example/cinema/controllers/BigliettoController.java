@@ -8,7 +8,6 @@ import org.example.cinema.entities.Proiezione;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.DateWrongRangeException;
-//import org.example.cinema.jwt.CustomJwt;
 import org.example.cinema.services.BigliettoService;
 import org.example.cinema.services.ClienteService;
 import org.example.cinema.services.ProiezioneService;
@@ -28,7 +27,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 
-//import static org.example.cinema.services.BigliettoService.PREZZO_BASE;
 
 @RestController
 @RequestMapping("/biglietti")

@@ -21,7 +21,7 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     public ClienteDTO registraCliente(ClienteCreateRequest req) throws MailUserAlreadyExistsException{
         if (clienteRepository.existsByEmail(req.getEmail()) ) {
             throw new MailUserAlreadyExistsException("L'utente è già registrato");

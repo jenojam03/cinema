@@ -114,8 +114,10 @@ export class AcquistoComponent implements OnInit {
   confermaAcquisto(): void {
     if (!this.oauthService.hasValidAccessToken()) {
       alert('Devi essere loggato per effettuare un acquisto.');
-      sessionStorage.setItem('returnUrl', this.router.url);
-      sessionStorage.setItem('postiSelezionati', JSON.stringify(this.postiSelezionati));
+
+      //memorizzo la pagina di ritorno e i posti selezionati per non doverli riselezionare dopo il login
+      sessionStorage.setItem('returnUrl', this.router.url); //per ritornare all'acquisto
+      sessionStorage.setItem('postiSelezionati', JSON.stringify(this.postiSelezionati)); //per ripristinare i posit
 
       this.oauthService.initCodeFlow(this.router.url);
       return;

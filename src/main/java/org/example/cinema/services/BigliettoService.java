@@ -37,10 +37,8 @@ public class BigliettoService {
     @Autowired
     private EntityManager entityManager;
 
-    //public static final Double PREZZO_BASE = 8.50;
 
-
-    @Transactional(noRollbackFor = PagamentoFallitoException.class)
+    @Transactional(noRollbackFor = PagamentoFallitoException.class) //no rollback perchè voglio salvare le transazioni fallite
     public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti) {
 
         Cliente cliente = clienteRepository.findByEmail(emailCliente);
@@ -51,6 +49,7 @@ public class BigliettoService {
         Proiezione proiezione = proiezioneRepository.findById(idProiezione)
                 .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
 
+        //per assicurarmi di accedere ai posti lockati e per non dover rifare di nuovo le query
         Map<Long, Posto> postiBloccati = new HashMap<>();
         for (Long postoId : idPosti) {
             Posto p = entityManager.find(Posto.class, postoId, LockModeType.PESSIMISTIC_WRITE);
@@ -83,11 +82,11 @@ public class BigliettoService {
         List<Biglietto> biglietti = new ArrayList<>();
         Transazione transazione = new Transazione();
 
+        //a ogni costo corrisponde un biglietto
         for (Long postoID : idPosti) {
             Biglietto b = new Biglietto();
             b.setCliente(cliente);
-            //aggiungo biglietto anche al cliente
-            cliente.getBiglietti().add(b);
+            cliente.getBiglietti().add(b); //aggiungo biglietto anche al cliente
             b.setProiezione(proiezione);
             b.setPosto(postiBloccati.get(postoID));
             b.setStato(StatoBiglietto.ATTIVO);
@@ -96,43 +95,42 @@ public class BigliettoService {
             transazione.getBiglietti().add(b);
 
             //PREZZO
-            b.setPrezzo(proiezione.getPrezzo()); //potrei avere un campo prezzo in Proiezione e scrivere quindi proiezione.getPrezzo()
+            b.setPrezzo(proiezione.getPrezzo());
             bigliettoRepository.save(b);
             biglietti.add(b);
         }
 
         transazione.setData(Calendar.getInstance());
         transazione.setCliente(cliente);
-        //aggiungo la transazione anche al cliente
-        cliente.getTransazioni().add(transazione);
+        cliente.getTransazioni().add(transazione); //aggiungo la transazione anche al cliente
         transazione.setImporto(calcolaImporto(biglietti));
         transazione.setEsito(false);
         transazioneRepository.save(transazione);
-        clienteRepository.save(cliente);
+        //clienteRepository.save(cliente);
 
-        //ESITO POSITIVO CON 80% DI PROBABILITA' PER SIMULARE IMPREVISTI
+        //ESITO POSITIVO CON 90% DI PROBABILITA' PER SIMULARE IMPREVISTI
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
 
         if(esitoPagamento){
             transazione.setEsito(true);
-            transazioneRepository.save(transazione);//aggiorna esito
+            //transazioneRepository.save(transazione);//aggiorna esito
 
             for(Biglietto biglietto : biglietti){
                 bigliettoRepository.save(biglietto);
                 Posto p = biglietto.getPosto();
                 p.setOccupato(true);
                 p.setDataBloccoTemporaneo(null);
-                postoRepository.save(p);
+                //postoRepository.save(p);
 
             }
         }else{
             for(Biglietto biglietto : biglietti){
                 biglietto.setStato(StatoBiglietto.ANNULLATO);
-                bigliettoRepository.save(biglietto);
+                //bigliettoRepository.save(biglietto);
                 Posto p = biglietto.getPosto();
                 p.setDataBloccoTemporaneo(null);
                 p.setOccupato(false);
-                postoRepository.save(p);
+                //postoRepository.save(p);
             }
 
             throw new PagamentoFallitoException("Il pagamento è fallito, riprovare.");
@@ -287,6 +285,7 @@ public class BigliettoService {
         return postoRepository.findPostiOccupatiByProiezione(proiezione);
     }
 
+    @Transactional(readOnly = true)
     public Biglietto getBigliettoById(Long id) {
         return bigliettoRepository.findById(id).orElse(null);
     }

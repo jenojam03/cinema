@@ -24,29 +24,21 @@ public class TransazioneService {
     @Autowired
     private PostoRepository postoRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void salvaTransazioneFallita(Transazione transazione, List<Biglietto> biglietti) {
-        transazioneRepository.save(transazione);
-        for (Biglietto b : biglietti) {
-            bigliettoRepository.save(b);
-            Posto p = b.getPosto();
-            p.setDataBloccoTemporaneo(null);
-            postoRepository.save(p);
-        }
-    }
 
     @Transactional(readOnly = true)
     public List<Transazione> getTransazioni() {
-        return transazioneRepository.findAll();
+        return transazioneRepository.findAllByOrderByDataDesc();
     }
 
     @Transactional(readOnly = true)
     public List<Transazione> getTransazioniByEsito(boolean esito) {
-        return transazioneRepository.findByEsito(esito);
+        return transazioneRepository.findByEsitoOrderByDataDesc(esito);
     }
 
     @Transactional(readOnly = true)
     public List<Transazione> getTransazioniByEmail(String email) {
-        return transazioneRepository.findByClienteEmail(email);
+        return transazioneRepository.findByClienteEmailOrderByDataDesc(email);
     }
+
+    //metodo che riceve sia mail ed esito e gestisce casi nulli
 }

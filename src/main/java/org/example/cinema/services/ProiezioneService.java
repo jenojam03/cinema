@@ -37,7 +37,7 @@ public class ProiezioneService {
     @Autowired
     private FilmRepository filmRepository;
 
-
+    @Transactional(readOnly = true)
     public List<Posto> getPostiDisponibili(Long proiezioneId) {
         Proiezione proiezione = proiezioneRepository.findById(proiezioneId)
                 .orElseThrow(() -> new RuntimeException("Proiezione non trovata"));

@@ -72,7 +72,7 @@ public class FilmService {
         return filmRepository.save(film);
     }
 
-    @Transactional
+    @Transactional(readOnly =true)
     public List<Proiezione> getProiezioniFilm(Long filmId) {
         Film film = getFilmById(filmId);
         return film.getProiezioni();
