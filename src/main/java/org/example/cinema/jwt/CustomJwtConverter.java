@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+/*@Component
 public class CustomJwtConverter implements Converter<Jwt,CustomJwt> {
 
     @Override
@@ -38,3 +38,4 @@ public class CustomJwtConverter implements Converter<Jwt,CustomJwt> {
         return authorities;
     }
 }
+*/

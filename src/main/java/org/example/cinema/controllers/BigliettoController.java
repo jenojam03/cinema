@@ -7,9 +7,7 @@ import org.example.cinema.entities.Cliente;
 import org.example.cinema.exceptions.BigliettoNotFoundException;
 import org.example.cinema.exceptions.ClienteNotFoundException;
 import org.example.cinema.exceptions.DateWrongRangeException;
-import org.example.cinema.jwt.CustomJwt;
-import org.example.cinema.repositories.BigliettoRepository;
-import org.example.cinema.repositories.ClienteRepository;
+//import org.example.cinema.jwt.CustomJwt;
 import org.example.cinema.services.BigliettoService;
 import org.example.cinema.services.ClienteService;
 import org.example.cinema.support.ResponseMessage;
@@ -18,7 +16,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
@@ -53,8 +53,11 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated() and hasRole('cliente')")
     @PostMapping("/acquista")
     public ResponseEntity<Map<String, String>> acquistaBiglietti(@RequestBody @NotNull AcquistoRequest request) {
-        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        String email = jwt.getName();
+        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        //String email = jwt.getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaimAsString("email");
         Map<String, String> response;
 
         try {
@@ -111,8 +114,13 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> annullaBiglietto(@PathVariable Long id) {
-        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        String email = jwt.getName();
+        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        //String email = jwt.getName();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaimAsString("email");
+
         Cliente cliente = clienteService.getClienteByEmail(email);
         Biglietto biglietto = bigliettoService.getBigliettoById(id);
 
@@ -145,9 +153,11 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/miei_biglietti")
     public ResponseEntity<List<BigliettoDTO>> getMieiBiglietti() {
-        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        String email = jwt.getName();
-
+        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        //String email = jwt.getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaimAsString("email");
 
         try {
             List<BigliettoDTO> ordini = bigliettoService.getBigliettiCliente(email);
@@ -163,8 +173,12 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<?> getBiglietto(@PathVariable Long id) {
-        var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        String email = jwt.getName();
+        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
+        //String email = jwt.getName();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaimAsString("email");
 
         Biglietto biglietto = bigliettoService.getBigliettoById(id);
 
@@ -173,7 +187,8 @@ public class BigliettoController {
         }
 
         //verifica che l'utente loggato sia il proprietario del biglietto
-        if (!biglietto.getCliente().getEmail().equals(email) && !jwt.getAuthorities().contains("ROLE_admin")) {
+        if (!biglietto.getCliente().getEmail().equals(email) && !authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_admin"))) {
             return new ResponseEntity<>("Non hai i permessi per visualizzare questo biglietto.", HttpStatus.FORBIDDEN);
         }
 

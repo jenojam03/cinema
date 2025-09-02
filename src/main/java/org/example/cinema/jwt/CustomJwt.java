@@ -1,4 +1,4 @@
-package org.example.cinema.jwt;
+/*package org.example.cinema.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,4 +20,4 @@ public class CustomJwt extends JwtAuthenticationToken {
         super(jwt, authorities);
     }
 
-}
+}*/
