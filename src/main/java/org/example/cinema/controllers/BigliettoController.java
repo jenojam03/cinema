@@ -65,11 +65,9 @@ public class BigliettoController {
     }
 
 
-    @PreAuthorize("isAuthenticated() and hasRole('cliente')")
+    @PreAuthorize("isAuthenticated() and hasRole('cliente') and !hasRole('admin')")
     @PostMapping("/acquista")
     public ResponseEntity<Map<String, String>> acquistaBiglietti(@RequestBody @NotNull AcquistoRequest request) {
-        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        //String email = jwt.getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaimAsString("email");
@@ -129,9 +127,6 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> annullaBiglietto(@PathVariable Long id) {
-        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        //String email = jwt.getName();
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaimAsString("email");
@@ -168,8 +163,6 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/miei_biglietti")
     public ResponseEntity<List<BigliettoDTO>> getMieiBiglietti() {
-        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        //String email = jwt.getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaimAsString("email");
@@ -188,9 +181,6 @@ public class BigliettoController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<?> getBiglietto(@PathVariable Long id) {
-        //var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        //String email = jwt.getName();
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaimAsString("email");
