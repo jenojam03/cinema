@@ -144,11 +144,3 @@ CREATE DATABASE "cinema-db";
    npm start
    ```
    *The frontend application will be accessible at `http://localhost:4200`.*
-
----
-
-## 🔒 Security Best Practices
-
-- **Zero Hardcoded Secrets**: Credentials, database passwords, and client keys are abstracted using environment variables.
-- **Git Hygiene**: Strict `.gitignore` prevents logs, dependencies (`node_modules/`, `target/`), local environment files (`.env*`), and sensitive certificates from being committed.
-- **Stateless Authorization**: Requests to secured API endpoints validate JWT signatures using Keycloak's public JWK sets.
