@@ -46,7 +46,6 @@ public class ProiezioneService {
         return postoRepository.findPostiLiberiByProiezione(proiezione);
     }
 
-
     @Transactional
     public void aggiungiProiezione(ProiezioneCreateRequest request) {
         Optional<Film> film = filmRepository.findById(request.getFilmId());
@@ -60,8 +59,8 @@ public class ProiezioneService {
         proiezione.setFilm(film.get());
         film.get().getProiezioni().add(proiezione);
 
-        //salvo la proiezione
-        //Proiezione savedProiezione = proiezioneRepository.save(proiezione);
+        // salvo la proiezione
+        // Proiezione savedProiezione = proiezioneRepository.save(proiezione);
 
         List<Posto> posti = request.getPosti().stream().map(postoDto -> {
             Posto posto = new Posto();
@@ -72,10 +71,10 @@ public class ProiezioneService {
             return posto;
         }).toList();
 
-        //postoRepository.saveAll(posti);
+        // postoRepository.saveAll(posti);
         proiezione.setPosti(posti);
         proiezioneRepository.save(proiezione);
-        //filmRepository.save(film.get());
+        // filmRepository.save(film.get());
 
     }
 
@@ -125,7 +124,7 @@ public class ProiezioneService {
         proiezioneRepository.delete(proiezione);
     }
 
-    //posso modificare solo la data di una proiezione già immessa nel db
+    // posso modificare solo la data di una proiezione già immessa nel db
     @Transactional
     public void aggiornaProiezione(Long id, Calendar nuovaDataOra) {
         Proiezione existingProiezione = proiezioneRepository.findById(id)
@@ -144,8 +143,7 @@ public class ProiezioneService {
         return p.getPosti();
     }
 
-
-    //FUTURE
+    // FUTURE
     @Transactional(readOnly = true)
     public List<Proiezione> showAllProiezioniOrderedFuture() {
         return proiezioneRepository.findByDataOraAfterOrderByDataOraAsc(Calendar.getInstance());
@@ -156,17 +154,19 @@ public class ProiezioneService {
         return proiezioneRepository.findByFilmIdAndDataOraAfterOrderByDataOraAsc(filmId, Calendar.getInstance());
     }
 
-    //PAGINATE
+    // PAGINATE
     @Transactional(readOnly = true)
     public Page<Proiezione> getFutureProiezioni(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
         Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraAfter(Calendar.getInstance(), pageable);
-        /*if ( pagedResult.hasContent() ) {
-            return pagedResult.getContent();
-        }
-        else {
-            return new ArrayList<>();
-        }*/
+        /*
+         * if ( pagedResult.hasContent() ) {
+         * return pagedResult.getContent();
+         * }
+         * else {
+         * return new ArrayList<>();
+         * }
+         */
         return pagedResult;
 
     }
@@ -174,13 +174,16 @@ public class ProiezioneService {
     @Transactional(readOnly = true)
     public Page<Proiezione> getFutureProiezioniByFilm(Long filmId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
-        Page<Proiezione> pagedResult = proiezioneRepository.findByFilmIdAndDataOraAfter(filmId, Calendar.getInstance(), pageable);
-        /*if ( pagedResult.hasContent() ) {
-            return pagedResult.getContent();
-        }
-        else {
-            return new ArrayList<>();
-        }*/
+        Page<Proiezione> pagedResult = proiezioneRepository.findByFilmIdAndDataOraAfter(filmId, Calendar.getInstance(),
+                pageable);
+        /*
+         * if ( pagedResult.hasContent() ) {
+         * return pagedResult.getContent();
+         * }
+         * else {
+         * return new ArrayList<>();
+         * }
+         */
         return pagedResult;
     }
 
@@ -188,18 +191,20 @@ public class ProiezioneService {
     public Page<Proiezione> showProiezioniBetween(Calendar inizio, Calendar fine, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
         Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraBetween(inizio, fine, pageable);
-        /*if ( pagedResult.hasContent() ) {
-            return pagedResult.getContent();
-        }
-        else {
-            return new ArrayList<>();
-        }*/
+        /*
+         * if ( pagedResult.hasContent() ) {
+         * return pagedResult.getContent();
+         * }
+         * else {
+         * return new ArrayList<>();
+         * }
+         */
         return pagedResult;
     }
 
     @Transactional(readOnly = true)
     public Page<Proiezione> showProiezioniByData(Calendar data, int page, int size) {
-        //perchè altrimenti fa la ricerca per ora precisa e non restituisce nulla
+        // perchè altrimenti fa la ricerca per ora precisa e non restituisce nulla
         Calendar inizioGiorno = (Calendar) data.clone();
         inizioGiorno.set(Calendar.HOUR_OF_DAY, 0);
         inizioGiorno.set(Calendar.MINUTE, 0);
@@ -213,15 +218,16 @@ public class ProiezioneService {
         fineGiorno.set(Calendar.MILLISECOND, 999);
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").ascending());
         Page<Proiezione> pagedResult = proiezioneRepository.findByDataOraBetween(inizioGiorno, fineGiorno, pageable);
-        /*if ( pagedResult.hasContent() ) {
-            return pagedResult.getContent();
-        }
-        else {
-            return new ArrayList<>();
-        }*/
+        /*
+         * if ( pagedResult.hasContent() ) {
+         * return pagedResult.getContent();
+         * }
+         * else {
+         * return new ArrayList<>();
+         * }
+         */
         return pagedResult;
     }
-
 
     @Transactional(readOnly = true)
     public List<Proiezione> getProiezioneByData(Calendar dataCercata) {
@@ -229,7 +235,7 @@ public class ProiezioneService {
     }
 
     @Transactional(readOnly = true)
-    public List<Proiezione> getProiezioneBetween(Calendar inizio, Calendar fine){
-        return proiezioneRepository.findByDataOraBetween(inizio,fine);
+    public List<Proiezione> getProiezioneBetween(Calendar inizio, Calendar fine) {
+        return proiezioneRepository.findByDataOraBetween(inizio, fine);
     }
 }

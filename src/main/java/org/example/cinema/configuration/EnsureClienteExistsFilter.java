@@ -21,19 +21,17 @@ public class EnsureClienteExistsFilter extends OncePerRequestFilter {
     @Autowired
     private ClienteRepository clienteRepository;
 
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null
                 && authentication.isAuthenticated()
-                && authentication.getPrincipal() instanceof Jwt jwt){
+                && authentication.getPrincipal() instanceof Jwt jwt) {
             String email = jwt.getClaimAsString("email");
             if (!clienteRepository.existsByEmail(email)) {
                 Cliente nuovo = new Cliente();
@@ -47,4 +45,3 @@ public class EnsureClienteExistsFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-

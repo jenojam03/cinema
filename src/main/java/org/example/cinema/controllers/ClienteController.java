@@ -19,7 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,8 +28,6 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
-
-
 
     @PostMapping("/registrazione")
     public ResponseEntity<?> create(@RequestBody @Valid ClienteCreateRequest request) {
@@ -43,33 +41,41 @@ public class ClienteController {
         }
     }
 
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping(value="/search/{id}")
-    public @ResponseBody ResponseEntity<ClienteDTO> readById(@PathVariable(value = "id") long id) throws ClienteNotFoundException {
+    @PreAuthorize(value = "hasRole('admin')")
+    @GetMapping(value = "/search/{id}")
+    public @ResponseBody ResponseEntity<ClienteDTO> readById(@PathVariable(value = "id") long id)
+            throws ClienteNotFoundException {
         ClienteDTO cliente = clienteService.getCliente(id);
-        if(cliente == null) { return ResponseEntity.notFound().build(); }
+        if (cliente == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(cliente);
     }
 
-    /*//@PreAuthorize(value="hasRole('admin')")
-    @GetMapping(value="/search/by_name/{name}")
-    public @ResponseBody List<ClienteDTO> readByName(@PathVariable(value = "name") String name) {
-        return clienteService.getClientiByNome(name);
-    }*/
+    /*
+     * //@PreAuthorize(value="hasRole('admin')")
+     * 
+     * @GetMapping(value="/search/by_name/{name}")
+     * public @ResponseBody List<ClienteDTO> readByName(@PathVariable(value =
+     * "name") String name) {
+     * return clienteService.getClientiByNome(name);
+     * }
+     */
 
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping(value="/search/by_surname/{surname}")
+    @PreAuthorize(value = "hasRole('admin')")
+    @GetMapping(value = "/search/by_surname/{surname}")
     public @ResponseBody List<ClienteDTO> readBySurname(@PathVariable(value = "surname") String surname) {
         return clienteService.getClientiByCognome(surname);
     }
 
-    @PreAuthorize(value="hasRole('admin')")
-    @GetMapping(value="/search/by_name_surname/{name}/{surname}")
-    public @ResponseBody List<ClienteDTO> readByNameSurname(@PathVariable(value = "name") String name, @PathVariable(value = "surname") String surname) {
-        return clienteService.getClientiByNomeAndCognome(name,surname);
+    @PreAuthorize(value = "hasRole('admin')")
+    @GetMapping(value = "/search/by_name_surname/{name}/{surname}")
+    public @ResponseBody List<ClienteDTO> readByNameSurname(@PathVariable(value = "name") String name,
+            @PathVariable(value = "surname") String surname) {
+        return clienteService.getClientiByNomeAndCognome(name, surname);
     }
 
-    @PreAuthorize(value="hasRole('admin')")
+    @PreAuthorize(value = "hasRole('admin')")
     @GetMapping("search/by_email")
     public ResponseEntity<?> getClienteByEmail(@RequestParam String email) {
         Cliente cliente = clienteService.getClienteByEmail(email);

@@ -22,11 +22,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
-
 
 @RestController
 @RequestMapping("/biglietti")
@@ -39,14 +38,12 @@ public class BigliettoController {
     @Autowired
     private ProiezioneService proiezioneService;
 
-
-
     @GetMapping("/prezzo")
     public ResponseEntity<?> prezzoTot(@RequestParam int numeroPosti, @RequestParam Long proiezioneId) {
         Optional<Proiezione> p = proiezioneService.getProiezioneById(proiezioneId);
-        if(p.isPresent()) {
+        if (p.isPresent()) {
             double prezzoBase = p.get().getPrezzo();
-            double prezzoTot = numeroPosti*prezzoBase;
+            double prezzoTot = numeroPosti * prezzoBase;
             return ResponseEntity.ok(prezzoTot);
         }
         return ResponseEntity.status(404).body("L'id della proiezione non è corretto");
@@ -55,13 +52,12 @@ public class BigliettoController {
     @GetMapping("/prezzoBase")
     public ResponseEntity<?> prezzoBase(@RequestParam Long proiezioneId) {
         Optional<Proiezione> p = proiezioneService.getProiezioneById(proiezioneId);
-        if(p.isPresent()) {
+        if (p.isPresent()) {
             double prezzoBase = p.get().getPrezzo();
             return ResponseEntity.ok(prezzoBase);
         }
         return ResponseEntity.status(404).body("L'id della proiezione non è corretto");
     }
-
 
     @PreAuthorize("isAuthenticated() and hasRole('cliente') and !hasRole('admin')")
     @PostMapping("/acquista")
@@ -73,10 +69,9 @@ public class BigliettoController {
 
         try {
             List<Biglietto> biglietti = bigliettoService.acquistaBiglietti(
-                    email, //prendo l'email dal token
+                    email, // prendo l'email dal token
                     request.getIdProiezione(),
-                    request.getIdPosti()
-            );
+                    request.getIdPosti());
             response = new HashMap<>();
             response.put("message", "Acquisto effettuato con successo.");
             return ResponseEntity.ok(response);
@@ -84,7 +79,7 @@ public class BigliettoController {
             response = new HashMap<>();
             response.put("error", "Utente non trovato.");
             return ResponseEntity.status(404).body(response);
-        }catch(Exception e){
+        } catch (Exception e) {
             response = new HashMap<>();
             response.put("error", e.getMessage());
             return ResponseEntity.status(400).body(response);
@@ -105,8 +100,8 @@ public class BigliettoController {
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/{cliente}/{startDate}/{endDate}")
     public ResponseEntity<?> getBigliettiPeriodo(@Valid @PathVariable("cliente") Cliente cliente,
-                                              @PathVariable("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy")
-                                              String start, @PathVariable("endDate") @DateTimeFormat(pattern = "dd-MM-yyyy") String end) {
+            @PathVariable("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy") String start,
+            @PathVariable("endDate") @DateTimeFormat(pattern = "dd-MM-yyyy") String end) {
         try {
             Calendar inizio = parseDate(start);
             Calendar fine = parseDate(end);
@@ -143,7 +138,6 @@ public class BigliettoController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
@@ -189,7 +183,7 @@ public class BigliettoController {
             return new ResponseEntity<>("Biglietto non trovato.", HttpStatus.NOT_FOUND);
         }
 
-        //verifica che l'utente loggato sia il proprietario del biglietto
+        // verifica che l'utente loggato sia il proprietario del biglietto
         if (!biglietto.getCliente().getEmail().equals(email) && !authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_admin"))) {
             return new ResponseEntity<>("Non hai i permessi per visualizzare questo biglietto.", HttpStatus.FORBIDDEN);

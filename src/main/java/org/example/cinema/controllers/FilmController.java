@@ -33,14 +33,14 @@ public class FilmController {
 
     @GetMapping("/{id}/proiezioni")
     public ResponseEntity<?> getProiezioniPerFilm(@PathVariable Long id) {
-       List<Proiezione> proiezioni = proiezioneService.getFutureProiezioniByFilmId(id);
+        List<Proiezione> proiezioni = proiezioneService.getFutureProiezioniByFilmId(id);
         return ResponseEntity.ok(proiezioni);
     }
 
     @GetMapping("/{id}/proiezioni/paged")
     public ResponseEntity<?> getProiezioniPerFilmPaged(@PathVariable Long id,
-                                                       @RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
         Page<Proiezione> proiezioni = proiezioneService.getFutureProiezioniByFilm(id, page, size);
         return ResponseEntity.ok(proiezioni);
     }
@@ -61,7 +61,6 @@ public class FilmController {
         }
     }
 
-
     @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminaFilm(@PathVariable Long id) {
@@ -74,27 +73,27 @@ public class FilmController {
     }
 
     @GetMapping("/search/nome/{nome}")
-    public ResponseEntity<?> getFilmByTitolo(@PathVariable String nome)  {
+    public ResponseEntity<?> getFilmByTitolo(@PathVariable String nome) {
         List<Film> ret = filmService.getFilmByTitoloContaining(nome);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/search/autore/{autore}")
-    public ResponseEntity<?> getFilmByAutore(@PathVariable String autore)  {
+    public ResponseEntity<?> getFilmByAutore(@PathVariable String autore) {
         List<Film> ret = filmService.getFilmByRegistaContaining(autore);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
     }
 
     @GetMapping("/search/genere/{genere}")
-    public ResponseEntity<?> getFilmByGenere(@PathVariable String genere)  {
+    public ResponseEntity<?> getFilmByGenere(@PathVariable String genere) {
         List<Film> ret = filmService.getFilmByGenere(genere);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
@@ -105,24 +104,23 @@ public class FilmController {
         return ResponseEntity.ok(filmService.getFilmById(id));
     }
 
-    //PAGINATE
+    // PAGINATE
     @GetMapping("/paged")
     public ResponseEntity<?> getAllFilmPaged(@RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "12") int size) {
         Page<Film> ret = filmService.getAllPaged(page, size);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
     }
 
-
     @GetMapping("/search/paged/genere/{genere}")
     public ResponseEntity<?> getFilmByGenerePaged(@PathVariable String genere,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
         Page<Film> ret = filmService.getFilmByGenere(genere, page, size);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
@@ -130,10 +128,10 @@ public class FilmController {
 
     @GetMapping("/search/paged/titolo/{titolo}")
     public ResponseEntity<?> getFilmByTitoloPaged(@PathVariable String titolo,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
         Page<Film> ret = filmService.getFilmByTitolo(titolo, page, size);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);
@@ -141,10 +139,10 @@ public class FilmController {
 
     @GetMapping("/search/paged/regista/{regista}")
     public ResponseEntity<?> getFilmByRegistaPaged(@PathVariable String regista,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
         Page<Film> ret = filmService.getFilmByRegista(regista, page, size);
-        if(ret.isEmpty()) {
+        if (ret.isEmpty()) {
             return ResponseEntity.status(404).body(new ResponseMessage("Nessun film trovato"));
         }
         return ResponseEntity.ok(ret);

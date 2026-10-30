@@ -37,8 +37,8 @@ public class BigliettoService {
     @Autowired
     private EntityManager entityManager;
 
-
-    @Transactional(noRollbackFor = PagamentoFallitoException.class) //no rollback perchè voglio salvare le transazioni fallite
+    @Transactional(noRollbackFor = PagamentoFallitoException.class) // no rollback perchè voglio salvare le transazioni
+                                                                    // fallite
     public List<Biglietto> acquistaBiglietti(String emailCliente, Long idProiezione, List<Long> idPosti) {
 
         Cliente cliente = clienteRepository.findByEmail(emailCliente);
@@ -49,31 +49,34 @@ public class BigliettoService {
         Proiezione proiezione = proiezioneRepository.findById(idProiezione)
                 .orElseThrow(() -> new ProiezioneNotFoundException("Proiezione non trovata"));
 
-        //per assicurarmi di accedere ai posti lockati e per non dover rifare di nuovo le query
+        // per assicurarmi di accedere ai posti lockati e per non dover rifare di nuovo
+        // le query
         Map<Long, Posto> postiBloccati = new HashMap<>();
         for (Long postoId : idPosti) {
             Posto p = entityManager.find(Posto.class, postoId, LockModeType.PESSIMISTIC_WRITE);
 
-            //Posto p = postoRepository.findById(postoId).orElseThrow(() -> new PostoNotFoundException("Il posto non è valido"));
-            //entityManager.lock(p, LockModeType.PESSIMISTIC_WRITE);
+            // Posto p = postoRepository.findById(postoId).orElseThrow(() -> new
+            // PostoNotFoundException("Il posto non è valido"));
+            // entityManager.lock(p, LockModeType.PESSIMISTIC_WRITE);
 
-            if(p == null) {
+            if (p == null) {
                 throw new PostoNotFoundException("Posto non trovato!");
             }
-            if(!p.getProiezione().equals(proiezione)) {
+            if (!p.getProiezione().equals(proiezione)) {
                 throw new RuntimeException("Il posto non appartiene alla proiezione corretta");
             }
-            if(p.getProiezione().getDataOra().after(LocalDate.now())) {
+            if (p.getProiezione().getDataOra().after(LocalDate.now())) {
                 throw new RuntimeException("La proiezione è già iniziata");
             }
             if (p.isOccupato()) {
                 throw new RuntimeException("Il posto con ID " + postoId + " è già prenotato.");
             }
-            if(p.getDataBloccoTemporaneo() != null && p.getDataBloccoTemporaneo().isAfter(LocalDateTime.now().minusMinutes(5))){
+            if (p.getDataBloccoTemporaneo() != null
+                    && p.getDataBloccoTemporaneo().isAfter(LocalDateTime.now().minusMinutes(5))) {
                 throw new RuntimeException("Posto temporaneamente riservato. Riprova tra qualche minuto");
             }
 
-            //blocco temporaneamente la prenotazione
+            // blocco temporaneamente la prenotazione
             p.setDataBloccoTemporaneo(LocalDateTime.now());
             postiBloccati.put(postoId, p);
 
@@ -82,11 +85,11 @@ public class BigliettoService {
         List<Biglietto> biglietti = new ArrayList<>();
         Transazione transazione = new Transazione();
 
-        //a ogni costo corrisponde un biglietto
+        // a ogni costo corrisponde un biglietto
         for (Long postoID : idPosti) {
             Biglietto b = new Biglietto();
             b.setCliente(cliente);
-            cliente.getBiglietti().add(b); //aggiungo biglietto anche al cliente
+            cliente.getBiglietti().add(b); // aggiungo biglietto anche al cliente
             b.setProiezione(proiezione);
             b.setPosto(postiBloccati.get(postoID));
             b.setStato(StatoBiglietto.ATTIVO);
@@ -94,7 +97,7 @@ public class BigliettoService {
             b.setDataAcquisto(Calendar.getInstance());
             transazione.getBiglietti().add(b);
 
-            //PREZZO
+            // PREZZO
             b.setPrezzo(proiezione.getPrezzo());
             bigliettoRepository.save(b);
             biglietti.add(b);
@@ -102,35 +105,35 @@ public class BigliettoService {
 
         transazione.setData(Calendar.getInstance());
         transazione.setCliente(cliente);
-        cliente.getTransazioni().add(transazione); //aggiungo la transazione anche al cliente
+        cliente.getTransazioni().add(transazione); // aggiungo la transazione anche al cliente
         transazione.setImporto(calcolaImporto(biglietti));
         transazione.setEsito(false);
         transazioneRepository.save(transazione);
-        //clienteRepository.save(cliente);
+        // clienteRepository.save(cliente);
 
-        //ESITO POSITIVO CON 90% DI PROBABILITA' PER SIMULARE IMPREVISTI
+        // ESITO POSITIVO CON 90% DI PROBABILITA' PER SIMULARE IMPREVISTI
         boolean esitoPagamento = processaPagamento(transazione.getImporto());
 
-        if(esitoPagamento){
+        if (esitoPagamento) {
             transazione.setEsito(true);
-            //transazioneRepository.save(transazione);//aggiorna esito
+            // transazioneRepository.save(transazione);//aggiorna esito
 
-            for(Biglietto biglietto : biglietti){
+            for (Biglietto biglietto : biglietti) {
                 bigliettoRepository.save(biglietto);
                 Posto p = biglietto.getPosto();
                 p.setOccupato(true);
                 p.setDataBloccoTemporaneo(null);
-                //postoRepository.save(p);
+                // postoRepository.save(p);
 
             }
-        }else{
-            for(Biglietto biglietto : biglietti){
+        } else {
+            for (Biglietto biglietto : biglietti) {
                 biglietto.setStato(StatoBiglietto.ANNULLATO);
-                //bigliettoRepository.save(biglietto);
+                // bigliettoRepository.save(biglietto);
                 Posto p = biglietto.getPosto();
                 p.setDataBloccoTemporaneo(null);
                 p.setOccupato(false);
-                //postoRepository.save(p);
+                // postoRepository.save(p);
             }
 
             throw new PagamentoFallitoException("Il pagamento è fallito, riprovare.");
@@ -141,7 +144,7 @@ public class BigliettoService {
     }
 
     private boolean processaPagamento(double importo) {
-       if(importo <= 0){
+        if (importo <= 0) {
             System.out.println("Importo non valido");
             return false;
         }
@@ -150,10 +153,10 @@ public class BigliettoService {
 
         boolean ok = new Random().nextInt(100) < 90;
 
-        if(ok){
+        if (ok) {
             System.out.println("Pagamento effettuato con successo");
             return true;
-        }else{
+        } else {
             System.out.println("Pagamento fallito. Riprovare");
             return false;
         }
@@ -161,28 +164,27 @@ public class BigliettoService {
 
     private double calcolaImporto(List<Biglietto> biglietti) {
         double ret = 0;
-        for(Biglietto b : biglietti) {
+        for (Biglietto b : biglietti) {
             ret += b.getPrezzo();
         }
         return ret;
     }
 
-
     @Transactional(readOnly = true)
     public List<BigliettoDTO> getBigliettiCliente(String email) throws ClienteNotFoundException {
         Cliente cliente = clienteRepository.findByEmail(email);
-        if(cliente == null)
+        if (cliente == null)
             throw new ClienteNotFoundException("Cliente non trovato!");
 
         System.out.println("Cliente trovato: " + cliente.getEmail());
 
-        //recupero gli ordini del cliente
+        // recupero gli ordini del cliente
         List<Biglietto> biglietti = bigliettoRepository.findByCliente_IdOrderByDataAcquistoDesc(cliente.getId());
         if (biglietti.isEmpty()) {
             System.out.println("Nessun biglietto trovato per il cliente con email: " + email);
         }
 
-        //creazione della lista di DTO per gli ordini
+        // creazione della lista di DTO per gli ordini
         List<BigliettoDTO> bigliettiDTO = new ArrayList<>();
         for (Biglietto biglietto : biglietti) {
             BigliettoDTO dto = new BigliettoDTO();
@@ -195,22 +197,19 @@ public class BigliettoService {
             dto.setPrezzo(biglietto.getPrezzo());
             bigliettiDTO.add(dto);
 
-
-            //log per ogni biglietto trovato
+            // log per ogni biglietto trovato
             System.out.println("Biglietto trovato: ID = " + biglietto.getId() + ", Stato = " + biglietto.getStato());
         }
         return bigliettiDTO;
     }
 
-
-
     @Transactional(readOnly = true)
     public List<Biglietto> getBigliettiClientePeriodo(String email, Calendar da, Calendar a)
             throws ClienteNotFoundException, DateWrongRangeException {
         Cliente cliente = clienteRepository.findByEmail(email);
-        if(cliente == null)
+        if (cliente == null)
             throw new ClienteNotFoundException("Cliente non trovato!");
-        if ( da.compareTo(a) >= 0 ) {
+        if (da.compareTo(a) >= 0) {
             throw new DateWrongRangeException();
         }
         return bigliettoRepository.findByClienteIdAndDataAcquistoBetween(cliente.getId(), da, a);
@@ -239,23 +238,23 @@ public class BigliettoService {
             throw new IllegalStateException("Solo i biglietti acquistati possono essere annullati.");
         }
 
-        //annullamento
+        // annullamento
         biglietto.setStato(StatoBiglietto.ANNULLATO);
         bigliettoRepository.save(biglietto);
 
-        //libera il posto
+        // libera il posto
         Posto posto = biglietto.getPosto();
         posto.setOccupato(false);
         postoRepository.save(posto);
 
-        //rimborso
+        // rimborso
         rimborsoUtente(biglietto);
-        }
-
+    }
 
     private boolean rimborsoUtente(Biglietto biglietto) {
         boolean ret = false;
-        long minutiDifferenza = (biglietto.getProiezione().getDataOra().getTimeInMillis() - Calendar.getInstance().getTimeInMillis()) / (1000 * 60);
+        long minutiDifferenza = (biglietto.getProiezione().getDataOra().getTimeInMillis()
+                - Calendar.getInstance().getTimeInMillis()) / (1000 * 60);
 
         if (minutiDifferenza >= 60) {
             double importoRimborso = biglietto.getPrezzo();
@@ -268,7 +267,7 @@ public class BigliettoService {
                 throw new RuntimeException("Errore durante il rimborso.");
             }
         } else {
-            //niente rimborso
+            // niente rimborso
             System.out.println("Nessun rimborso: meno di 60 minuti alla proiezione.");
         }
         return ret;
@@ -289,6 +288,5 @@ public class BigliettoService {
     public Biglietto getBigliettoById(Long id) {
         return bigliettoRepository.findById(id).orElse(null);
     }
-
 
 }
