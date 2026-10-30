@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class BigliettoService {
             if (!p.getProiezione().equals(proiezione)) {
                 throw new RuntimeException("Il posto non appartiene alla proiezione corretta");
             }
-            if (p.getProiezione().getDataOra().after(LocalDate.now())) {
+            if (p.getProiezione().getDataOra().before(Calendar.getInstance())) {
                 throw new RuntimeException("La proiezione è già iniziata");
             }
             if (p.isOccupato()) {
