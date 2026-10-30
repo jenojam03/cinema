@@ -1,5 +1,7 @@
 # 🎬 Cinema PSW - Full-Stack Movie Booking & Management Platform
 
+> **Academic Project** developed for the university course **"Piattaforme Software e Applicazioni Web" (Software Platforms and Web Applications)** — Bachelor's Degree in Computer Engineering (*Laurea Triennale in Ingegneria Informatica*).
+
 A modern, full-stack cinema reservation and ticket management system built with **Spring Boot 3**, **Angular 20**, and **Keycloak** for OAuth2/OIDC authentication. Designed for secure, concurrent booking operations and smooth user experience.
 
 ---
